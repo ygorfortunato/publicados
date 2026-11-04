@@ -28,10 +28,10 @@ Funciona em um único arquivo (`index.html`), sem servidor, sem conta e sem inst
 
 ## Publicar no GitHub Pages
 
-Este app vive em `projetos/netrunner-os/` dentro do repositório `ygorfortunato` e é publicado pelo workflow `.github/workflows/pages.yml` a cada push na `main` que altere esta pasta.
+Este app vive em `netrunner-os/` dentro do repositório público `publicados` e é publicado pelo workflow `.github/workflows/pages.yml` a cada push na `main`.
 
 - Em **Settings → Pages**, a origem (**Source**) deve estar em **GitHub Actions**.
-- Endereço: https://ygorfortunato.github.io/ygorfortunato/netrunner-os/
+- Endereço: https://ygorfortunato.github.io/publicados/netrunner-os/
 
 O progresso salvo continua valendo, porque o navegador guarda os dados por domínio (`ygorfortunato.github.io`), e não por caminho.
 
