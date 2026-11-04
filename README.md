@@ -28,11 +28,12 @@ Funciona em um único arquivo (`index.html`), sem servidor, sem conta e sem inst
 
 ## Publicar no GitHub Pages
 
-1. Crie um repositório novo no GitHub (por exemplo, `netrunner-os`).
-2. Envie os arquivos desta pasta para a raiz do repositório.
-3. Abra **Settings → Pages**.
-4. Em **Build and deployment**, escolha **Deploy from a branch**, selecione a branch `main` e a pasta `/ (root)`, e salve.
-5. Aguarde cerca de um minuto. O endereço será `https://SEU-USUARIO.github.io/netrunner-os/`.
+Este app vive em `projetos/netrunner-os/` dentro do repositório `Estudos_iniciais` e é publicado pelo workflow `.github/workflows/pages.yml` a cada push na `main` que altere esta pasta.
+
+- Em **Settings → Pages**, a origem (**Source**) deve estar em **GitHub Actions**.
+- Endereço: https://ygorfortunato.github.io/Estudos_iniciais/netrunner-os/
+
+O progresso salvo continua valendo, porque o navegador guarda os dados por domínio (`ygorfortunato.github.io`), e não por caminho.
 
 ## Instalar no celular
 
