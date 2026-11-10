@@ -98,6 +98,7 @@ input,select{font-size:16px}
 .seg button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
 .note{font-size:13px;color:var(--muted);margin:8px 0 0}
 .photo .actions{flex-wrap:wrap;margin-top:8px}
+.field select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 8px;max-width:45%}
 .sortrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
 .sortrow select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:60%}
 .manual{margin:-6px 0 12px}
@@ -137,7 +138,8 @@ function save() {
 let route = {tab: 'col', setId: null};
 const PAGE = 60;
 let search = {q: '', base: [], all: [], shown: 0, sorted: false, loading: false, err: ''};
-let searchSort = 'recent';
+let searchSort = 'recent', setSort = 'recent';
+const SETSORTS = {recent: 'Mais recentes', mine: 'Mais cartas na coleção', name: 'Nome (A–Z)'};
 const SORTS = {recent: 'Mais recentes', numAsc: 'Número (menor primeiro)', numDesc: 'Número (maior primeiro)', name: 'Nome (A–Z)', set: 'Set (A–Z)'};
 let setsCache = null, setsErr = '', setData = null, setErr = '', current = null, colFilter = '', setsLoading = false, setLoadingId = null;
 
@@ -248,14 +250,19 @@ function viewSets() {
   let h = '<div class="top"><h1>Sets</h1></div>';
   if (setsErr) return h + errBlock(setsErr, 'retrysets');
   if (!setsCache) { loadSets(); return h + '<p class="muted">Carregando sets…</p>'; }
-  h += '<div class="field"><input id="sfilter" type="search" placeholder="Filtrar set"></div><div class="list" id="setlist">' + setRows('') + '</div>';
+  h += '<div class="field"><input id="sfilter" type="search" placeholder="Filtrar set"><select id="setsort" aria-label="Ordenar sets">' +
+    Object.keys(SETSORTS).map(k => '<option value="' + k + '"' + (setSort === k ? ' selected' : '') + '>' + SETSORTS[k] + '</option>').join('') + '</select></div><div class="list" id="setlist">' + setRows('') + '</div>';
   return h;
 }
 function setRows(f) {
   f = f.trim().toLowerCase();
   const ownedBySet = {};
   Object.values(state.cards).forEach(e => { if (e.setId) ownedBySet[e.setId] = (ownedBySet[e.setId] || 0) + 1; });
-  return setsCache.slice().reverse().filter(s => !f || (s.name || '').toLowerCase().includes(f) || String(s.id).toLowerCase().includes(f)).map(s => {
+  const list = setsCache.slice().reverse().filter(s => !f || (s.name || '').toLowerCase().includes(f) || String(s.id).toLowerCase().includes(f));
+  // Cartas únicas da coleção por set; empates ficam em ordem de lançamento (mais novos primeiro).
+  if (setSort === 'mine') list.sort((a, b) => (ownedBySet[b.id] || 0) - (ownedBySet[a.id] || 0));
+  else if (setSort === 'name') list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'pt', {sensitivity: 'base'}));
+  return list.map(s => {
     const art = s.logo ? '<img loading="lazy" alt="" src="' + esc(s.logo) + '.webp">' : (s.symbol ? '<img loading="lazy" alt="" src="' + esc(s.symbol) + '.webp">' : '<span class="ph"></span>');
     const have = ownedBySet[s.id] || 0;
     return '<button class="setrow" data-act="set" data-id="' + esc(s.id) + '">' + art + '<span class="t"><b>' + esc(s.name) + '</b><span class="n">' + esc(s.id) + '</span></span><span class="n">' + have + ' / ' + (s.cardCount ? s.cardCount.official : '?') + '</span></button>';
@@ -602,6 +609,7 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
+  if (ev.target.id === 'setsort') { setSort = ev.target.value; if (setsCache) $('#setlist').innerHTML = setRows($('#sfilter').value); return; }
   if (ev.target.id === 'sortsel') { searchSort = ev.target.value; applySort(); search.shown = PAGE; render(); return; }
   if (ev.target.id === 'photo-cam' || ev.target.id === 'photo-lib') { const f = ev.target.files[0]; ev.target.value = ''; onPhoto(f); return; }
   if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', base: [], all: [], shown: 0, sorted: false, loading: false, err: ''}; toast('Idioma alterado'); }
