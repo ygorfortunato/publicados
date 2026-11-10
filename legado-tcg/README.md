@@ -5,7 +5,9 @@ App para acompanhar uma coleção de cards de Pokémon TCG e o quanto foi invest
 ## O que tem
 
 - **Coleção** com cartas únicas, unidades, sets, filtro por nome ou set e total investido
-- **Buscar** cartas por nome na [TCGdex](https://tcgdex.dev), em português, com retorno ao inglês quando faltar tradução
+- **Buscar** cartas por nome na [TCGdex](https://tcgdex.dev), em português e inglês ao mesmo tempo, com os sets mais novos primeiro
+- **Bandeira** 🇧🇷 ou 🇺🇸 no nome da carta, e campo **Idioma da minha carta** para avisar quando os dados aparecem em inglês mas a sua carta é em português
+- **Adicionar carta manualmente** para promos e sets que a API ainda não tem
 - **Sets** com progresso por set; as cartas que faltam aparecem esmaecidas
 - **Ficha da carta** com a quantidade por variante (normal, reverse, holo, 1ª edição, promo)
 - **Compras** de boosters, boxes/ETB, cartas avulsas e outros, com quantidade, total pago em R$, data e loja
