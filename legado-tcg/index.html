@@ -92,6 +92,13 @@ input,select{font-size:16px}
 .actions .btn{flex:1}
 .formerr{color:var(--accent);min-height:1.2em;margin:10px 0 0;font-size:13px}
 .danger{width:100%;margin-top:10px;color:var(--accent)}
+@media (max-width:600px){body{padding-top:max(56px,calc(env(safe-area-inset-top,0px) + 12px))}}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.seg button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.manual{margin:-6px 0 12px}
+.linkbtn{background:none;border:0;color:var(--accent);padding:6px 0;font-weight:600;text-align:left}
 @media (prefers-reduced-motion:no-preference){.panel{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
 </style>
 </head>
@@ -123,8 +130,9 @@ function save() {
 }
 
 let route = {tab: 'col', setId: null};
-let search = {q: '', items: [], page: 0, more: false, loading: false, err: ''};
-let setsCache = null, setsErr = '', setData = null, setErr = '', current = null, colFilter = '';
+const PAGE = 60;
+let search = {q: '', all: [], shown: 0, sorted: false, loading: false, err: ''};
+let setsCache = null, setsErr = '', setData = null, setErr = '', current = null, colFilter = '', setsLoading = false, setLoadingId = null;
 
 const total = e => Object.values(e.qty || {}).reduce((a, b) => a + b, 0);
 const BLABEL = {booster: 'Booster', box: 'Box / ETB', single: 'Carta avulsa', other: 'Outro'};
@@ -139,14 +147,34 @@ function parseMoney(s) {
   return isFinite(n) && n >= 0 ? Math.round(n * 100) : NaN;
 }
 
-async function api(path) {
-  const go = async l => {
-    const r = await fetch(API + '/' + l + path);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  };
-  try { return await go(state.lang); }
-  catch (e) { if (state.lang !== 'en') return await go('en'); throw e; }
+const FLAG = {pt: '🇧🇷', en: '🇺🇸'};
+const flag = l => FLAG[l] ? FLAG[l] + ' ' : '';
+
+async function getJSON(lang, path) {
+  const r = await fetch(API + '/' + lang + path);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+// Consulta o idioma escolhido e também o inglês, que tem o catálogo mais completo.
+async function fetchBoth(path) {
+  const langs = state.lang === 'en' ? ['en'] : ['pt', 'en'];
+  const res = await Promise.allSettled(langs.map(l => getJSON(l, path)));
+  const by = {pt: null, en: null};
+  langs.forEach((l, i) => { if (res[i].status === 'fulfilled') by[l] = res[i].value; });
+  if (!by.pt && !by.en) throw new Error('sem resposta');
+  return by;
+}
+// Junta as duas listas: usa o texto em português quando existe e a imagem em inglês quando falta.
+function mergeCards(pt, en) {
+  const ptMap = new Map((pt || []).map(c => [c.id, c]));
+  const out = (en || []).map(c => {
+    const p = ptMap.get(c.id);
+    if (p) ptMap.delete(c.id);
+    const src = p || c;
+    return {id: src.id, localId: src.localId, name: src.name, image: src.image || c.image, lang: p ? 'pt' : 'en'};
+  });
+  ptMap.forEach(p => out.push({id: p.id, localId: p.localId, name: p.name, image: p.image, lang: 'pt'}));
+  return out;
 }
 
 function toast(msg) {
@@ -158,9 +186,10 @@ function toast(msg) {
 function tile(c, o) {
   o = o || {};
   const q = o.qty || 0;
-  const img = c.image ? '<img loading="lazy" alt="' + esc(c.name) + '" src="' + esc(c.image) + '/low.webp">' : '<span class="noimg">sem imagem</span>';
-  return '<button class="tile' + (o.dim ? ' dim' : '') + '" data-act="open" data-id="' + esc(c.id) + '"><span class="art">' + img +
-    (q ? '<b class="qty">' + q + '</b>' : '') + '</span><span class="nm">' + esc(c.name) + '</span><span class="id">' + esc(c.localId || '') + '</span></button>';
+  const img = c.image ? '<img loading="lazy" alt="' + esc(c.name) + '" src="' + esc(c.image) + '/low.webp">' : '<span class="noimg">' + (c.manual ? 'cadastro manual' : 'sem imagem') + '</span>';
+  const sub = c.manual ? [c.setName, c.localId].filter(Boolean).join(' ') : (c.localId || '');
+  return '<button class="tile' + (o.dim ? ' dim' : '') + '" data-act="open" data-id="' + esc(c.id) + '" data-lang="' + esc(c.lang || '') + '"><span class="art">' + img +
+    (q ? '<b class="qty">' + q + '</b>' : '') + '</span><span class="nm">' + flag((state.cards[c.id] && state.cards[c.id].ownLang) || c.lang) + esc(c.name) + '</span><span class="id">' + esc(sub) + '</span></button>';
 }
 function errBlock(msg, act) {
   return '<div class="err"><p>' + esc(msg) + '</p><button class="btn" data-act="' + act + '">Tentar de novo</button></div>';
@@ -192,12 +221,14 @@ function viewCollection() {
 function viewSearch() {
   let h = '<div class="top"><h1>Buscar carta</h1></div>';
   h += '<form class="field" id="sf"><input id="q" type="search" enterkeyhint="search" placeholder="Nome da carta, ex.: Pikachu" value="' + esc(search.q) + '"><button class="btn" type="submit">Buscar</button></form>';
+  h += '<div class="manual"><button class="linkbtn" type="button" data-act="newcard">Não achou? Adicionar carta manualmente</button></div>';
   if (search.err) h += errBlock(search.err, 'retrysearch');
   else if (!search.q) h += '<p class="muted">Digite o nome (ou parte dele) e toque em Buscar.</p>';
-  else if (!search.items.length && !search.loading) h += '<p class="muted">Nenhuma carta encontrada para "' + esc(search.q) + '".</p>';
-  h += '<div class="grid">' + search.items.map(c => tile(c, {qty: state.cards[c.id] ? total(state.cards[c.id]) : 0})).join('') + '</div>';
+  else if (!search.all.length && !search.loading) h += '<p class="muted">Nenhuma carta encontrada para "' + esc(search.q) + '".</p>';
+  if (search.all.length) h += '<p class="muted" style="margin:0 0 10px">' + search.all.length + ' cartas encontradas' + (search.sorted ? ', mais recentes primeiro' : '') + '</p>';
+  h += '<div class="grid">' + search.all.slice(0, search.shown).map(c => tile(c, {qty: state.cards[c.id] ? total(state.cards[c.id]) : 0})).join('') + '</div>';
   if (search.loading) h += '<p class="muted">Carregando…</p>';
-  else if (search.more) h += '<div style="margin-top:14px"><button class="btn ghost" data-act="more">Mostrar mais</button></div>';
+  else if (search.shown < search.all.length) h += '<div style="margin-top:14px"><button class="btn ghost" data-act="more">Mostrar mais</button></div>';
   return h;
 }
 
@@ -255,43 +286,106 @@ function render() {
 }
 
 /* ---------- data loading ---------- */
+async function fetchSets() {
+  const by = await fetchBoth('/sets');
+  const ptMap = new Map((by.pt || []).map(s => [s.id, s]));
+  const out = (by.en || []).map(s => {
+    const p = ptMap.get(s.id);
+    if (p) ptMap.delete(s.id);
+    return p ? Object.assign({}, s, p, {logo: p.logo || s.logo, symbol: p.symbol || s.symbol, cardCount: p.cardCount || s.cardCount}) : s;
+  });
+  ptMap.forEach(p => out.push(p));
+  return out;
+}
+async function fetchSet(id) {
+  const by = await fetchBoth('/sets/' + encodeURIComponent(id));
+  const base = by.pt || by.en;
+  const ptCards = new Map(((by.pt && by.pt.cards) || []).map(c => [c.id, c]));
+  const cards = ((by.en && by.en.cards) || []).map(c => {
+    const p = ptCards.get(c.id);
+    if (p) ptCards.delete(c.id);
+    const src = p || c;
+    return {id: src.id, localId: src.localId, name: src.name, image: src.image || c.image, lang: p ? 'pt' : 'en'};
+  });
+  ptCards.forEach(p => cards.push({id: p.id, localId: p.localId, name: p.name, image: p.image, lang: 'pt'}));
+  return {id: base.id, name: base.name, cards};
+}
+async function ensureSets() {
+  if (setsCache) return;
+  try { setsCache = await fetchSets(); setsErr = ''; } catch (e) {}
+}
 async function runSearch(reset) {
-  if (reset) { search.items = []; search.page = 0; search.more = false; }
+  if (reset) { search.all = []; search.shown = 0; search.sorted = false; }
   if (!search.q) return render();
-  const per = 30, page = search.page + 1;
   search.loading = true; search.err = ''; render();
   try {
-    const data = await api('/cards?name=' + encodeURIComponent(search.q) + '&pagination:page=' + page + '&pagination:itemsPerPage=' + per);
-    search.items = search.items.concat(data); search.page = page; search.more = data.length === per;
+    const by = await fetchBoth('/cards?name=' + encodeURIComponent(search.q));
+    const all = mergeCards(by.pt, by.en);
+    await ensureSets();
+    if (setsCache) {
+      // A lista de sets vem em ordem de lançamento; mostra os sets mais novos primeiro.
+      const idx = new Map(setsCache.map((s, i) => [s.id, i]));
+      const pos = c => { const i = idx.get(c.id.slice(0, c.id.lastIndexOf('-'))); return i == null ? -1 : i; };
+      all.sort((a, b) => pos(b) - pos(a));
+      search.sorted = true;
+    }
+    search.all = all; search.shown = PAGE;
   } catch (e) { search.err = 'Não consegui falar com a TCGdex. Confira a conexão e tente de novo.'; }
   search.loading = false; render();
 }
 async function loadSets() {
-  try { setsCache = await api('/sets'); setsErr = ''; } catch (e) { setsErr = 'Não consegui carregar a lista de sets.'; }
+  if (setsLoading) return;
+  setsLoading = true;
+  try { setsCache = await fetchSets(); setsErr = ''; } catch (e) { setsErr = 'Não consegui carregar a lista de sets.'; }
+  setsLoading = false;
   if (route.tab === 'sets') render();
 }
 async function loadSet(id) {
-  setErr = '';
-  try { setData = await api('/sets/' + encodeURIComponent(id)); } catch (e) { setErr = 'Não consegui carregar esse set.'; }
+  if (setLoadingId === id) return;
+  setLoadingId = id; setErr = '';
+  try { setData = await fetchSet(id); } catch (e) { setErr = 'Não consegui carregar esse set.'; }
+  setLoadingId = null;
   if (route.tab === 'sets' && route.setId === id) render();
 }
 
 /* ---------- card sheet ---------- */
-async function openCard(id) {
+async function openCard(id, hint) {
   $('#sheet').hidden = false;
+  const saved = state.cards[id];
+  if (saved && saved.manual) {
+    current = {id, name: saved.name, localId: saved.localId, image: '', set: {id: null, name: saved.setName || ''},
+      variants: {normal: true, reverse: true, holo: true, firstEdition: true, wPromo: true}, manual: true, _lang: saved.lang};
+    return renderSheet();
+  }
   $('#panel').innerHTML = '<p class="muted">Carregando carta…</p>';
-  try { current = await api('/cards/' + encodeURIComponent(id)); renderSheet(); }
-  catch (e) { $('#panel').innerHTML = errBlock('Não consegui carregar a carta.', 'close'); }
+  const order = state.lang === 'en' ? ['en'] : (hint === 'en' ? ['en', 'pt'] : ['pt', 'en']);
+  let card = null, used = '';
+  for (const l of order) {
+    try { card = await getJSON(l, '/cards/' + encodeURIComponent(id)); used = l; break; } catch (e) {}
+  }
+  if (!card) { $('#panel').innerHTML = errBlock('Não consegui carregar a carta.', 'close'); return; }
+  if (!card.image && used !== 'en') {
+    try { card.image = (await getJSON('en', '/cards/' + encodeURIComponent(id))).image; } catch (e) {}
+  }
+  card._lang = used; current = card; renderSheet();
 }
 function renderSheet() {
   const c = current, e = state.cards[c.id];
   let keys = VARIANTS.filter(k => c.variants && c.variants[k]);
   if (!keys.length) keys = ['normal'];
   const img = c.image ? '<img alt="' + esc(c.name) + '" src="' + esc(c.image) + '/high.webp">' : '';
-  const setLine = c.set ? esc(c.set.name) + (c.set.cardCount ? ' · ' + esc(c.localId) + '/' + c.set.cardCount.official : '') : '';
-  let h = '<div class="card-head">' + img + '<div class="meta"><h2>' + esc(c.name) + '</h2><p class="muted" style="margin:0">' + setLine + '</p>' +
+  const setLine = c.manual ? esc([c.set.name, c.localId && 'nº ' + c.localId].filter(Boolean).join(' · '))
+    : (c.set ? esc(c.set.name) + (c.set.cardCount ? ' · ' + esc(c.localId) + '/' + c.set.cardCount.official : '') : '');
+  let h = '<div class="card-head">' + img + '<div class="meta"><h2>' + flag(c._lang) + esc(c.name) + '</h2><p class="muted" style="margin:0">' + setLine + '</p>' +
     (c.rarity ? '<p class="muted" style="margin:4px 0 0">' + esc(c.rarity) + '</p>' : '') + (c.illustrator ? '<p class="muted" style="margin:4px 0 0">Arte: ' + esc(c.illustrator) + '</p>' : '') + '</div></div>';
   h += keys.map(k => '<div class="row"><span>' + VLABEL[k] + '</span><div class="step"><button data-act="dec" data-v="' + k + '" aria-label="Remover ' + VLABEL[k] + '">−</button><output>' + ((e && e.qty[k]) || 0) + '</output><button data-act="inc" data-v="' + k + '" aria-label="Adicionar ' + VLABEL[k] + '">+</button></div></div>').join('');
+  const own = (e && e.ownLang) || c._own || c._lang || 'pt';
+  const note = (c._lang === 'en' && !c.manual)
+    ? (own === 'pt' ? 'Os dados desta carta estão em inglês na TCGdex. A sua está marcada como português.'
+      : 'Esta carta só aparece em inglês na TCGdex. Se a sua é em português, toque em Português.') : '';
+  h += '<div class="own"><p class="lbl" style="margin:16px 0 6px">Idioma da minha carta</p><div class="seg">' +
+    ['pt', 'en'].map(l => '<button type="button" data-act="own" data-l="' + l + '" class="' + (own === l ? 'on' : '') + '" aria-pressed="' + (own === l) + '">' + FLAG[l] + ' ' + (l === 'pt' ? 'Português' : 'English') + '</button>').join('') +
+    '</div>' + (note ? '<p class="note">' + note + '</p>' : '') + '</div>';
   h += '<div style="margin-top:14px"><button class="btn" data-act="close" style="width:100%">Pronto</button></div>';
   $('#panel').innerHTML = h;
 }
@@ -299,12 +393,44 @@ function change(v, d) {
   const c = current;
   let e = state.cards[c.id];
   if (!e) e = state.cards[c.id] = {id: c.id, name: c.name, image: c.image, localId: c.localId, rarity: c.rarity,
-    setId: c.set && c.set.id, setName: c.set && c.set.name, setTotal: c.set && c.set.cardCount && c.set.cardCount.official, added: Date.now(), qty: {}};
+    setId: c.set && c.set.id, setName: c.set && c.set.name, setTotal: c.set && c.set.cardCount && c.set.cardCount.official,
+    lang: c._lang, ownLang: c._own || c._lang, manual: !!c.manual, added: Date.now(), qty: {}};
   e.qty[v] = Math.max(0, (e.qty[v] || 0) + d);
   if (!total(e)) delete state.cards[c.id];
   save(); renderSheet();
 }
+function setOwn(l) {
+  if (!current) return;
+  const e = state.cards[current.id];
+  if (e) { e.ownLang = l; save(); } else current._own = l;
+  renderSheet();
+}
 function closeSheet() { $('#sheet').hidden = true; current = null; render(); }
+
+/* ---------- manual card ---------- */
+function openManual() {
+  $('#sheet').hidden = false;
+  $('#panel').innerHTML = '<h2>Adicionar carta manualmente</h2><p class="muted" style="margin:0">Use quando a carta não aparece na busca, como promos e sets muito novos.</p><form id="mf" novalidate>' +
+    '<label class="lbl" for="m-name">Nome da carta</label><input id="m-name" class="inp" type="text" maxlength="80" placeholder="ex.: Slowpoke">' +
+    '<div class="pair"><div><label class="lbl" for="m-set">Set ou código</label><input id="m-set" class="inp" type="text" maxlength="60" placeholder="ex.: MEP"></div>' +
+    '<div><label class="lbl" for="m-num">Número</label><input id="m-num" class="inp" type="text" maxlength="12" placeholder="ex.: 086"></div></div>' +
+    '<div class="pair"><div><label class="lbl" for="m-var">Variante</label><select id="m-var" class="inp">' + VARIANTS.map(k => '<option value="' + k + '">' + VLABEL[k] + '</option>').join('') + '</select></div>' +
+    '<div><label class="lbl" for="m-qty">Quantidade</label><input id="m-qty" class="inp" type="number" min="1" step="1" inputmode="numeric" value="1"></div></div>' +
+    '<label class="lbl" for="m-lang">Idioma da carta</label><select id="m-lang" class="inp"><option value="pt">🇧🇷 Português</option><option value="en">🇺🇸 English</option></select>' +
+    '<p class="formerr" id="m-err" role="alert"></p>' +
+    '<div class="actions"><button class="btn" type="submit">Salvar</button><button class="btn ghost" type="button" data-act="close">Cancelar</button></div></form>';
+}
+function submitManual(f) {
+  const val = id => f.querySelector('#' + id).value;
+  const err = m => { f.querySelector('#m-err').textContent = m; };
+  const name = val('m-name').trim(), qty = parseInt(val('m-qty'), 10);
+  if (!name) return err('Informe o nome da carta.');
+  if (!(qty >= 1)) return err('A quantidade precisa ser 1 ou mais.');
+  const id = 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+  state.cards[id] = {id, manual: true, name, image: '', localId: val('m-num').trim(), setName: val('m-set').trim(), setId: null,
+    lang: val('m-lang'), added: Date.now(), qty: {[val('m-var')]: qty}};
+  save(); closeSheet(); toast('Carta adicionada');
+}
 
 /* ---------- purchases ---------- */
 function openBuy(id) {
@@ -369,11 +495,13 @@ document.addEventListener('click', ev => {
   if (!t) { if (ev.target.id === 'sheet') closeSheet(); return; }
   if (t.dataset.tab) { route = {tab: t.dataset.tab, setId: null}; render(); window.scrollTo(0, 0); return; }
   const a = t.dataset.act;
-  if (a === 'open') openCard(t.dataset.id);
+  if (a === 'open') openCard(t.dataset.id, t.dataset.lang);
+  else if (a === 'newcard') openManual();
+  else if (a === 'own') setOwn(t.dataset.l);
   else if (a === 'inc') change(t.dataset.v, 1);
   else if (a === 'dec') change(t.dataset.v, -1);
   else if (a === 'close') closeSheet();
-  else if (a === 'more') runSearch(false);
+  else if (a === 'more') { search.shown += PAGE; render(); }
   else if (a === 'retrysearch') runSearch(true);
   else if (a === 'retrysets') { setsErr = ''; setsCache = null; render(); }
   else if (a === 'retryset') { setErr = ''; setData = null; render(); }
@@ -390,6 +518,7 @@ document.addEventListener('click', ev => {
 });
 document.addEventListener('submit', ev => {
   if (ev.target.id === 'bf') { ev.preventDefault(); submitBuy(ev.target); return; }
+  if (ev.target.id === 'mf') { ev.preventDefault(); submitManual(ev.target); return; }
   if (ev.target.id !== 'sf') return;
   ev.preventDefault();
   search.q = $('#q').value.trim(); runSearch(true);
@@ -404,7 +533,7 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
-  if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', items: [], page: 0, more: false, loading: false, err: ''}; toast('Idioma alterado'); }
+  if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', all: [], shown: 0, sorted: false, loading: false, err: ''}; toast('Idioma alterado'); }
 });
 document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
 
