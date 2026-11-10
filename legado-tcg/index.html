@@ -98,6 +98,8 @@ input,select{font-size:16px}
 .seg button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
 .note{font-size:13px;color:var(--muted);margin:8px 0 0}
 .photo .actions{flex-wrap:wrap;margin-top:8px}
+.sortrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
+.sortrow select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:60%}
 .manual{margin:-6px 0 12px}
 .linkbtn{background:none;border:0;color:var(--accent);padding:6px 0;font-weight:600;text-align:left}
 @media (prefers-reduced-motion:no-preference){.panel{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
@@ -134,7 +136,9 @@ function save() {
 
 let route = {tab: 'col', setId: null};
 const PAGE = 60;
-let search = {q: '', all: [], shown: 0, sorted: false, loading: false, err: ''};
+let search = {q: '', base: [], all: [], shown: 0, sorted: false, loading: false, err: ''};
+let searchSort = 'recent';
+const SORTS = {recent: 'Mais recentes', numAsc: 'Número (menor primeiro)', numDesc: 'Número (maior primeiro)', name: 'Nome (A–Z)', set: 'Set (A–Z)'};
 let setsCache = null, setsErr = '', setData = null, setErr = '', current = null, colFilter = '', setsLoading = false, setLoadingId = null;
 
 const total = e => Object.values(e.qty || {}).reduce((a, b) => a + b, 0);
@@ -231,7 +235,8 @@ function viewSearch() {
   if (search.err) h += errBlock(search.err, 'retrysearch');
   else if (!search.q) h += '<p class="muted">Digite o nome (ou parte dele) e toque em Buscar.</p>';
   else if (!search.all.length && !search.loading) h += '<p class="muted">Nenhuma carta encontrada para "' + esc(search.q) + '".</p>';
-  if (search.all.length) h += '<p class="muted" style="margin:0 0 10px">' + search.all.length + ' cartas encontradas' + (search.sorted ? ', mais recentes primeiro' : '') + '</p>';
+  if (search.all.length) h += '<div class="sortrow"><span class="muted">' + search.all.length + ' cartas encontradas</span><select id="sortsel" aria-label="Ordenar por">' +
+    Object.keys(SORTS).map(k => '<option value="' + k + '"' + (searchSort === k ? ' selected' : '') + '>' + SORTS[k] + '</option>').join('') + '</select></div>';
   h += '<div class="grid">' + search.all.slice(0, search.shown).map(c => tile(c, {qty: state.cards[c.id] ? total(state.cards[c.id]) : 0})).join('') + '</div>';
   if (search.loading) h += '<p class="muted">Carregando…</p>';
   else if (search.shown < search.all.length) h += '<div style="margin-top:14px"><button class="btn ghost" data-act="more">Mostrar mais</button></div>';
@@ -321,7 +326,7 @@ async function ensureSets() {
   try { setsCache = await fetchSets(); setsErr = ''; } catch (e) {}
 }
 async function runSearch(reset) {
-  if (reset) { search.all = []; search.shown = 0; search.sorted = false; }
+  if (reset) { search.base = []; search.all = []; search.shown = 0; search.sorted = false; }
   if (!search.q) return render();
   search.loading = true; search.err = ''; render();
   try {
@@ -335,9 +340,21 @@ async function runSearch(reset) {
       all.sort((a, b) => pos(b) - pos(a));
       search.sorted = true;
     }
-    search.all = all; search.shown = PAGE;
+    search.base = all; applySort(); search.shown = PAGE;
   } catch (e) { search.err = 'Não consegui falar com a TCGdex. Confira a conexão e tente de novo.'; }
   search.loading = false; render();
+}
+// Ordena os resultados. A lista da API traz número, nome e set; raridade, tipo e PS exigiriam abrir cada carta.
+function applySort() {
+  const list = search.base.slice();
+  const num = (a, b) => String(a.localId || '').localeCompare(String(b.localId || ''), 'en', {numeric: true});
+  const names = new Map((setsCache || []).map(s => [s.id, s.name]));
+  const setName = c => { const id = c.id.slice(0, c.id.lastIndexOf('-')); return names.get(id) || id; };
+  if (searchSort === 'numAsc') list.sort(num);
+  else if (searchSort === 'numDesc') list.sort((a, b) => num(b, a));
+  else if (searchSort === 'name') list.sort((a, b) => a.name.localeCompare(b.name, 'pt', {sensitivity: 'base'}) || num(a, b));
+  else if (searchSort === 'set') list.sort((a, b) => setName(a).localeCompare(setName(b), 'pt', {sensitivity: 'base'}) || num(a, b));
+  search.all = list;
 }
 async function loadSets() {
   if (setsLoading) return;
@@ -585,8 +602,9 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
+  if (ev.target.id === 'sortsel') { searchSort = ev.target.value; applySort(); search.shown = PAGE; render(); return; }
   if (ev.target.id === 'photo-cam' || ev.target.id === 'photo-lib') { const f = ev.target.files[0]; ev.target.value = ''; onPhoto(f); return; }
-  if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', all: [], shown: 0, sorted: false, loading: false, err: ''}; toast('Idioma alterado'); }
+  if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', base: [], all: [], shown: 0, sorted: false, loading: false, err: ''}; toast('Idioma alterado'); }
 });
 document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
 
