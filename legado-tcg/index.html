@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#161a22">
+<title>Minha Coleção TCG</title>
+<style>
+/* Layout: lista de cartas em grade, navegação fixa no rodapé, ficha da carta em folha deslizante */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#14181f; --muted:#5d6675; --line:#dde0e6;
+  --accent:#d6401f; --accent-ink:#ffffff; --ok:#1d8a4f; --shadow:0 -8px 30px rgba(20,24,31,.18);
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#161a22;--surface:#212733;--ink:#eef0f4;--muted:#9aa3b2;--line:#323a49;--accent:#ff7a59;--accent-ink:#1b0d08;--ok:#4cc382;--shadow:0 -8px 30px rgba(0,0,0,.5)}
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.4 var(--font);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-top:max(12px,env(safe-area-inset-top,0px));padding-bottom:calc(84px + env(safe-area-inset-bottom,0px));min-height:100vh}
+h1{font-size:20px;margin:0;letter-spacing:-.01em}
+h2{font-size:17px;margin:0 0 8px}
+.muted{color:var(--muted)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.top select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.field{display:flex;gap:8px;margin-bottom:14px}
+.field input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:11px 14px;font-weight:600}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.tile{background:none;border:0;padding:0;text-align:left;display:flex;flex-direction:column;gap:4px;min-width:0}
+.art{position:relative;display:block;aspect-ratio:245/337;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.noimg{display:grid;place-items:center;height:100%;font-size:11px;color:var(--muted);padding:6px;text-align:center}
+.qty{position:absolute;top:5px;right:5px;background:var(--accent);color:var(--accent-ink);border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px;padding:0 6px}
+.tile.dim .art img{opacity:.35;filter:grayscale(1)}
+.nm{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.id{font-size:11px;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:8px}
+.setrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.setrow img{width:44px;height:32px;object-fit:contain;flex:none}
+.setrow .ph{width:44px;height:32px;flex:none}
+.setrow .t{flex:1;min-width:0}
+.setrow .t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.setrow .n{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin:8px 0 14px}
+.bar i{display:block;height:100%;background:var(--ok)}
+nav{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);
+  padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px));z-index:5}
+nav button{background:none;border:0;padding:10px 4px;border-radius:10px;color:var(--muted);font-weight:600}
+nav button[aria-current=page]{color:var(--accent)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:22px 16px;text-align:center}
+.empty p{margin:6px 0 14px}
+.back{background:none;border:0;color:var(--accent);padding:4px 0;margin-bottom:8px;font-weight:600}
+.err{background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:14px}
+.err p{margin:0 0 10px}
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10;display:flex;align-items:flex-end}
+#sheet[hidden]{display:none}
+.panel{background:var(--surface);width:100%;max-height:90vh;overflow:auto;border-radius:18px 18px 0 0;box-shadow:var(--shadow);
+  padding:16px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+.card-head{display:flex;gap:14px;margin-bottom:12px}
+.card-head img{width:42%;max-width:190px;aspect-ratio:245/337;object-fit:cover;border-radius:8px;border:1px solid var(--line);flex:none}
+.meta{min-width:0}
+.meta h2{margin-bottom:4px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
+.step{display:flex;align-items:center;gap:10px}
+.step button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:20px}
+.step output{min-width:24px;text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:10px;z-index:20;font-size:13px}
+.foot{margin-top:22px;font-size:12px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+input,select{font-size:16px}
+.stats.two{grid-template-columns:repeat(2,1fr)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:2px 12px;margin-bottom:14px}
+.box .row:first-child{border-top:0}
+.setrow .t .n{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.amt{flex:none;font-variant-numeric:tabular-nums}
+.lbl{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}
+.inp{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pair>div{min-width:0}
+.actions{display:flex;gap:8px;margin-top:16px}
+.actions .btn{flex:1}
+.formerr{color:var(--accent);min-height:1.2em;margin:10px 0 0;font-size:13px}
+.danger{width:100%;margin-top:10px;color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.panel{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+</style>
+</head>
+<body>
+<div id="view"></div>
+<nav id="nav" aria-label="Seções">
+  <button data-tab="col">Coleção</button>
+  <button data-tab="search">Buscar</button>
+  <button data-tab="sets">Sets</button>
+  <button data-tab="buys">Compras</button>
+</nav>
+<div id="sheet" hidden><div class="panel" id="panel" role="dialog" aria-modal="true"></div></div>
+<input type="file" id="importer" accept="application/json" hidden>
+<script>
+const API = 'https://api.tcgdex.net/v2';
+const KEY = 'tcg.colecao.v1';
+const VARIANTS = ['normal', 'reverse', 'holo', 'firstEdition', 'wPromo'];
+const VLABEL = {normal: 'Normal', reverse: 'Reverse', holo: 'Holo', firstEdition: '1ª edição', wPromo: 'Promo W'};
+
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = s => document.querySelector(s);
+
+let state = {lang: 'pt', cards: {}, buys: []};
+try { Object.assign(state, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+if (!Array.isArray(state.buys)) state.buys = [];
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch (e) { toast('Não consegui salvar neste navegador. Exporte um backup.'); }
+}
+
+let route = {tab: 'col', setId: null};
+let search = {q: '', items: [], page: 0, more: false, loading: false, err: ''};
+let setsCache = null, setsErr = '', setData = null, setErr = '', current = null, colFilter = '';
+
+const total = e => Object.values(e.qty || {}).reduce((a, b) => a + b, 0);
+const BLABEL = {booster: 'Booster', box: 'Box / ETB', single: 'Carta avulsa', other: 'Outro'};
+const BRL = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'});
+const money = cents => BRL.format(cents / 100);
+const fmtDate = d => { const p = String(d || '').split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : '—'; };
+function parseMoney(s) {
+  s = String(s).replace(/[R$\s]/g, '');
+  if (!s) return NaN;
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  const n = Number(s);
+  return isFinite(n) && n >= 0 ? Math.round(n * 100) : NaN;
+}
+
+async function api(path) {
+  const go = async l => {
+    const r = await fetch(API + '/' + l + path);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  };
+  try { return await go(state.lang); }
+  catch (e) { if (state.lang !== 'en') return await go('en'); throw e; }
+}
+
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+
+function tile(c, o) {
+  o = o || {};
+  const q = o.qty || 0;
+  const img = c.image ? '<img loading="lazy" alt="' + esc(c.name) + '" src="' + esc(c.image) + '/low.webp">' : '<span class="noimg">sem imagem</span>';
+  return '<button class="tile' + (o.dim ? ' dim' : '') + '" data-act="open" data-id="' + esc(c.id) + '"><span class="art">' + img +
+    (q ? '<b class="qty">' + q + '</b>' : '') + '</span><span class="nm">' + esc(c.name) + '</span><span class="id">' + esc(c.localId || '') + '</span></button>';
+}
+function errBlock(msg, act) {
+  return '<div class="err"><p>' + esc(msg) + '</p><button class="btn" data-act="' + act + '">Tentar de novo</button></div>';
+}
+
+/* ---------- views ---------- */
+function viewCollection() {
+  const all = Object.values(state.cards);
+  const units = all.reduce((a, e) => a + total(e), 0);
+  const setIds = new Set(all.map(e => e.setId).filter(Boolean));
+  let list = all.slice().sort((a, b) => (b.added || 0) - (a.added || 0));
+  const f = colFilter.trim().toLowerCase();
+  if (f) list = list.filter(e => (e.name || '').toLowerCase().includes(f) || (e.setName || '').toLowerCase().includes(f));
+  let h = '<div class="top"><h1>Minha coleção</h1><select id="lang" aria-label="Idioma"><option value="pt">Português</option><option value="en">English</option></select></div>';
+  h += '<div class="stats"><div class="stat"><b>' + all.length + '</b><span>cartas únicas</span></div><div class="stat"><b>' + units + '</b><span>unidades</span></div><div class="stat"><b>' + setIds.size + '</b><span>sets</span></div></div>';
+  if (state.buys.length) h += '<p class="muted" style="margin:-4px 0 14px">Investido: <b style="color:var(--ink)">' + money(state.buys.reduce((a, b) => a + b.cents, 0)) + '</b> em compras registradas</p>';
+  if (!all.length) {
+    h += '<div class="empty"><h2>Nenhuma carta ainda</h2><p class="muted">Busque a primeira carta que você tem e toque em + para registrar.</p><button class="btn" data-tab="search">Buscar carta</button></div>';
+  } else {
+    h += '<div class="field"><input id="cf" type="search" placeholder="Filtrar por nome ou set" value="' + esc(colFilter) + '"></div>';
+    h += '<div class="grid">' + list.map(e => tile(e, {qty: total(e)})).join('') + '</div>';
+    if (!list.length) h += '<p class="muted">Nada encontrado para esse filtro.</p>';
+  }
+  h += '<div class="tools"><button class="btn ghost" data-act="export">Exportar backup</button><button class="btn ghost" data-act="import">Importar backup</button></div>';
+  h += '<p class="foot muted">Os dados ficam só neste navegador. Exporte um backup de vez em quando. Dados das cartas: TCGdex.</p>';
+  return h;
+}
+
+function viewSearch() {
+  let h = '<div class="top"><h1>Buscar carta</h1></div>';
+  h += '<form class="field" id="sf"><input id="q" type="search" enterkeyhint="search" placeholder="Nome da carta, ex.: Pikachu" value="' + esc(search.q) + '"><button class="btn" type="submit">Buscar</button></form>';
+  if (search.err) h += errBlock(search.err, 'retrysearch');
+  else if (!search.q) h += '<p class="muted">Digite o nome (ou parte dele) e toque em Buscar.</p>';
+  else if (!search.items.length && !search.loading) h += '<p class="muted">Nenhuma carta encontrada para "' + esc(search.q) + '".</p>';
+  h += '<div class="grid">' + search.items.map(c => tile(c, {qty: state.cards[c.id] ? total(state.cards[c.id]) : 0})).join('') + '</div>';
+  if (search.loading) h += '<p class="muted">Carregando…</p>';
+  else if (search.more) h += '<div style="margin-top:14px"><button class="btn ghost" data-act="more">Mostrar mais</button></div>';
+  return h;
+}
+
+function viewSets() {
+  if (route.setId) return viewSetDetail();
+  let h = '<div class="top"><h1>Sets</h1></div>';
+  if (setsErr) return h + errBlock(setsErr, 'retrysets');
+  if (!setsCache) { loadSets(); return h + '<p class="muted">Carregando sets…</p>'; }
+  h += '<div class="field"><input id="sfilter" type="search" placeholder="Filtrar set"></div><div class="list" id="setlist">' + setRows('') + '</div>';
+  return h;
+}
+function setRows(f) {
+  f = f.trim().toLowerCase();
+  const ownedBySet = {};
+  Object.values(state.cards).forEach(e => { if (e.setId) ownedBySet[e.setId] = (ownedBySet[e.setId] || 0) + 1; });
+  return setsCache.slice().reverse().filter(s => !f || (s.name || '').toLowerCase().includes(f) || String(s.id).toLowerCase().includes(f)).map(s => {
+    const art = s.logo ? '<img loading="lazy" alt="" src="' + esc(s.logo) + '.webp">' : (s.symbol ? '<img loading="lazy" alt="" src="' + esc(s.symbol) + '.webp">' : '<span class="ph"></span>');
+    const have = ownedBySet[s.id] || 0;
+    return '<button class="setrow" data-act="set" data-id="' + esc(s.id) + '">' + art + '<span class="t"><b>' + esc(s.name) + '</b><span class="n">' + esc(s.id) + '</span></span><span class="n">' + have + ' / ' + (s.cardCount ? s.cardCount.official : '?') + '</span></button>';
+  }).join('');
+}
+function viewSetDetail() {
+  let h = '<button class="back" data-act="back">‹ Todos os sets</button>';
+  if (setErr) return h + errBlock(setErr, 'retryset');
+  if (!setData || setData.id !== route.setId) { loadSet(route.setId); return h + '<p class="muted">Carregando set…</p>'; }
+  const cards = setData.cards || [];
+  const have = cards.filter(c => state.cards[c.id]).length;
+  const pct = cards.length ? Math.round(have * 100 / cards.length) : 0;
+  h += '<h1>' + esc(setData.name) + '</h1><p class="muted" style="margin:4px 0 0">' + have + ' de ' + cards.length + ' cartas (' + pct + '%)</p><div class="bar"><i style="width:' + pct + '%"></i></div>';
+  h += '<div class="grid">' + cards.map(c => tile(c, {qty: state.cards[c.id] ? total(state.cards[c.id]) : 0, dim: !state.cards[c.id]})).join('') + '</div>';
+  return h;
+}
+
+function viewBuys() {
+  const list = state.buys.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '') || String(b.id).localeCompare(String(a.id)));
+  let h = '<div class="top"><h1>Compras</h1><button class="btn" data-act="newbuy">+ Compra</button></div>';
+  if (!list.length) return h + '<div class="empty"><h2>Nenhuma compra registrada</h2><p class="muted">Registre boosters, boxes e cartas avulsas com o valor que você pagou. Depois você compara com o que a coleção vale.</p><button class="btn" data-act="newbuy">Registrar primeira compra</button></div>';
+  const sum = list.reduce((a, b) => a + b.cents, 0), items = list.reduce((a, b) => a + b.qty, 0);
+  h += '<div class="stats two"><div class="stat"><b>' + money(sum) + '</b><span>total investido</span></div><div class="stat"><b>' + items + '</b><span>itens comprados</span></div></div>';
+  const by = {};
+  list.forEach(b => { const o = by[b.type] || (by[b.type] = {cents: 0, qty: 0}); o.cents += b.cents; o.qty += b.qty; });
+  h += '<div class="box">' + Object.keys(by).map(k => '<div class="row"><span>' + esc(BLABEL[k] || 'Outro') + ' <span class="muted">(' + by[k].qty + ')</span></span><b>' + money(by[k].cents) + '</b></div>').join('') + '</div>';
+  h += '<div class="list">' + list.map(b => {
+    const unit = b.qty > 1 ? ' · ' + b.qty + ' × ' + money(Math.round(b.cents / b.qty)) : '';
+    return '<button class="setrow" data-act="editbuy" data-id="' + esc(b.id) + '"><span class="t"><b>' + esc(b.name) + '</b><span class="n">' + esc(BLABEL[b.type] || 'Outro') + ' · ' + fmtDate(b.date) + unit + (b.store ? ' · ' + esc(b.store) : '') + '</span></span><b class="amt">' + money(b.cents) + '</b></button>';
+  }).join('') + '</div>';
+  return h;
+}
+
+function render() {
+  $('#nav').querySelectorAll('button').forEach(b => { if (b.dataset.tab === route.tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  const v = route.tab === 'col' ? viewCollection() : route.tab === 'search' ? viewSearch() : route.tab === 'buys' ? viewBuys() : viewSets();
+  $('#view').innerHTML = v;
+  const lang = $('#lang'); if (lang) lang.value = state.lang;
+}
+
+/* ---------- data loading ---------- */
+async function runSearch(reset) {
+  if (reset) { search.items = []; search.page = 0; search.more = false; }
+  if (!search.q) return render();
+  const per = 30, page = search.page + 1;
+  search.loading = true; search.err = ''; render();
+  try {
+    const data = await api('/cards?name=' + encodeURIComponent(search.q) + '&pagination:page=' + page + '&pagination:itemsPerPage=' + per);
+    search.items = search.items.concat(data); search.page = page; search.more = data.length === per;
+  } catch (e) { search.err = 'Não consegui falar com a TCGdex. Confira a conexão e tente de novo.'; }
+  search.loading = false; render();
+}
+async function loadSets() {
+  try { setsCache = await api('/sets'); setsErr = ''; } catch (e) { setsErr = 'Não consegui carregar a lista de sets.'; }
+  if (route.tab === 'sets') render();
+}
+async function loadSet(id) {
+  setErr = '';
+  try { setData = await api('/sets/' + encodeURIComponent(id)); } catch (e) { setErr = 'Não consegui carregar esse set.'; }
+  if (route.tab === 'sets' && route.setId === id) render();
+}
+
+/* ---------- card sheet ---------- */
+async function openCard(id) {
+  $('#sheet').hidden = false;
+  $('#panel').innerHTML = '<p class="muted">Carregando carta…</p>';
+  try { current = await api('/cards/' + encodeURIComponent(id)); renderSheet(); }
+  catch (e) { $('#panel').innerHTML = errBlock('Não consegui carregar a carta.', 'close'); }
+}
+function renderSheet() {
+  const c = current, e = state.cards[c.id];
+  let keys = VARIANTS.filter(k => c.variants && c.variants[k]);
+  if (!keys.length) keys = ['normal'];
+  const img = c.image ? '<img alt="' + esc(c.name) + '" src="' + esc(c.image) + '/high.webp">' : '';
+  const setLine = c.set ? esc(c.set.name) + (c.set.cardCount ? ' · ' + esc(c.localId) + '/' + c.set.cardCount.official : '') : '';
+  let h = '<div class="card-head">' + img + '<div class="meta"><h2>' + esc(c.name) + '</h2><p class="muted" style="margin:0">' + setLine + '</p>' +
+    (c.rarity ? '<p class="muted" style="margin:4px 0 0">' + esc(c.rarity) + '</p>' : '') + (c.illustrator ? '<p class="muted" style="margin:4px 0 0">Arte: ' + esc(c.illustrator) + '</p>' : '') + '</div></div>';
+  h += keys.map(k => '<div class="row"><span>' + VLABEL[k] + '</span><div class="step"><button data-act="dec" data-v="' + k + '" aria-label="Remover ' + VLABEL[k] + '">−</button><output>' + ((e && e.qty[k]) || 0) + '</output><button data-act="inc" data-v="' + k + '" aria-label="Adicionar ' + VLABEL[k] + '">+</button></div></div>').join('');
+  h += '<div style="margin-top:14px"><button class="btn" data-act="close" style="width:100%">Pronto</button></div>';
+  $('#panel').innerHTML = h;
+}
+function change(v, d) {
+  const c = current;
+  let e = state.cards[c.id];
+  if (!e) e = state.cards[c.id] = {id: c.id, name: c.name, image: c.image, localId: c.localId, rarity: c.rarity,
+    setId: c.set && c.set.id, setName: c.set && c.set.name, setTotal: c.set && c.set.cardCount && c.set.cardCount.official, added: Date.now(), qty: {}};
+  e.qty[v] = Math.max(0, (e.qty[v] || 0) + d);
+  if (!total(e)) delete state.cards[c.id];
+  save(); renderSheet();
+}
+function closeSheet() { $('#sheet').hidden = true; current = null; render(); }
+
+/* ---------- purchases ---------- */
+function openBuy(id) {
+  const b = id ? state.buys.find(x => x.id === id) : null;
+  if (id && !b) return;
+  const v = b || {type: 'booster', name: '', qty: 1, cents: null, date: new Date().toLocaleDateString('sv-SE'), store: ''};
+  const price = v.cents == null ? '' : (v.cents / 100).toFixed(2).replace('.', ',');
+  $('#sheet').hidden = false;
+  $('#panel').innerHTML = '<h2>' + (b ? 'Editar compra' : 'Nova compra') + '</h2><form id="bf" data-id="' + esc(b ? b.id : '') + '" novalidate>' +
+    '<label class="lbl" for="b-type">Tipo</label><select id="b-type" class="inp">' + Object.keys(BLABEL).map(k => '<option value="' + k + '"' + (v.type === k ? ' selected' : '') + '>' + BLABEL[k] + '</option>').join('') + '</select>' +
+    '<label class="lbl" for="b-name">Produto</label><input id="b-name" class="inp" type="text" maxlength="80" placeholder="ex.: Booster Rivais Predestinados" value="' + esc(v.name) + '">' +
+    '<div class="pair"><div><label class="lbl" for="b-qty">Quantidade</label><input id="b-qty" class="inp" type="number" min="1" step="1" inputmode="numeric" value="' + v.qty + '"></div>' +
+    '<div><label class="lbl" for="b-total">Total pago (R$)</label><input id="b-total" class="inp" type="text" inputmode="decimal" placeholder="0,00" value="' + price + '"></div></div>' +
+    '<div class="pair"><div><label class="lbl" for="b-date">Data</label><input id="b-date" class="inp" type="date" value="' + esc(v.date) + '"></div>' +
+    '<div><label class="lbl" for="b-store">Loja (opcional)</label><input id="b-store" class="inp" type="text" maxlength="60" value="' + esc(v.store || '') + '"></div></div>' +
+    '<p class="formerr" id="b-err" role="alert"></p>' +
+    '<div class="actions"><button class="btn" type="submit">Salvar</button><button class="btn ghost" type="button" data-act="close">Cancelar</button></div>' +
+    (b ? '<button class="btn ghost danger" type="button" data-act="delbuy" data-id="' + esc(b.id) + '">Excluir compra</button>' : '') + '</form>';
+}
+function submitBuy(f) {
+  const val = id => f.querySelector('#' + id).value;
+  const err = m => { f.querySelector('#b-err').textContent = m; };
+  const name = val('b-name').trim(), qty = parseInt(val('b-qty'), 10), cents = parseMoney(val('b-total')), date = val('b-date');
+  if (!name) return err('Informe o nome do produto.');
+  if (!(qty >= 1)) return err('A quantidade precisa ser 1 ou mais.');
+  if (isNaN(cents)) return err('Informe o valor pago, por exemplo 49,90.');
+  if (!date) return err('Informe a data da compra.');
+  const rec = {type: val('b-type'), name, qty, cents, date, store: val('b-store').trim()};
+  const id = f.dataset.id;
+  if (id) { const i = state.buys.findIndex(x => x.id === id); if (i >= 0) state.buys[i] = Object.assign({id}, rec); }
+  else state.buys.push(Object.assign({id: 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5)}, rec));
+  save(); closeSheet(); toast('Compra salva');
+}
+
+/* ---------- backup ---------- */
+function exportData() {
+  const blob = new Blob([JSON.stringify({version: 2, exportedAt: new Date().toISOString(), cards: state.cards, buys: state.buys}, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'colecao-tcg-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast('Backup gerado');
+}
+$('#importer').addEventListener('change', async ev => {
+  const f = ev.target.files[0]; ev.target.value = '';
+  if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    if (!d || typeof d.cards !== 'object') throw new Error('formato');
+    Object.assign(state.cards, d.cards);
+    if (Array.isArray(d.buys)) {
+      const have = new Set(state.buys.map(b => b.id));
+      d.buys.forEach(b => { if (b && b.id && typeof b.cents === 'number' && !have.has(b.id)) state.buys.push(b); });
+    }
+    save(); render(); toast('Backup importado');
+  } catch (e) { toast('Arquivo de backup inválido'); }
+});
+
+/* ---------- events ---------- */
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('[data-tab],[data-act]');
+  if (!t) { if (ev.target.id === 'sheet') closeSheet(); return; }
+  if (t.dataset.tab) { route = {tab: t.dataset.tab, setId: null}; render(); window.scrollTo(0, 0); return; }
+  const a = t.dataset.act;
+  if (a === 'open') openCard(t.dataset.id);
+  else if (a === 'inc') change(t.dataset.v, 1);
+  else if (a === 'dec') change(t.dataset.v, -1);
+  else if (a === 'close') closeSheet();
+  else if (a === 'more') runSearch(false);
+  else if (a === 'retrysearch') runSearch(true);
+  else if (a === 'retrysets') { setsErr = ''; setsCache = null; render(); }
+  else if (a === 'retryset') { setErr = ''; setData = null; render(); }
+  else if (a === 'set') { route.setId = t.dataset.id; setData = null; setErr = ''; render(); window.scrollTo(0, 0); }
+  else if (a === 'back') { route.setId = null; render(); }
+  else if (a === 'newbuy') openBuy();
+  else if (a === 'editbuy') openBuy(t.dataset.id);
+  else if (a === 'delbuy') {
+    if (t.dataset.armed) { state.buys = state.buys.filter(x => x.id !== t.dataset.id); save(); closeSheet(); toast('Compra excluída'); }
+    else { t.dataset.armed = '1'; t.textContent = 'Toque de novo para excluir'; }
+  }
+  else if (a === 'export') exportData();
+  else if (a === 'import') $('#importer').click();
+});
+document.addEventListener('submit', ev => {
+  if (ev.target.id === 'bf') { ev.preventDefault(); submitBuy(ev.target); return; }
+  if (ev.target.id !== 'sf') return;
+  ev.preventDefault();
+  search.q = $('#q').value.trim(); runSearch(true);
+});
+document.addEventListener('input', ev => {
+  if (ev.target.id === 'cf') {
+    colFilter = ev.target.value;
+    const pos = ev.target.selectionStart;
+    render(); const n = $('#cf'); if (n) { n.focus(); n.setSelectionRange(pos, pos); }
+  } else if (ev.target.id === 'sfilter' && setsCache) {
+    $('#setlist').innerHTML = setRows(ev.target.value);
+  }
+});
+document.addEventListener('change', ev => {
+  if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', items: [], page: 0, more: false, loading: false, err: ''}; toast('Idioma alterado'); }
+});
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
+
+render();
+</script>
+</body>
+</html>
