@@ -97,6 +97,7 @@ input,select{font-size:16px}
 .seg button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
 .seg button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
 .note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.photo .actions{flex-wrap:wrap;margin-top:8px}
 .manual{margin:-6px 0 12px}
 .linkbtn{background:none;border:0;color:var(--accent);padding:6px 0;font-weight:600;text-align:left}
 @media (prefers-reduced-motion:no-preference){.panel{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
@@ -112,6 +113,8 @@ input,select{font-size:16px}
 </nav>
 <div id="sheet" hidden><div class="panel" id="panel" role="dialog" aria-modal="true"></div></div>
 <input type="file" id="importer" accept="application/json" hidden>
+<input type="file" id="photo-cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="photo-lib" accept="image/*" hidden>
 <script>
 const API = 'https://api.tcgdex.net/v2';
 const KEY = 'tcg.colecao.v1';
@@ -186,7 +189,10 @@ function toast(msg) {
 function tile(c, o) {
   o = o || {};
   const q = o.qty || 0;
-  const img = c.image ? '<img loading="lazy" alt="' + esc(c.name) + '" src="' + esc(c.image) + '/low.webp">' : '<span class="noimg">' + (c.manual ? 'cadastro manual' : 'sem imagem') + '</span>';
+  const photo = c.photo || (state.cards[c.id] && state.cards[c.id].photo) || '';
+  const img = c.image ? '<img loading="lazy" alt="' + esc(c.name) + '" src="' + esc(c.image) + '/low.webp">'
+    : photo ? '<img alt="' + esc(c.name) + '" src="' + esc(photo) + '">'
+    : '<span class="noimg">' + (c.manual ? 'cadastro manual' : 'sem imagem') + '</span>';
   const sub = c.manual ? [c.setName, c.localId].filter(Boolean).join(' ') : (c.localId || '');
   return '<button class="tile' + (o.dim ? ' dim' : '') + '" data-act="open" data-id="' + esc(c.id) + '" data-lang="' + esc(c.lang || '') + '"><span class="art">' + img +
     (q ? '<b class="qty">' + q + '</b>' : '') + '</span><span class="nm">' + flag((state.cards[c.id] && state.cards[c.id].ownLang) || c.lang) + esc(c.name) + '</span><span class="id">' + esc(sub) + '</span></button>';
@@ -373,12 +379,21 @@ function renderSheet() {
   const c = current, e = state.cards[c.id];
   let keys = VARIANTS.filter(k => c.variants && c.variants[k]);
   if (!keys.length) keys = ['normal'];
-  const img = c.image ? '<img alt="' + esc(c.name) + '" src="' + esc(c.image) + '/high.webp">' : '';
+  const ph = (e && e.photo) || c._photo || '';
+  const img = c.image ? '<img alt="' + esc(c.name) + '" src="' + esc(c.image) + '/high.webp">'
+    : ph ? '<img alt="Foto da minha carta" src="' + esc(ph) + '">' : '';
   const setLine = c.manual ? esc([c.set.name, c.localId && 'nº ' + c.localId].filter(Boolean).join(' · '))
     : (c.set ? esc(c.set.name) + (c.set.cardCount ? ' · ' + esc(c.localId) + '/' + c.set.cardCount.official : '') : '');
   let h = '<div class="card-head">' + img + '<div class="meta"><h2>' + flag(c._lang) + esc(c.name) + '</h2><p class="muted" style="margin:0">' + setLine + '</p>' +
     (c.rarity ? '<p class="muted" style="margin:4px 0 0">' + esc(c.rarity) + '</p>' : '') + (c.illustrator ? '<p class="muted" style="margin:4px 0 0">Arte: ' + esc(c.illustrator) + '</p>' : '') + '</div></div>';
   h += keys.map(k => '<div class="row"><span>' + VLABEL[k] + '</span><div class="step"><button data-act="dec" data-v="' + k + '" aria-label="Remover ' + VLABEL[k] + '">−</button><output>' + ((e && e.qty[k]) || 0) + '</output><button data-act="inc" data-v="' + k + '" aria-label="Adicionar ' + VLABEL[k] + '">+</button></div></div>').join('');
+  if (!c.image) {
+    h += '<div class="photo"><p class="lbl" style="margin:16px 0 0">Foto da minha carta</p><p class="note" style="margin:4px 0 0">' +
+      (c.manual ? 'Cartas cadastradas à mão não têm imagem. Use uma foto da sua.' : 'A TCGdex ainda não tem a imagem desta carta. Use uma foto da sua.') + '</p><div class="actions">' +
+      '<button class="btn ghost" type="button" data-act="photocam">' + (ph ? 'Tirar outra' : 'Tirar foto') + '</button>' +
+      '<button class="btn ghost" type="button" data-act="photolib">Da galeria</button>' +
+      (ph ? '<button class="btn ghost" type="button" data-act="rmphoto">Remover</button>' : '') + '</div></div>';
+  }
   const own = (e && e.ownLang) || c._own || c._lang || 'pt';
   const note = (c._lang === 'en' && !c.manual)
     ? (own === 'pt' ? 'Os dados desta carta estão em inglês na TCGdex. A sua está marcada como português.'
@@ -394,10 +409,44 @@ function change(v, d) {
   let e = state.cards[c.id];
   if (!e) e = state.cards[c.id] = {id: c.id, name: c.name, image: c.image, localId: c.localId, rarity: c.rarity,
     setId: c.set && c.set.id, setName: c.set && c.set.name, setTotal: c.set && c.set.cardCount && c.set.cardCount.official,
-    lang: c._lang, ownLang: c._own || c._lang, manual: !!c.manual, added: Date.now(), qty: {}};
+    lang: c._lang, ownLang: c._own || c._lang, photo: c._photo || '', manual: !!c.manual, added: Date.now(), qty: {}};
   e.qty[v] = Math.max(0, (e.qty[v] || 0) + d);
   if (!total(e)) delete state.cards[c.id];
   save(); renderSheet();
+}
+// Reduz a foto (lado maior de 400 px, JPEG) para ocupar pouco espaço no navegador.
+function shrink(file, max) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+      const w = Math.round(im.naturalWidth * k), h = Math.round(im.naturalHeight * k);
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(im, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(cv.toDataURL('image/jpeg', 0.7));
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); reject(new Error('imagem')); };
+    im.src = url;
+  });
+}
+async function onPhoto(file) {
+  if (!file || !current) return;
+  try {
+    const data = await shrink(file, 400);
+    if (JSON.stringify(state).length + data.length > 4200000) { toast('Espaço do navegador quase cheio. Exporte um backup e remova algumas fotos.'); return; }
+    const e = state.cards[current.id];
+    if (e) { e.photo = data; save(); } else current._photo = data;
+    renderSheet();
+    toast(e ? 'Foto salva' : 'Foto anexada. Ela é salva quando você registrar a carta.');
+  } catch (err) { toast('Não consegui ler essa imagem.'); }
+}
+function rmPhoto() {
+  if (!current) return;
+  const e = state.cards[current.id];
+  if (e) { delete e.photo; save(); }
+  delete current._photo;
+  renderSheet();
 }
 function setOwn(l) {
   if (!current) return;
@@ -498,6 +547,9 @@ document.addEventListener('click', ev => {
   if (a === 'open') openCard(t.dataset.id, t.dataset.lang);
   else if (a === 'newcard') openManual();
   else if (a === 'own') setOwn(t.dataset.l);
+  else if (a === 'photocam') $('#photo-cam').click();
+  else if (a === 'photolib') $('#photo-lib').click();
+  else if (a === 'rmphoto') rmPhoto();
   else if (a === 'inc') change(t.dataset.v, 1);
   else if (a === 'dec') change(t.dataset.v, -1);
   else if (a === 'close') closeSheet();
@@ -533,6 +585,7 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
+  if (ev.target.id === 'photo-cam' || ev.target.id === 'photo-lib') { const f = ev.target.files[0]; ev.target.value = ''; onPhoto(f); return; }
   if (ev.target.id === 'lang') { state.lang = ev.target.value; save(); setsCache = null; setData = null; search = {q: '', all: [], shown: 0, sorted: false, loading: false, err: ''}; toast('Idioma alterado'); }
 });
 document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
