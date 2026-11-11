@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f2a3d">
+<link rel="icon" href="legado-logo.png" type="image/png">
+<link rel="apple-touch-icon" href="legado-logo.png">
 <meta name="apple-mobile-web-app-title" content="Legado TCG">
 <title>Legado TCG</title>
 <style>
@@ -25,9 +27,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.4 var(--font);
   padding-top:max(12px,env(safe-area-inset-top,0px));padding-bottom:calc(84px + env(safe-area-inset-bottom,0px));min-height:100vh}
 h1{font-size:20px;margin:0;letter-spacing:-.01em}
 .brand{display:flex;align-items:center;gap:10px;margin:0 0 12px}
-.brand .mark{width:30px;height:30px;border-radius:50%;flex:none;border:2px solid var(--ink);
-  background:linear-gradient(135deg,var(--green) 0 33%,var(--blue) 33% 66%,var(--orange) 66%);position:relative}
-.brand .mark::after{content:"";position:absolute;inset:50% auto auto 50%;width:9px;height:9px;transform:translate(-50%,-50%);border-radius:50%;background:var(--surface);border:2px solid var(--ink)}
+.brand .mark{width:44px;height:44px;border-radius:12px;flex:none;display:block}
 .brand b{font-size:17px;letter-spacing:-.01em}
 .brand small{display:block;font-size:11px;color:var(--muted);margin-top:-2px}
 .stripe{height:4px;border-radius:99px;margin:0 0 14px;background:linear-gradient(90deg,var(--green) 0 33.3%,var(--blue) 33.3% 66.6%,var(--orange) 66.6%)}
@@ -121,7 +121,7 @@ input,select{font-size:16px}
 </style>
 </head>
 <body>
-<header class="brand"><span class="mark" aria-hidden="true"></span><div><b>Legado TCG</b><small>@legado.pkmtcg</small></div></header>
+<header class="brand"><img class="mark" src="legado-logo.png" width="44" height="44" alt="Logo Legado TCG"><div><b>Legado TCG</b><small>@legado.pkmtcg</small></div></header>
 <div class="stripe" aria-hidden="true"></div>
 <div id="view"></div>
 <nav id="nav" aria-label="Seções">
