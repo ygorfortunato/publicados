@@ -155,6 +155,8 @@ let route = {tab: 'col', setId: null};
 const PAGE = 60;
 let search = {q: '', base: [], all: [], shown: 0, sorted: false, loading: false, err: ''};
 let searchSort = 'recent', setSort = 'recent';
+const COLSORTS = {added:'Adicionadas recentemente', numAsc:'Número (menor primeiro)', numDesc:'Número (maior primeiro)', name:'Nome (A–Z)', set:'Set (A–Z)', qty:'Mais unidades'};
+let colSort = 'added';
 const SETSORTS = {recent: 'Mais recentes', mine: 'Mais cartas na coleção', name: 'Nome (A–Z)'};
 const SORTS = {recent: 'Mais recentes', numAsc: 'Número (menor primeiro)', numDesc: 'Número (maior primeiro)', name: 'Nome (A–Z)', set: 'Set (A–Z)'};
 let setsCache = null, setsErr = '', setData = null, setErr = '', current = null, colFilter = '', setsLoading = false, setLoadingId = null;
@@ -228,7 +230,17 @@ function viewCollection() {
   const all = Object.values(state.cards);
   const units = all.reduce((a, e) => a + total(e), 0);
   const setIds = new Set(all.map(e => e.setId).filter(Boolean));
-  let list = all.slice().sort((a, b) => (b.added || 0) - (a.added || 0));
+  const num = (a, b) => String(a.localId || '').localeCompare(String(b.localId || ''), 'en', {numeric: true});
+  const nm = (a, b) => (a.name || '').localeCompare(b.name || '', 'pt', {sensitivity: 'base'});
+  const st = e => e.setName || '\uffff';
+  const recent = (a, b) => (b.added || 0) - (a.added || 0);
+  let list = all.slice();
+  if (colSort === 'numAsc') list.sort((a, b) => num(a, b) || nm(a, b));
+  else if (colSort === 'numDesc') list.sort((a, b) => num(b, a) || nm(a, b));
+  else if (colSort === 'name') list.sort((a, b) => nm(a, b) || num(a, b));
+  else if (colSort === 'set') list.sort((a, b) => st(a).localeCompare(st(b), 'pt', {sensitivity: 'base'}) || num(a, b));
+  else if (colSort === 'qty') list.sort((a, b) => total(b) - total(a) || recent(a, b));
+  else list.sort(recent);
   const f = colFilter.trim().toLowerCase();
   if (f) list = list.filter(e => (e.name || '').toLowerCase().includes(f) || (e.setName || '').toLowerCase().includes(f));
   let h = '<div class="top"><h1>Minha coleção</h1><select id="lang" aria-label="Idioma"><option value="pt">Português</option><option value="en">English</option></select></div>';
@@ -238,6 +250,8 @@ function viewCollection() {
     h += '<div class="empty"><h2>Nenhuma carta ainda</h2><p class="muted">Busque a primeira carta que você tem e toque em + para registrar.</p><button class="btn" data-tab="search">Buscar carta</button></div>';
   } else {
     h += '<div class="field"><input id="cf" type="search" placeholder="Filtrar por nome ou set" value="' + esc(colFilter) + '"></div>';
+    h += '<div class="sortrow"><span class="muted">' + list.length + ' ' + (list.length === 1 ? 'carta' : 'cartas') + '</span><select id="colsort" aria-label="Ordenar por">' +
+      Object.keys(COLSORTS).map(k => '<option value="' + k + '"' + (colSort === k ? ' selected' : '') + '>' + COLSORTS[k] + '</option>').join('') + '</select></div>';
     h += '<div class="grid">' + list.map(e => tile(e, {qty: total(e)})).join('') + '</div>';
     if (!list.length) h += '<p class="muted">Nada encontrado para esse filtro.</p>';
   }
@@ -625,6 +639,7 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
+  if (ev.target.id === 'colsort') { colSort = ev.target.value; render(); return; }
   if (ev.target.id === 'setsort') { setSort = ev.target.value; if (setsCache) $('#setlist').innerHTML = setRows($('#sfilter').value); return; }
   if (ev.target.id === 'sortsel') { searchSort = ev.target.value; applySort(); search.shown = PAGE; render(); return; }
   if (ev.target.id === 'photo-cam' || ev.target.id === 'photo-lib') { const f = ev.target.files[0]; ev.target.value = ''; onPhoto(f); return; }
