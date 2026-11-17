@@ -77,11 +77,17 @@
     .class-customizer { display:grid; grid-template-columns:310px minmax(0,1fr); min-height:450px; margin-top:20px; overflow:hidden; border-color:rgba(203,155,100,.52); background:linear-gradient(130deg,#171427 0%,#29223a 58%,#331d26 100%); }
     .class-showcase { position:relative; display:grid; place-items:center; padding:24px; overflow:hidden; border-right:1px solid rgba(244,230,208,.12); background:radial-gradient(circle at 50% 40%,rgba(242,140,40,.2),transparent 35%),linear-gradient(180deg,rgba(22,20,38,.3),rgba(17,9,17,.72)); }
     .class-showcase::before { content:"Seleção de classe"; position:absolute; top:17px; left:20px; color:var(--ocre); font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; }
-    .class-portrait { width:min(100%,240px); aspect-ratio:1 / 2; border:1px solid rgba(255,197,61,.78); border-radius:9px; background-image:linear-gradient(0deg,rgba(17,9,17,.16),rgba(17,9,17,.02)),url("assets/classes-fogueira-masculino.png"); background-repeat:no-repeat; background-size:100% 100%,300% 100%; box-shadow:0 17px 35px rgba(0,0,0,.42),0 0 0 6px rgba(84,42,47,.45); transition:background-position .42s ease,transform .42s ease; }
+    .class-portrait { position:relative; width:min(100%,240px); aspect-ratio:1 / 2; overflow:hidden; border:1px solid rgba(255,197,61,.78); border-radius:9px; background-image:linear-gradient(0deg,rgba(17,9,17,.16),rgba(17,9,17,.02)),url("assets/classes-fogueira-masculino.png"); background-repeat:no-repeat; background-size:100% 100%,300% 100%; box-shadow:0 17px 35px rgba(0,0,0,.42),0 0 0 6px rgba(84,42,47,.45); transition:background-position .42s ease,transform .42s ease,filter .3s ease; }
     .class-portrait[data-gender="feminino"] { background-image:linear-gradient(0deg,rgba(17,9,17,.16),rgba(17,9,17,.02)),url("assets/classes-fogueira-feminino.png"); }
     .class-portrait[data-class="guardiao"] { background-position:0 0,0 50%; }
     .class-portrait[data-class="exploradora"] { background-position:0 0,50% 50%; }
     .class-portrait[data-class="arcanista"] { background-position:0 0,100% 50%; }
+    .gear-overlay { position:absolute; z-index:2; display:none; pointer-events:none; background-image:url("assets/equipamentos-fogueira.png"); background-repeat:no-repeat; background-size:300% 100%; filter:drop-shadow(0 4px 5px rgba(17,9,17,.58)); }
+    .gear-cloak { bottom:-4%; left:5%; width:90%; aspect-ratio:1; background-position:0 50%; }
+    .gear-crown { top:13%; left:25%; width:50%; aspect-ratio:1; background-position:50% 50%; }
+    .gear-amulet { top:40%; left:31%; width:38%; aspect-ratio:1; background-position:100% 50%; filter:drop-shadow(0 0 8px rgba(255,197,61,.48)); }
+    .class-portrait[data-cloak="manto-brasa"] .gear-cloak,.class-portrait[data-head="coroa-vigia"] .gear-crown,.class-portrait[data-amulet="selo-aurora"] .gear-amulet { display:block; }
+    .class-portrait[data-cloak="manto-brasa"] { box-shadow:0 17px 35px rgba(0,0,0,.42),0 0 0 6px rgba(118,39,39,.52),0 0 28px rgba(242,140,40,.2); }
     .class-content { display:flex; flex-direction:column; justify-content:center; padding:34px; }
     .class-content h2 { max-width:600px; margin:7px 0 8px; font-size:clamp(1.8rem,3vw,2.55rem); line-height:.96; }
     .class-description { max-width:610px; margin:0 0 17px; color:#dccbbb; font-size:.94rem; line-height:1.5; }
@@ -191,6 +197,23 @@
     .building strong,.building small { display:block; }
     .building strong { font-family:Fraunces,Georgia,serif; font-size:.98rem; }
     .building small { margin-top:2px; color:var(--muted); font-size:.72rem; }
+    .armory-shop { grid-column:1 / -1; padding:22px; scroll-margin-top:18px; }
+    .shop-heading { display:flex; align-items:end; justify-content:space-between; gap:14px; margin-bottom:16px; }
+    .shop-heading h3 { margin:6px 0 0; font-size:1.48rem; }
+    .shop-heading p { max-width:560px; margin:0; color:var(--muted); font-size:.82rem; line-height:1.45; }
+    .shop-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .shop-item { min-width:0; padding:11px; border:1px solid rgba(203,155,100,.24); border-radius:10px; background:linear-gradient(145deg,rgba(17,9,17,.34),rgba(84,42,47,.16)); }
+    .shop-item.equipped { border-color:var(--brilho); box-shadow:inset 0 0 0 1px rgba(255,197,61,.18); }
+    .item-art { width:100%; aspect-ratio:1; margin-bottom:8px; border:1px solid rgba(255,197,61,.2); border-radius:7px; background-image:radial-gradient(circle at 50% 60%,rgba(242,140,40,.17),transparent 62%),url("assets/equipamentos-fogueira.png"); background-repeat:no-repeat; background-size:100% 100%,300% 100%; }
+    .item-art[data-item="manto-brasa"] { background-position:0 0,0 50%; }
+    .item-art[data-item="coroa-vigia"] { background-position:0 0,50% 50%; }
+    .item-art[data-item="selo-aurora"] { background-position:0 0,100% 50%; }
+    .item-slot { color:var(--ocre); font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
+    .shop-item h4 { margin:4px 0 4px; font-family:Fraunces,Georgia,serif; font-size:1.02rem; line-height:1.05; }
+    .shop-item p { min-height:2.9em; margin:0; color:var(--muted); font-size:.71rem; line-height:1.35; }
+    .shop-buy { width:100%; margin-top:10px; padding:8px; color:var(--sombra); font-size:.74rem; font-weight:700; border:0; border-radius:7px; background:var(--brilho); transition:transform .15s,filter .15s; }
+    .shop-buy:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.05); }
+    .shop-buy:disabled { cursor:not-allowed; color:rgba(244,230,208,.52); background:rgba(244,230,208,.14); }
     .journey-data { grid-column:1 / -1; padding:22px; }
     .journey-data h3 { margin:7px 0 6px; font-size:1.38rem; }
     .journey-data > p { max-width:720px; margin:0; color:var(--muted); font-size:.84rem; line-height:1.48; }
@@ -228,8 +251,9 @@
     @media (max-width:570px) { .shell { width:min(100% - 20px,1190px); padding-top:15px; } .topbar { align-items:flex-start; flex-direction:column; } .nav { width:100%; } .hero { min-height:425px; } .hero-copy { padding:34px 24px 15px; } h1 { font-size:3.05rem; } .hero-stats { padding:15px 24px 24px; } .customizer-copy { padding:22px 18px; } .appearance-choices { grid-template-columns:1fr; gap:10px; } .mission { grid-template-columns:auto 1fr; } .reward { grid-column:2; } .mission-action { grid-column:1 / 3; margin-left:52px; } .camp-body { max-width:70%; } }
     @media (max-width:840px) { .class-customizer { grid-template-columns:1fr; } .class-showcase { min-height:395px; border-right:0; border-bottom:1px solid rgba(244,230,208,.12); } .class-portrait { width:196px; } }
     @media (max-width:570px) { .class-content { padding:24px 17px; } .class-options { grid-template-columns:1fr; } .class-option { display:grid; grid-template-columns:64px 1fr; column-gap:9px; align-items:center; } .class-option .mini-art { grid-row:span 2; margin:0; } .class-option small { align-self:start; } }
-    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
+    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
     @media (max-width:480px) { .gate-top,.gate-step,.gate-footer { padding-right:18px; padding-left:18px; } .gate-footer { align-items:stretch; flex-direction:column; } .start-button { width:100%; } }
+    @media (max-width:570px) { .shop-heading { align-items:flex-start; flex-direction:column; } .shop-grid { grid-template-columns:1fr; } .shop-item { display:grid; grid-template-columns:90px 1fr; column-gap:11px; align-items:start; } .item-art { grid-row:span 4; margin:0; } .shop-buy { grid-column:2; } }
   </style>
 </head>
 <body>
@@ -247,7 +271,7 @@
 
     <section class="tab-view active" data-view="hoje">
       <section class="panel class-customizer" aria-label="Personalização do personagem">
-        <div class="class-showcase"><div class="class-portrait" id="classPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato da classe selecionada"></div></div>
+        <div class="class-showcase"><div class="class-portrait" id="classPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato da classe selecionada"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span></div></div>
         <div class="class-content">
           <span class="eyebrow">Seu personagem</span><h2 id="className">Guardião da Brasa</h2>
           <p class="class-description" id="classDescription">Fica de vigia quando a noite se alonga. É uma presença firme, que transforma disciplina em abrigo para o próprio reino.</p>
@@ -299,12 +323,13 @@
     <section class="tab-view" data-view="reino">
       <div class="view-header"><div><span class="eyebrow">Seu espaço de progresso</span><h2>O reino em evolução</h2></div><p>Ouro, itens e construções serão os sinais visuais da constância que você está acumulando.</p></div>
       <div class="realm-grid">
-        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"></div><div><span class="eyebrow">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span>Nível 7</span><span><span id="realmGold">152</span> ouro</span></div></div></section>
+        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span></div><div><span class="eyebrow">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span>Nível 7</span><span><span id="realmGold">152</span> ouro</span></div></div></section>
         <section class="panel buildings"><span class="eyebrow">Construções</span><div class="building"><span class="building-icon">♨</span><div><strong>Fogueira central</strong><small>Nível 1 · aquece o início da jornada</small></div></div><div class="building"><span class="building-icon">⌂</span><div><strong>Biblioteca</strong><small>Em breve · cresce com suas leituras</small></div></div><div class="building"><span class="building-icon">✦</span><div><strong>Arsenal de aparências</strong><small>Em breve · compre itens com ouro</small></div></div></section>
+        <section class="panel armory-shop" id="armoryShop"><div class="shop-heading"><div><span class="eyebrow">Arsenal de aparências</span><h3>Mercador da Fogueira</h3></div><p>Use o ouro conquistado nas missões para comprar peças. Ao equipá-las, elas aparecem no retrato do seu personagem.</p></div><div class="shop-grid"><article class="shop-item" data-shop-item="manto-brasa"><div class="item-art" data-item="manto-brasa" aria-hidden="true"></div><span class="item-slot">Manto</span><h4>Manto das Brasas</h4><p>Uma capa cerimonial em vermelho profundo, com o calor da fogueira.</p><button class="shop-buy" type="button" data-item="manto-brasa"></button></article><article class="shop-item" data-shop-item="coroa-vigia"><div class="item-art" data-item="coroa-vigia" aria-hidden="true"></div><span class="item-slot">Cabeça</span><h4>Coroa do Vigia</h4><p>Metal dourado e uma gema âmbar para quem sustenta sua vigília.</p><button class="shop-buy" type="button" data-item="coroa-vigia"></button></article><article class="shop-item" data-shop-item="selo-aurora"><div class="item-art" data-item="selo-aurora" aria-hidden="true"></div><span class="item-slot">Relíquia</span><h4>Selo da Aurora</h4><p>Um amuleto que leva uma pequena chama junto ao coração.</p><button class="shop-buy" type="button" data-item="selo-aurora"></button></article></div></section>
         <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um backup completo: personagem, ouro, diário, missões, histórico de conclusões e campanhas. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup completo</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
       </div>
     </section>
-    <p class="source-note">Arte de abertura: <a href="https://pixabay.com/photos/fantasy-people-bonfire-group-5583344/" target="_blank" rel="noreferrer">PatoLenin / Pixabay</a>. Carta de construção: <a href="https://commons.wikimedia.org/wiki/File:Quaternius_-_3D_Card_Kit_-_Fantasy_-_16_Belltowers.png" target="_blank" rel="noreferrer">Quaternius / CC0</a>. Artes de classe: ilustrações originais geradas para este protótipo.</p>
+    <p class="source-note">Arte de abertura: <a href="https://pixabay.com/photos/fantasy-people-bonfire-group-5583344/" target="_blank" rel="noreferrer">PatoLenin / Pixabay</a>. Carta de construção: <a href="https://commons.wikimedia.org/wiki/File:Quaternius_-_3D_Card_Kit_-_Fantasy_-_16_Belltowers.png" target="_blank" rel="noreferrer">Quaternius / CC0</a>. Artes de classe e equipamentos: ilustrações originais geradas para este protótipo.</p>
   </main>
 
   <section class="journey-gate" id="journeyGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -326,7 +351,16 @@
     let savedState = {};
     try { savedState = JSON.parse(localStorage.getItem('reino-state') || '{}'); } catch { savedState = {}; }
     const defaultCampaigns = { vitalidade:{ completedDays:2, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } };
-    const state = { water:0, reading:0, gold:152, xp:280, done:{}, journal:'', selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, ...savedState, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [] };
+    const equipmentCatalog = {
+      'manto-brasa': { slot:'cloak', name:'Manto das Brasas', cost:80 },
+      'coroa-vigia': { slot:'head', name:'Coroa do Vigia', cost:120 },
+      'selo-aurora': { slot:'amulet', name:'Selo da Aurora', cost:60 }
+    };
+    const equipmentSlots = ['cloak','head','amulet'];
+    const sanitizeInventory = inventory => [...new Set(Array.isArray(inventory) ? inventory.filter(id => equipmentCatalog[id]) : [])];
+    const sanitizeEquipped = (equipped, inventory) => Object.fromEntries(equipmentSlots.map(slot => { const item = equipped?.[slot]; return [slot, inventory.includes(item) && equipmentCatalog[item]?.slot === slot ? item : null]; }));
+    const savedInventory = sanitizeInventory(savedState.inventory);
+    const state = { water:0, reading:0, gold:152, xp:280, done:{}, journal:'', selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
     if (!state.journeyStarted) { state.selectedClass = null; state.gender = null; }
     const classProfiles = {
       guardiao: { names:{masculino:'Guardião da Brasa',feminino:'Guardiã da Brasa'}, description:'Fica de vigia quando a noite se alonga. É uma presença firme, que transforma disciplina em abrigo para o próprio reino.', meta:'Foco narrativo · Vitalidade e proteção' },
@@ -352,7 +386,7 @@
     const renderCharacter = () => {
       const key = activeClassKey(); const gender = activeGender(); const profile = profileFor(); const name = profileName();
       document.querySelectorAll('.class-portrait,.mini-art').forEach(element => element.dataset.gender = gender);
-      document.querySelectorAll('.class-portrait').forEach(element => { element.dataset.class = key; element.setAttribute('aria-label', `Retrato de ${name}`); });
+      document.querySelectorAll('.class-portrait').forEach(element => { element.dataset.class = key; element.dataset.cloak = state.equipped.cloak || ''; element.dataset.head = state.equipped.head || ''; element.dataset.amulet = state.equipped.amulet || ''; element.setAttribute('aria-label', `Retrato de ${name}`); });
       document.getElementById('className').textContent = name;
       document.getElementById('classDescription').textContent = profile.description;
       document.getElementById('classMeta').textContent = profile.meta;
@@ -363,6 +397,16 @@
       document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
       document.querySelectorAll('[data-gender-choice]').forEach(element => { const selected = state.gender === element.dataset.genderChoice; element.classList.toggle('selected', selected); element.setAttribute('aria-pressed', String(selected)); });
       document.querySelectorAll('[data-gate-class]').forEach(element => { const selected = state.selectedClass === element.dataset.gateClass; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
+    };
+    const renderShop = () => {
+      Object.entries(equipmentCatalog).forEach(([id,item]) => {
+        const owned = state.inventory.includes(id); const equipped = state.equipped[item.slot] === id;
+        const card = document.querySelector(`[data-shop-item="${id}"]`); const button = card.querySelector('.shop-buy');
+        card.classList.toggle('equipped', equipped);
+        button.dataset.item = id; button.disabled = !owned && state.gold < item.cost;
+        if (!owned) { button.dataset.action = 'buy-equipment'; button.textContent = `Comprar · ${item.cost} ouro`; }
+        else { button.dataset.action = 'toggle-equipment'; button.textContent = equipped ? 'Remover visual' : 'Equipar agora'; }
+      });
     };
     const renderGate = () => {
       const ready = Boolean(state.gender && state.selectedClass);
@@ -396,12 +440,25 @@
       document.getElementById('xpValue').textContent = `${state.xp} / 400 XP`; document.getElementById('xpBar').style.width = `${Math.min(100,state.xp / 400 * 100)}%`;
       document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', Boolean(state.done[mission.dataset.mission])));
       const completed = Object.keys(state.done).length; document.getElementById('missionCount').textContent = completed === 4 ? 'Jornada concluída' : `${4 - completed} aguardando`;
-      renderCampaigns(); renderCharacter(); renderGate(); setActiveTab(state.activeTab);
+      renderCampaigns(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
     };
     const award = (xp,gold,mission) => { if (state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; state.missionHistory = [...state.missionHistory, { id:mission, completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
     const saveJournal = (source, savedId) => { state.journal = source.value; journals.filter(other => other !== source).forEach(other => other.value = state.journal); save(); const notice = document.getElementById(savedId); notice.classList.add('show'); setTimeout(() => notice.classList.remove('show'),2200); };
+    const buyEquipment = id => {
+      const item = equipmentCatalog[id];
+      if (!item || state.inventory.includes(id)) return;
+      if (state.gold < item.cost) { message('Ainda não há ouro suficiente para essa peça.'); return; }
+      state.gold -= item.cost; state.inventory = [...state.inventory, id]; state.equipped[item.slot] = id;
+      save(); render(); message(`${item.name} foi comprado e equipado.`);
+    };
+    const toggleEquipment = id => {
+      const item = equipmentCatalog[id];
+      if (!item || !state.inventory.includes(id)) return;
+      const equipping = state.equipped[item.slot] !== id; state.equipped[item.slot] = equipping ? id : null;
+      save(); render(); message(equipping ? `${item.name} equipado.` : `${item.name} guardado no inventário.`);
+    };
     const exportBackup = () => {
-      const backup = { app:'reino-em-evolucao', version:2, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
+      const backup = { app:'reino-em-evolucao', version:3, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
       const url = URL.createObjectURL(blob); const link = document.createElement('a');
       link.href = url; link.download = `reino-em-evolucao-backup-${new Date().toISOString().slice(0,10)}.json`;
@@ -409,7 +466,7 @@
       setBackupStatus('Backup baixado. Guarde este arquivo em um local seguro.'); message('Backup da jornada criado.');
     };
     const restoreState = backup => {
-      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
+      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
       const source = backup.state;
       const number = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback; };
       const done = Object.fromEntries(Object.entries(source.done || {}).filter(([key,value]) => missionIds.has(key) && value === true));
@@ -418,7 +475,8 @@
       const journeyStarted = source.journeyStarted === true && Boolean(selectedClass && gender);
       const campaign = (key, fallback) => { const value = source.campaigns?.[key] || {}; const targetDays = Math.round(number(value.targetDays, fallback.targetDays, 1, 365)); return { completedDays:Math.round(number(value.completedDays, fallback.completedDays, 0, targetDays)), targetDays }; };
       const missionHistory = Array.isArray(source.missionHistory) ? source.missionHistory.filter(entry => entry && missionIds.has(entry.id) && typeof entry.completedAt === 'string').slice(-365).map(entry => ({ id:entry.id, completedAt:entry.completedAt, xp:Math.round(number(entry.xp,0,0,1000000000)), gold:Math.round(number(entry.gold,0,0,1000000000)) })) : [];
-      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,152,0,1000000000)), xp:Math.round(number(source.xp,280,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', selectedClass:journeyStarted ? selectedClass : null, gender:journeyStarted ? gender : null, journeyStarted, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) } };
+      const inventory = sanitizeInventory(source.inventory); const equipped = sanitizeEquipped(source.equipped, inventory);
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,152,0,1000000000)), xp:Math.round(number(source.xp,280,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', selectedClass:journeyStarted ? selectedClass : null, gender:journeyStarted ? gender : null, journeyStarted, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, inventory, equipped };
     };
     const importBackup = async file => {
       if (!file) return;
@@ -430,7 +488,7 @@
       } catch (error) { setBackupStatus('Não foi possível importar este arquivo. Verifique se é um backup do Reino em Evolução.'); }
     };
     const resetJourney = () => {
-      const confirmed = window.confirm('Reiniciar a jornada? Isso apagará personagem, missões, ouro e diário deste dispositivo. Faça um backup antes se quiser guardar seu progresso.');
+      const confirmed = window.confirm('Reiniciar a jornada? Isso apagará personagem, missões, campanhas, ouro, inventário e diário deste dispositivo. Faça um backup antes se quiser guardar seu progresso.');
       if (!confirmed) return;
       localStorage.removeItem('reino-state'); window.location.reload();
     };
@@ -454,11 +512,13 @@
       if (action === 'clear-adult') award(15,6,'adult');
       if (action === 'record-food') message('Ocorrência registrada. Amanhã a jornada continua.');
       if (action === 'record-adult') message('Ocorrência registrada com honestidade. Sem perdas.');
-      if (action === 'shop') { setActiveTab('reino'); save(); message('A loja de equipamentos será a próxima sala do reino.'); }
+      if (action === 'shop') { setActiveTab('reino'); save(); requestAnimationFrame(() => document.getElementById('armoryShop').scrollIntoView({ behavior:'smooth', block:'start' })); }
       if (action === 'save-journal') saveJournal(document.getElementById('journal'), 'saved');
       if (action === 'save-journal-full') saveJournal(document.getElementById('journalFull'), 'savedFull');
       if (action === 'export-backup') exportBackup();
       if (action === 'reset-journey') resetJourney();
+      if (action === 'buy-equipment') buyEquipment(event.target.dataset.item);
+      if (action === 'toggle-equipment') toggleEquipment(event.target.dataset.item);
     });
     render();
   </script>
