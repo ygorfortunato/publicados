@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#262643">
+  <title>Fogueira · Reino em Evolução</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --noite: #262643; --ocre: #cb9b64; --fogo: #f28c28; --pergaminho: #f4e6d0; --brilho: #ffc53d; --por-do-sol: #d4727a; --terracota: #8c5a51; --vinho: #542a2f; --marrom: #644048; --azul-profundo: #161426; --base-quente: #2b151d; --sombra: #110911; --muted: #c7bcae; --line: rgba(244,230,208,.15);
+    }
+    * { box-sizing: border-box; }
+    body { min-height:100vh; margin:0; color:var(--pergaminho); font-family:"DM Sans",system-ui,sans-serif; background:radial-gradient(circle at 84% 5%,rgba(212,114,122,.18),transparent 24rem),radial-gradient(circle at 5% 72%,rgba(140,90,81,.22),transparent 30rem),linear-gradient(145deg,var(--azul-profundo),var(--noite) 52%,var(--base-quente)); }
+    button { font:inherit; cursor:pointer; }
+    .shell { width:min(1190px,calc(100% - 36px)); margin:0 auto; padding:24px 0 48px; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:24px; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--ocre); font-family:Fraunces,Georgia,serif; font-size:1.2rem; font-weight:700; letter-spacing:.01em; }
+    .brand-mark { position:relative; display:grid; width:39px; height:42px; place-items:center; color:var(--brilho); font-size:21px; border:1px solid rgba(203,155,100,.7); border-radius:48% 48% 44% 44%; background:var(--vinho); box-shadow:inset 0 0 16px rgba(242,140,40,.25); }
+    .brand-mark::after { content:""; position:absolute; inset:5px; border:1px solid rgba(255,197,61,.35); border-radius:50%; }
+    .nav { display:flex; gap:5px; overflow-x:auto; }
+    .nav button { padding:9px 12px; color:var(--muted); font-size:.88rem; border:0; border-radius:8px; background:transparent; white-space:nowrap; }
+    .nav button.active,.nav button:hover { color:var(--pergaminho); background:rgba(244,230,208,.1); }
+    .hero { position:relative; isolation:isolate; display:grid; grid-template-columns:minmax(0,1fr) 265px; min-height:355px; overflow:hidden; border:1px solid rgba(203,155,100,.44); border-radius:18px; background:var(--noite); box-shadow:0 22px 50px rgba(17,9,17,.35); }
+    .hero::before { content:""; position:absolute; z-index:-2; inset:0; background:url("assets/fantasy-bonfire.jpg") center 46% / cover no-repeat; filter:saturate(.78) contrast(1.05); }
+    .hero::after { content:""; position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(22,20,38,.98) 2%,rgba(38,38,67,.91) 42%,rgba(38,38,67,.17) 100%),linear-gradient(0deg,rgba(43,21,29,.5),transparent 65%); }
+    .hero-copy { display:flex; flex-direction:column; justify-content:center; padding:38px 15px 38px 42px; }
+    .eyebrow { color:var(--ocre); font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+    h1,h2,h3 { font-family:Fraunces,Georgia,serif; }
+    h1 { max-width:630px; margin:9px 0 14px; color:var(--pergaminho); font-size:clamp(2.55rem,5vw,4.9rem); font-weight:700; letter-spacing:-.055em; line-height:.91; }
+    .lead { max-width:570px; margin:0; color:#dfd2c1; font-size:1.04rem; line-height:1.55; }
+    .today { margin:15px 0 0; color:var(--ocre); font-size:.84rem; text-transform:capitalize; }
+    .hero-stats { display:grid; align-content:center; gap:10px; padding:28px 28px 28px 0; }
+    .level-orb { display:grid; width:92px; height:92px; place-items:center; margin-left:auto; color:var(--azul-profundo); font-family:Fraunces,Georgia,serif; font-size:2.05rem; font-weight:700; border:4px solid var(--brilho); border-radius:50%; background:var(--fogo); box-shadow:0 0 0 8px rgba(84,42,47,.7),0 10px 28px rgba(17,9,17,.42); }
+    .level-orb span { display:block; margin-top:-7px; font-family:"DM Sans",sans-serif; font-size:.56rem; font-weight:700; letter-spacing:.1em; text-align:center; text-transform:uppercase; }
+    .hud { padding:12px; border:1px solid rgba(244,230,208,.2); border-radius:10px; background:rgba(22,20,38,.76); backdrop-filter:blur(5px); }
+    .hud-line { display:flex; justify-content:space-between; gap:8px; color:var(--ocre); font-size:.72rem; font-weight:700; }
+    .hud-line strong { color:var(--pergaminho); }
+    .track { height:7px; margin-top:8px; overflow:hidden; border-radius:999px; background:rgba(17,9,17,.7); }
+    .track span { display:block; width:70%; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--fogo),var(--brilho)); transition:width .25s ease; }
+    .gold-hud { display:flex; justify-content:space-between; align-items:center; color:var(--pergaminho); font-size:.84rem; }
+    .gold-hud strong { color:var(--brilho); }
+    .customizer { display:grid; grid-template-columns:285px minmax(0,1fr); min-height:275px; margin-top:20px; overflow:hidden; border-color:rgba(203,155,100,.38); background:linear-gradient(125deg,var(--vinho),var(--azul-profundo) 65%); }
+    .avatar-stage { position:relative; display:grid; min-height:275px; place-items:end center; overflow:hidden; border-right:1px solid rgba(244,230,208,.12); background:radial-gradient(circle at 50% 37%,rgba(242,140,40,.36),transparent 24%),linear-gradient(180deg,#292b4b,#171427); }
+    .avatar-stage::before { content:"✦  ·  ✦"; position:absolute; top:24px; color:var(--brilho); font-size:.8rem; letter-spacing:1.5rem; opacity:.7; }
+    .avatar-stage::after { content:""; position:absolute; right:-30px; bottom:-56px; left:-30px; height:114px; border-radius:50%; background:radial-gradient(ellipse,rgba(203,155,100,.34),transparent 68%); }
+    .avatar { --outfit:#8c5a51; --trim:#cb9b64; position:relative; z-index:1; width:154px; height:226px; filter:drop-shadow(0 10px 12px rgba(17,9,17,.42)); }
+    .avatar-head { position:absolute; z-index:4; top:20px; left:53px; width:49px; height:55px; border:3px solid #542a2f; border-radius:42% 42% 46% 46%; background:#c98662; }
+    .avatar-hair { position:absolute; z-index:5; top:12px; left:48px; width:59px; height:34px; border-radius:50% 50% 42% 40%; background:#251b22; }
+    .avatar-hair::after { content:""; position:absolute; right:1px; bottom:-20px; width:11px; height:34px; border-radius:0 0 10px 10px; background:inherit; }
+    .avatar-cloak { position:absolute; z-index:1; top:64px; left:8px; width:138px; height:150px; background:color-mix(in srgb,var(--outfit),#161426 32%); clip-path:polygon(50% 0,100% 95%,50% 80%,0 95%); }
+    .avatar-body { position:absolute; z-index:2; top:70px; left:34px; width:86px; height:130px; border:3px solid #542a2f; background:linear-gradient(90deg,var(--outfit),var(--trim),var(--outfit)); clip-path:polygon(24% 0,76% 0,100% 100%,0 100%); }
+    .avatar-belt { position:absolute; z-index:4; top:138px; left:38px; width:79px; height:11px; border:2px solid #542a2f; background:var(--brilho); }
+    .avatar-belt::after { content:""; position:absolute; top:-2px; left:31px; width:10px; height:10px; border:2px solid #542a2f; border-radius:50%; background:var(--fogo); }
+    .avatar-boots { position:absolute; z-index:3; bottom:0; left:40px; width:76px; height:44px; border-bottom:7px solid #3b2025; background:linear-gradient(90deg,#644048 45%,transparent 45% 55%,#644048 55%); clip-path:polygon(7% 0,93% 0,100% 100%,0 100%); }
+    .amulet { position:absolute; z-index:6; top:89px; left:70px; display:grid; width:22px; height:22px; place-items:center; color:var(--vinho); font-size:14px; border:2px solid var(--brilho); border-radius:50%; background:var(--fogo); }
+    .avatar[data-outfit="viajante"] { --outfit:#644048; --trim:#d4727a; }
+    .avatar[data-outfit="guardiao"] { --outfit:#2f5364; --trim:#cb9b64; }
+    .avatar[data-outfit="alquimista"] { --outfit:#5c496f; --trim:#ffc53d; }
+    .avatar[data-hair="cobre"] .avatar-hair { background:#a85237; }
+    .avatar[data-hair="prata"] .avatar-hair { background:#c7c2bd; }
+    .avatar[data-amulet="lua"] .amulet { color:#262643; background:var(--pergaminho); }
+    .avatar[data-amulet="sol"] .amulet { color:#542a2f; background:var(--brilho); }
+    .customizer-copy { display:flex; flex-direction:column; justify-content:center; padding:24px 28px; }
+    .customizer-copy h2 { margin:7px 0 6px; font-size:1.6rem; }
+    .customizer-copy > p { max-width:560px; margin:0 0 17px; color:var(--muted); font-size:.86rem; line-height:1.48; }
+    .appearance-choices { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .choice-group { min-width:0; }
+    .choice-group > span { display:block; margin-bottom:7px; color:var(--ocre); font-size:.69rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .choices { display:flex; gap:5px; flex-wrap:wrap; }
+    .choice { padding:7px 8px; color:var(--muted); font-size:.74rem; border:1px solid rgba(203,155,100,.34); border-radius:6px; background:rgba(17,9,17,.32); }
+    .choice:hover { color:var(--pergaminho); border-color:var(--ocre); }
+    .choice.selected { color:var(--sombra); font-weight:700; border-color:var(--fogo); background:var(--fogo); }
+    .customizer-foot { margin-top:15px; color:#e1c6af; font-size:.73rem; }
+    .class-customizer { display:grid; grid-template-columns:310px minmax(0,1fr); min-height:450px; margin-top:20px; overflow:hidden; border-color:rgba(203,155,100,.52); background:linear-gradient(130deg,#171427 0%,#29223a 58%,#331d26 100%); }
+    .class-showcase { position:relative; display:grid; place-items:center; padding:24px; overflow:hidden; border-right:1px solid rgba(244,230,208,.12); background:radial-gradient(circle at 50% 40%,rgba(242,140,40,.2),transparent 35%),linear-gradient(180deg,rgba(22,20,38,.3),rgba(17,9,17,.72)); }
+    .class-showcase::before { content:"Seleção de classe"; position:absolute; top:17px; left:20px; color:var(--ocre); font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; }
+    .class-portrait { width:min(100%,240px); aspect-ratio:1 / 2; border:1px solid rgba(255,197,61,.78); border-radius:9px; background-image:linear-gradient(0deg,rgba(17,9,17,.16),rgba(17,9,17,.02)),url("assets/classes-fogueira-masculino.png"); background-repeat:no-repeat; background-size:100% 100%,300% 100%; box-shadow:0 17px 35px rgba(0,0,0,.42),0 0 0 6px rgba(84,42,47,.45); transition:background-position .42s ease,transform .42s ease; }
+    .class-portrait[data-gender="feminino"] { background-image:linear-gradient(0deg,rgba(17,9,17,.16),rgba(17,9,17,.02)),url("assets/classes-fogueira-feminino.png"); }
+    .class-portrait[data-class="guardiao"] { background-position:0 0,0 50%; }
+    .class-portrait[data-class="exploradora"] { background-position:0 0,50% 50%; }
+    .class-portrait[data-class="arcanista"] { background-position:0 0,100% 50%; }
+    .class-content { display:flex; flex-direction:column; justify-content:center; padding:34px; }
+    .class-content h2 { max-width:600px; margin:7px 0 8px; font-size:clamp(1.8rem,3vw,2.55rem); line-height:.96; }
+    .class-description { max-width:610px; margin:0 0 17px; color:#dccbbb; font-size:.94rem; line-height:1.5; }
+    .class-meta { display:inline-flex; width:max-content; max-width:100%; margin-bottom:22px; padding:7px 9px; color:var(--ocre); font-size:.72rem; font-weight:700; border:1px solid rgba(203,155,100,.34); border-radius:6px; background:rgba(17,9,17,.3); }
+    .class-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; max-width:670px; }
+    .class-option { min-width:0; padding:7px; color:var(--pergaminho); text-align:left; border:1px solid rgba(203,155,100,.24); border-radius:9px; background:rgba(17,9,17,.31); transition:transform .18s,border-color .18s,background .18s; }
+    .class-option:hover { transform:translateY(-2px); border-color:var(--ocre); background:rgba(203,155,100,.1); }
+    .class-option.selected { border-color:var(--fogo); background:rgba(242,140,40,.13); box-shadow:inset 0 0 0 1px rgba(255,197,61,.18); }
+    .mini-art { display:block; width:100%; aspect-ratio:1 / 1; margin-bottom:7px; border-radius:5px; background-image:linear-gradient(0deg,rgba(17,9,17,.12),rgba(17,9,17,0)),url("assets/classes-fogueira-masculino.png"); background-repeat:no-repeat; background-size:100% 100%,300% auto; }
+    .mini-art[data-gender="feminino"] { background-image:linear-gradient(0deg,rgba(17,9,17,.12),rgba(17,9,17,0)),url("assets/classes-fogueira-feminino.png"); }
+    .mini-art[data-class="guardiao"] { background-position:0 0,0 50%; }
+    .mini-art[data-class="exploradora"] { background-position:0 0,50% 50%; }
+    .mini-art[data-class="arcanista"] { background-position:0 0,100% 50%; }
+    .class-option strong { display:block; font-family:Fraunces,Georgia,serif; font-size:.88rem; }
+    .class-option small { display:block; margin-top:2px; color:var(--muted); font-size:.67rem; line-height:1.25; }
+    .class-foot { margin:17px 0 0; color:#c9a781; font-size:.71rem; }
+    .main-grid { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(290px,.76fr); gap:20px; margin-top:20px; }
+    .panel { overflow:hidden; border:1px solid var(--line); border-radius:14px; background:rgba(22,20,38,.84); box-shadow:0 12px 28px rgba(17,9,17,.18); }
+    .panel-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 20px 15px; border-bottom:1px solid var(--line); }
+    .panel-heading h2 { margin:0; font-size:1.25rem; }
+    .panel-heading span { color:var(--ocre); font-size:.78rem; }
+    .mission-list { padding:8px; }
+    .mission { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:13px; align-items:center; padding:14px 12px; border-radius:10px; transition:background .2s,opacity .2s; }
+    .mission + .mission { border-top:1px solid rgba(244,230,208,.08); }
+    .mission:hover { background:rgba(244,230,208,.045); }
+    .mission.done { opacity:.5; }
+    .sigil { display:grid; width:39px; height:39px; place-items:center; border:1px solid; border-radius:50%; font-size:18px; }
+    .positive .sigil { color:var(--brilho); border-color:rgba(255,197,61,.55); background:rgba(242,140,40,.12); }
+    .reduce .sigil { color:var(--por-do-sol); border-color:rgba(212,114,122,.55); background:rgba(212,114,122,.11); }
+    .mission strong { display:block; color:var(--pergaminho); font-family:Fraunces,Georgia,serif; font-size:1.03rem; }
+    .mission small { display:block; margin-top:3px; color:var(--muted); font-size:.76rem; line-height:1.35; }
+    .reward { color:var(--ocre); font-size:.72rem; font-weight:700; white-space:nowrap; }
+    .mission-action { display:flex; grid-column:2 / 4; align-items:center; gap:8px; flex-wrap:wrap; margin-top:-3px; }
+    .mission-action .track { min-width:110px; flex:1; margin:0; }
+    .mission-action .track span { background:linear-gradient(90deg,var(--terracota),var(--ocre)); }
+    .mission-action span { color:var(--muted); font-size:.75rem; }
+    .mission button,.action-button { padding:7px 10px; color:var(--pergaminho); font-size:.76rem; border:1px solid rgba(203,155,100,.45); border-radius:7px; background:rgba(203,155,100,.08); transition:transform .15s,background .15s; }
+    .mission button:hover,.action-button:hover { transform:translateY(-1px); background:rgba(203,155,100,.18); }
+    .mission button.complete { color:var(--sombra); font-weight:700; border-color:var(--fogo); background:var(--fogo); }
+    .side-stack { display:grid; align-content:start; gap:20px; }
+    .camp-card { position:relative; min-height:260px; padding:19px; overflow:hidden; background:linear-gradient(155deg,var(--vinho),var(--base-quente)); }
+    .camp-card::after { content:""; position:absolute; inset:auto 0 0; height:60%; background:linear-gradient(0deg,var(--base-quente),transparent); pointer-events:none; }
+    .camp-art { position:absolute; z-index:0; top:-55px; right:-52px; width:245px; opacity:.85; transform:rotate(4deg); filter:saturate(.8) contrast(1.08); }
+    .camp-body { position:relative; z-index:1; max-width:68%; }
+    .camp-body h3 { margin:8px 0 7px; font-size:1.4rem; line-height:1; }
+    .camp-body p { margin:0 0 16px; color:#e2c9b6; font-size:.83rem; line-height:1.45; }
+    .meter { display:flex; justify-content:space-between; color:var(--ocre); font-size:.72rem; }
+    .camp-card .track { margin-top:8px; }
+    .camp-card .track span { width:29%; }
+    .camp-note { position:relative; z-index:1; margin-top:25px; color:var(--muted); font-size:.69rem; }
+    .wallet { display:flex; align-items:center; gap:12px; padding:16px 18px; border-color:rgba(203,155,100,.48); background:linear-gradient(110deg,#3c2633,#2c1d25); }
+    .coin { display:grid; flex:0 0 auto; width:42px; height:42px; place-items:center; color:var(--vinho); font-size:19px; border:3px solid var(--brilho); border-radius:50%; background:var(--fogo); }
+    .wallet small { display:block; color:var(--ocre); font-size:.74rem; }
+    .wallet strong { display:block; margin-top:1px; font-family:Fraunces,Georgia,serif; font-size:1.28rem; }
+    .shop-button { margin-left:auto; padding:8px 10px; color:var(--brilho); font-size:.75rem; border:1px solid rgba(255,197,61,.45); border-radius:7px; background:transparent; }
+    .diary { padding:18px; }
+    .diary h3 { margin:8px 0 6px; font-size:1.22rem; }
+    .diary p { margin:0 0 12px; color:var(--muted); font-size:.84rem; line-height:1.45; }
+    textarea { width:100%; min-height:80px; padding:10px; resize:vertical; color:var(--pergaminho); font:.84rem/1.45 "DM Sans",sans-serif; border:1px solid rgba(203,155,100,.34); border-radius:8px; outline:none; background:rgba(17,9,17,.46); }
+    textarea:focus { border-color:var(--fogo); }
+    .diary-footer { display:flex; justify-content:space-between; align-items:center; gap:9px; margin-top:10px; }
+    .saved { color:var(--ocre); font-size:.71rem; opacity:0; transition:opacity .25s; }
+    .saved.show { opacity:1; }
+    .source-note { margin:20px 4px 0; color:#aaa09c; font-size:.68rem; line-height:1.5; }
+    .source-note a { color:var(--ocre); }
+    .toast { position:fixed; z-index:15; right:18px; bottom:18px; padding:12px 15px; color:var(--sombra); font-size:.84rem; font-weight:700; border-radius:8px; background:var(--brilho); box-shadow:0 9px 28px rgba(17,9,17,.35); opacity:0; transform:translateY(10px); pointer-events:none; transition:opacity .25s,transform .25s; }
+    .toast.show { opacity:1; transform:translateY(0); }
+    .tab-view { display:none; animation:reveal .28s ease both; }
+    .tab-view.active { display:block; }
+    @keyframes reveal { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+    .gender-label { display:block; margin:0 0 8px; color:var(--ocre); font-size:.69rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    .gender-options { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+    .gender-option,.gate-choice { padding:8px 11px; color:var(--muted); font-size:.78rem; border:1px solid rgba(203,155,100,.42); border-radius:7px; background:rgba(17,9,17,.31); transition:transform .15s,border-color .15s,background .15s,color .15s; }
+    .gender-option:hover,.gate-choice:hover { color:var(--pergaminho); border-color:var(--ocre); transform:translateY(-1px); }
+    .gender-option.selected,.gate-choice.selected { color:var(--sombra); font-weight:700; border-color:var(--brilho); background:var(--brilho); }
+    .view-header { display:flex; align-items:end; justify-content:space-between; gap:18px; margin:25px 2px 15px; }
+    .view-header h2 { margin:4px 0 0; font-size:clamp(1.8rem,3vw,2.55rem); line-height:1; }
+    .view-header p { max-width:480px; margin:0; color:var(--muted); font-size:.86rem; line-height:1.5; }
+    .campaign-grid,.realm-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .campaign-large { position:relative; min-height:260px; padding:26px; overflow:hidden; border:1px solid var(--line); border-radius:14px; background:linear-gradient(125deg,#542a2f,#2b151d 62%,#262643); }
+    .campaign-large.alt { background:linear-gradient(125deg,#21394b,#262643 62%,#2b151d); }
+    .campaign-large::after { content:""; position:absolute; inset:auto -42px -62px auto; width:220px; height:220px; border:1px solid rgba(255,197,61,.25); border-radius:50%; box-shadow:0 0 0 27px rgba(242,140,40,.055),0 0 0 54px rgba(242,140,40,.035); }
+    .campaign-large > * { position:relative; z-index:1; }
+    .campaign-large h3 { margin:8px 0; font-size:1.72rem; line-height:1; }
+    .campaign-large p { max-width:370px; margin:0; color:#dec9b7; font-size:.87rem; line-height:1.5; }
+    .campaign-progress { display:flex; align-items:center; gap:10px; margin-top:24px; color:var(--ocre); font-size:.75rem; font-weight:700; }
+    .campaign-progress .track { flex:1; margin:0; }
+    .campaign-progress .track span { width:29%; }
+    .campaign-large.alt .campaign-progress .track span { width:14%; background:linear-gradient(90deg,#6295a4,var(--brilho)); }
+    .chronicle { display:grid; grid-template-columns:1.1fr .9fr; gap:20px; }
+    .chronicle-card { padding:24px; }
+    .chronicle-card h3 { margin:7px 0 8px; font-size:1.55rem; }
+    .chronicle-card p { margin:0 0 15px; color:var(--muted); font-size:.86rem; line-height:1.5; }
+    .memory-list { display:grid; gap:10px; padding:20px; }
+    .memory { padding:13px; border-left:2px solid var(--fogo); border-radius:0 8px 8px 0; background:rgba(244,230,208,.045); }
+    .memory strong { display:block; color:var(--ocre); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; }
+    .memory span { display:block; margin-top:4px; color:var(--pergaminho); font-family:Fraunces,Georgia,serif; font-size:1rem; }
+    .realm-character { min-height:340px; display:grid; grid-template-columns:200px minmax(0,1fr); align-items:center; gap:25px; padding:25px; }
+    .realm-character .class-portrait { width:170px; justify-self:center; }
+    .realm-character h3 { margin:7px 0 8px; font-size:1.8rem; }
+    .realm-character p { margin:0; color:var(--muted); font-size:.87rem; line-height:1.5; }
+    .realm-badges { display:flex; flex-wrap:wrap; gap:7px; margin-top:17px; }
+    .realm-badges span { padding:6px 8px; color:var(--ocre); font-size:.7rem; border:1px solid rgba(203,155,100,.34); border-radius:999px; background:rgba(17,9,17,.27); }
+    .buildings { display:grid; gap:11px; padding:20px; }
+    .building { display:flex; align-items:center; gap:12px; padding:13px; border:1px solid rgba(244,230,208,.09); border-radius:9px; background:rgba(244,230,208,.035); }
+    .building-icon { display:grid; flex:0 0 auto; width:37px; height:37px; place-items:center; color:var(--brilho); border:1px solid rgba(255,197,61,.4); border-radius:8px; background:rgba(242,140,40,.1); }
+    .building strong,.building small { display:block; }
+    .building strong { font-family:Fraunces,Georgia,serif; font-size:.98rem; }
+    .building small { margin-top:2px; color:var(--muted); font-size:.72rem; }
+    .journey-data { grid-column:1 / -1; padding:22px; }
+    .journey-data h3 { margin:7px 0 6px; font-size:1.38rem; }
+    .journey-data > p { max-width:720px; margin:0; color:var(--muted); font-size:.84rem; line-height:1.48; }
+    .data-actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:17px; }
+    .data-action { display:inline-flex; align-items:center; justify-content:center; min-height:38px; padding:8px 11px; color:var(--pergaminho); font-size:.77rem; font-weight:700; border:1px solid rgba(203,155,100,.45); border-radius:7px; background:rgba(203,155,100,.09); transition:transform .15s,background .15s,border-color .15s; }
+    .data-action:hover { transform:translateY(-1px); border-color:var(--ocre); background:rgba(203,155,100,.18); }
+    .data-action.danger { color:#ffd4d7; border-color:rgba(212,114,122,.65); background:rgba(212,114,122,.1); }
+    .data-action.danger:hover { border-color:var(--por-do-sol); background:rgba(212,114,122,.2); }
+    .backup-status { display:block; min-height:1.2em; margin-top:11px; color:var(--ocre); font-size:.73rem; }
+    .journey-gate { position:fixed; z-index:10; inset:0; display:grid; place-items:center; padding:20px; overflow:auto; background:linear-gradient(145deg,rgba(17,9,17,.78),rgba(22,20,38,.89)); backdrop-filter:blur(7px); }
+    .journey-gate.hidden { display:none; }
+    .gate-card { width:min(920px,100%); overflow:hidden; border:1px solid rgba(203,155,100,.58); border-radius:18px; background:linear-gradient(130deg,#171427,#29223a 62%,#331d26); box-shadow:0 30px 80px rgba(0,0,0,.55); }
+    .gate-top { padding:28px 30px 18px; border-bottom:1px solid rgba(244,230,208,.12); background:radial-gradient(circle at 83% 10%,rgba(242,140,40,.24),transparent 19rem); }
+    .gate-top h2 { max-width:660px; margin:7px 0 8px; font-size:clamp(2rem,4vw,3.25rem); line-height:.94; }
+    .gate-top p { max-width:570px; margin:0; color:#dac8b7; font-size:.9rem; line-height:1.5; }
+    .gate-content { display:grid; grid-template-columns:.72fr 1.28fr; gap:0; }
+    .gate-step { padding:23px 30px 27px; }
+    .gate-step + .gate-step { border-left:1px solid rgba(244,230,208,.12); }
+    .gate-step h3 { margin:4px 0 12px; font-size:1.25rem; }
+    .gate-step p { margin:0 0 14px; color:var(--muted); font-size:.82rem; line-height:1.45; }
+    .gate-gender-list { display:grid; gap:8px; }
+    .gate-choice { width:100%; text-align:left; }
+    .gate-classes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+    .gate-class { min-height:160px; padding:10px; color:var(--pergaminho); text-align:left; border:1px solid rgba(203,155,100,.32); border-radius:9px; background:rgba(17,9,17,.28); }
+    .gate-class:hover { border-color:var(--ocre); transform:translateY(-2px); }
+    .gate-class.selected { border-color:var(--brilho); background:rgba(242,140,40,.13); box-shadow:inset 0 0 0 1px rgba(255,197,61,.18); }
+    .gate-class .mini-art { height:82px; margin-bottom:7px; }
+    .gate-class strong { display:block; font-family:Fraunces,Georgia,serif; font-size:.83rem; }
+    .gate-class small { display:block; margin-top:3px; color:var(--muted); font-size:.65rem; line-height:1.25; }
+    .gate-footer { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 30px; border-top:1px solid rgba(244,230,208,.12); background:rgba(17,9,17,.24); }
+    .gate-status { color:var(--muted); font-size:.76rem; }
+    .start-button { padding:11px 16px; color:var(--sombra); font-weight:700; border:0; border-radius:8px; background:var(--brilho); box-shadow:0 6px 16px rgba(242,140,40,.22); }
+    .start-button:disabled { cursor:not-allowed; color:rgba(244,230,208,.4); background:rgba(244,230,208,.14); box-shadow:none; }
+    @media (max-width:840px) { .hero,.main-grid,.customizer { grid-template-columns:1fr; } .hero-stats { grid-template-columns:95px 1fr; align-items:center; padding:0 26px 25px 42px; } .level-orb { margin:0; } .hud { width:min(320px,100%); } .avatar-stage { min-height:240px; border-right:0; border-bottom:1px solid rgba(244,230,208,.12); } .appearance-choices { max-width:530px; } }
+    @media (max-width:570px) { .shell { width:min(100% - 20px,1190px); padding-top:15px; } .topbar { align-items:flex-start; flex-direction:column; } .nav { width:100%; } .hero { min-height:425px; } .hero-copy { padding:34px 24px 15px; } h1 { font-size:3.05rem; } .hero-stats { padding:15px 24px 24px; } .customizer-copy { padding:22px 18px; } .appearance-choices { grid-template-columns:1fr; gap:10px; } .mission { grid-template-columns:auto 1fr; } .reward { grid-column:2; } .mission-action { grid-column:1 / 3; margin-left:52px; } .camp-body { max-width:70%; } }
+    @media (max-width:840px) { .class-customizer { grid-template-columns:1fr; } .class-showcase { min-height:395px; border-right:0; border-bottom:1px solid rgba(244,230,208,.12); } .class-portrait { width:196px; } }
+    @media (max-width:570px) { .class-content { padding:24px 17px; } .class-options { grid-template-columns:1fr; } .class-option { display:grid; grid-template-columns:64px 1fr; column-gap:9px; align-items:center; } .class-option .mini-art { grid-row:span 2; margin:0; } .class-option small { align-self:start; } }
+    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
+    @media (max-width:480px) { .gate-top,.gate-step,.gate-footer { padding-right:18px; padding-left:18px; } .gate-footer { align-items:stretch; flex-direction:column; } .start-button { width:100%; } }
+  </style>
+</head>
+<body>
+  <main class="shell" id="appShell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">✦</span><span>Fogueira</span></div>
+      <nav class="nav" aria-label="Navegação principal">
+        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="reino">Reino</button>
+      </nav>
+    </header>
+    <section class="hero" aria-label="Resumo da jornada">
+      <div class="hero-copy"><span class="eyebrow">Capítulo 1 · Reconstrução</span><h1>A luz que reúne sua jornada.</h1><p class="lead">Pequenas escolhas ao redor da mesma fogueira: cuidar do corpo, clarear a mente e fazer o seu reino avançar.</p><p class="today" id="todayDate"></p></div>
+      <div class="hero-stats"><div class="level-orb">7<span>nível</span></div><div class="hud"><div class="hud-line"><span>Experiência</span><strong id="xpValue">280 / 400 XP</strong></div><div class="track"><span id="xpBar"></span></div></div><div class="hud gold-hud"><span>Bolsa de ouro</span><strong><span id="goldValue">152</span> ✦</strong></div></div>
+    </section>
+
+    <section class="tab-view active" data-view="hoje">
+      <section class="panel class-customizer" aria-label="Personalização do personagem">
+        <div class="class-showcase"><div class="class-portrait" id="classPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato da classe selecionada"></div></div>
+        <div class="class-content">
+          <span class="eyebrow">Seu personagem</span><h2 id="className">Guardião da Brasa</h2>
+          <p class="class-description" id="classDescription">Fica de vigia quando a noite se alonga. É uma presença firme, que transforma disciplina em abrigo para o próprio reino.</p>
+          <span class="class-meta" id="classMeta">Foco narrativo · Vitalidade e proteção</span>
+          <span class="gender-label">Identidade visual</span>
+          <div class="gender-options" role="group" aria-label="Gênero do personagem"><button class="gender-option" type="button" data-gender-choice="masculino">Masculino</button><button class="gender-option" type="button" data-gender-choice="feminino">Feminino</button></div>
+          <div class="class-options" role="listbox" aria-label="Classes disponíveis">
+            <button class="class-option" type="button" data-class="guardiao" role="option"><span class="mini-art" data-class="guardiao"></span><strong>Guardião da Brasa</strong><small>Vontade, presença e proteção.</small></button>
+            <button class="class-option" type="button" data-class="exploradora" role="option"><span class="mini-art" data-class="exploradora"></span><strong>Explorador da Mata</strong><small>Curiosidade, movimento e descoberta.</small></button>
+            <button class="class-option" type="button" data-class="arcanista" role="option"><span class="mini-art" data-class="arcanista"></span><strong>Arcanista do Fogo</strong><small>Conhecimento, clareza e intenção.</small></button>
+          </div>
+          <p class="class-foot">Classe e gênero trocam a arte do personagem; não há vantagem de produtividade entre elas.</p>
+        </div>
+      </section>
+      <section class="main-grid">
+        <section class="panel">
+          <div class="panel-heading"><h2>Missões de hoje</h2><span id="missionCount">4 aguardando</span></div>
+          <div class="mission-list">
+            <article class="mission positive" data-mission="water"><div class="sigil">◈</div><div><strong>Fonte da Vitalidade</strong><small>Saúde e energia · Beber 3 litros de água</small></div><div class="reward">+20 XP · +8 ouro</div><div class="mission-action"><div class="track" aria-label="Progresso de água"><span id="waterBar" style="width:0%"></span></div><span id="waterLabel">0 / 3 L</span><button type="button" data-action="water">+ 500 ml</button><button class="complete" type="button" data-action="finish-water">Concluir</button></div></article>
+            <article class="mission reduce" data-mission="food"><div class="sigil">◒</div><div><strong>Escolha Consciente</strong><small>Saúde e energia · Reduzir doces e fast food</small></div><div class="reward">+15 XP · +6 ouro</div><div class="mission-action"><span>O registro é uma bússola, nunca uma punição.</span><button class="complete" type="button" data-action="clear-food">Hoje não ocorreu</button><button type="button" data-action="record-food">Registrar ocorrência</button></div></article>
+            <article class="mission positive" data-mission="reading"><div class="sigil">✧</div><div><strong>Páginas da Biblioteca</strong><small>Conhecimento e equilíbrio · Ler ao menos 5 páginas</small></div><div class="reward">+15 XP · +6 ouro</div><div class="mission-action"><div class="track" aria-label="Progresso de leitura"><span id="readingBar" style="width:0%"></span></div><span id="readingLabel">0 / 5 páginas</span><button type="button" data-action="reading">+ 1 página</button><button class="complete" type="button" data-action="finish-reading">Concluir</button></div></article>
+            <article class="mission reduce" data-mission="adult"><div class="sigil">◒</div><div><strong>Mente Presente</strong><small>Conhecimento e equilíbrio · Reduzir pornografia</small></div><div class="reward">+15 XP · +6 ouro</div><div class="mission-action"><span>A honestidade protege a sua jornada.</span><button class="complete" type="button" data-action="clear-adult">Hoje não ocorreu</button><button type="button" data-action="record-adult">Registrar ocorrência</button></div></article>
+          </div>
+        </section>
+        <aside class="side-stack">
+          <section class="panel camp-card"><img class="camp-art" src="assets/towers-campfire.png" alt="Torres de fantasia junto a uma fogueira"><div class="camp-body"><span class="eyebrow">Campanha ativa</span><h3>Ritual de Vitalidade</h3><p>Construa uma rotina de cuidado possível, um dia de cada vez.</p><div class="meter"><span>Semana 1</span><span>2 de 7 dias</span></div><div class="track"><span></span></div></div><p class="camp-note">O seu reino cresce com constância, não perfeição.</p></section>
+          <section class="panel wallet"><span class="coin">●</span><div><small>Ouro disponível</small><strong><span id="goldValueSide">152</span> moedas</strong></div><button class="shop-button" type="button" data-action="shop">Ver loja</button></section>
+          <section class="panel diary"><span class="eyebrow">Diário de aventura</span><h3>Qual foi sua pequena vitória?</h3><p>Registre o que merece ser lembrado nesta noite.</p><textarea id="journal" placeholder="Escreva livremente…"></textarea><div class="diary-footer"><span class="saved" id="saved">Guardado neste dispositivo</span><button class="action-button" type="button" data-action="save-journal">Guardar no diário</button></div></section>
+        </aside>
+      </section>
+    </section>
+
+    <section class="tab-view" data-view="campanhas">
+      <div class="view-header"><div><span class="eyebrow">Arcos de evolução</span><h2>Campanhas do reino</h2></div><p>Missões de longo prazo que dão ritmo à jornada. Você define o próximo capítulo quando estiver pronto.</p></div>
+      <div class="campaign-grid">
+        <article class="campaign-large"><span class="eyebrow">Em curso · semana 1</span><h3>Ritual de Vitalidade</h3><p>Uma base de cuidado para recuperar energia: água, escolhas conscientes e constância sem dureza.</p><div class="campaign-progress"><span>2 de 7 dias</span><div class="track"><span></span></div></div></article>
+        <article class="campaign-large alt"><span class="eyebrow">Próxima fogueira</span><h3>Biblioteca Interior</h3><p>Pequenas leituras para ampliar repertório e criar um espaço de clareza dentro da rotina.</p><div class="campaign-progress"><span>0 de 7 dias</span><div class="track"><span></span></div></div></article>
+      </div>
+    </section>
+
+    <section class="tab-view" data-view="diario">
+      <div class="view-header"><div><span class="eyebrow">Memória da jornada</span><h2>Diário de aventura</h2></div><p>O diário transforma uma boa intenção em uma história que vale a pena revisitar.</p></div>
+      <div class="chronicle">
+        <section class="panel chronicle-card"><span class="eyebrow">Registro de hoje</span><h3>O que a fogueira iluminou?</h3><p>Escreva uma vitória, uma dificuldade ou algo pelo qual você quer se lembrar desta fase.</p><textarea id="journalFull" placeholder="Escreva livremente…"></textarea><div class="diary-footer"><span class="saved" id="savedFull">Guardado neste dispositivo</span><button class="action-button" type="button" data-action="save-journal-full">Guardar no diário</button></div></section>
+        <aside class="panel memory-list"><div class="memory"><strong>Intenção</strong><span>Constância sem perfeição</span></div><div class="memory"><strong>Fogueira atual</strong><span>Cuidar do corpo e clarear a mente</span></div><div class="memory"><strong>Próxima página</strong><span>Uma pequena vitória por vez</span></div></aside>
+      </div>
+    </section>
+
+    <section class="tab-view" data-view="reino">
+      <div class="view-header"><div><span class="eyebrow">Seu espaço de progresso</span><h2>O reino em evolução</h2></div><p>Ouro, itens e construções serão os sinais visuais da constância que você está acumulando.</p></div>
+      <div class="realm-grid">
+        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"></div><div><span class="eyebrow">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span>Nível 7</span><span><span id="realmGold">152</span> ouro</span></div></div></section>
+        <section class="panel buildings"><span class="eyebrow">Construções</span><div class="building"><span class="building-icon">♨</span><div><strong>Fogueira central</strong><small>Nível 1 · aquece o início da jornada</small></div></div><div class="building"><span class="building-icon">⌂</span><div><strong>Biblioteca</strong><small>Em breve · cresce com suas leituras</small></div></div><div class="building"><span class="building-icon">✦</span><div><strong>Arsenal de aparências</strong><small>Em breve · compre itens com ouro</small></div></div></section>
+        <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um arquivo de backup. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
+      </div>
+    </section>
+    <p class="source-note">Arte de abertura: <a href="https://pixabay.com/photos/fantasy-people-bonfire-group-5583344/" target="_blank" rel="noreferrer">PatoLenin / Pixabay</a>. Carta de construção: <a href="https://commons.wikimedia.org/wiki/File:Quaternius_-_3D_Card_Kit_-_Fantasy_-_16_Belltowers.png" target="_blank" rel="noreferrer">Quaternius / CC0</a>. Artes de classe: ilustrações originais geradas para este protótipo.</p>
+  </main>
+
+  <section class="journey-gate" id="journeyGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <div class="gate-top"><span class="eyebrow">Antes da primeira fogueira</span><h2 id="gateTitle">Escolha quem vai iniciar esta jornada.</h2><p>Defina a identidade visual do personagem e sua classe. A jornada só começa quando você confirmar essa escolha.</p></div>
+      <div class="gate-content">
+        <div class="gate-step"><span class="eyebrow">Passo 1</span><h3>Gênero</h3><p>Ele define qual retrato ilustrado acompanhará sua classe.</p><div class="gate-gender-list"><button class="gate-choice" type="button" data-gender-choice="masculino">Masculino</button><button class="gate-choice" type="button" data-gender-choice="feminino">Feminino</button></div></div>
+        <div class="gate-step"><span class="eyebrow">Passo 2</span><h3>Classe</h3><p>Cada classe tem uma arte e uma identidade própria.</p><div class="gate-classes" role="listbox" aria-label="Classes disponíveis">
+          <button class="gate-class" type="button" data-gate-class="guardiao" role="option"><span class="mini-art" data-class="guardiao"></span><strong>Guardião da Brasa</strong><small>Proteção e vitalidade</small></button>
+          <button class="gate-class" type="button" data-gate-class="exploradora" role="option"><span class="mini-art" data-class="exploradora"></span><strong>Explorador da Mata</strong><small>Descoberta e movimento</small></button>
+          <button class="gate-class" type="button" data-gate-class="arcanista" role="option"><span class="mini-art" data-class="arcanista"></span><strong>Arcanista do Fogo</strong><small>Clareza e conhecimento</small></button>
+        </div></div>
+      </div>
+      <div class="gate-footer"><span class="gate-status" id="gateStatus">Escolha um gênero e uma classe para continuar.</span><button class="start-button" id="startJourney" type="button" disabled>Salvar e começar jornada</button></div>
+    </div>
+  </section>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    let savedState = {};
+    try { savedState = JSON.parse(localStorage.getItem('reino-state') || '{}'); } catch { savedState = {}; }
+    const state = { water:0, reading:0, gold:152, xp:280, done:{}, journal:'', selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', ...savedState };
+    if (!state.journeyStarted) { state.selectedClass = null; state.gender = null; }
+    const classProfiles = {
+      guardiao: { names:{masculino:'Guardião da Brasa',feminino:'Guardiã da Brasa'}, description:'Fica de vigia quando a noite se alonga. É uma presença firme, que transforma disciplina em abrigo para o próprio reino.', meta:'Foco narrativo · Vitalidade e proteção' },
+      exploradora: { names:{masculino:'Explorador da Mata',feminino:'Exploradora da Mata'}, description:'Enxerga caminhos onde antes havia névoa. Move-se com curiosidade, leveza e coragem para descobrir o que vem depois.', meta:'Foco narrativo · Movimento e descoberta' },
+      arcanista: { names:{masculino:'Arcanista do Fogo',feminino:'Arcanista do Fogo'}, description:'Reúne conhecimento e o transforma em clareza. Cada página lida é uma faísca que ilumina as próximas decisões.', meta:'Foco narrativo · Sabedoria e intenção' }
+    };
+    const shell = document.getElementById('appShell');
+    const gate = document.getElementById('journeyGate');
+    const toast = document.getElementById('toast'); let toastTimer;
+    const journals = [document.getElementById('journal'), document.getElementById('journalFull')];
+    const backupInput = document.getElementById('backupFile');
+    const backupStatus = document.getElementById('backupStatus');
+    const missionIds = new Set(['water','food','reading','adult']);
+    const save = () => localStorage.setItem('reino-state', JSON.stringify(state));
+    const message = text => { toast.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2600); };
+    const setBackupStatus = text => { backupStatus.textContent = text; };
+    const activeClassKey = () => classProfiles[state.selectedClass] ? state.selectedClass : 'guardiao';
+    const activeGender = () => state.gender === 'feminino' ? 'feminino' : 'masculino';
+    const profileFor = () => classProfiles[activeClassKey()];
+    const profileName = () => profileFor().names[activeGender()];
+    document.getElementById('todayDate').textContent = new Intl.DateTimeFormat('pt-BR', { weekday:'long', day:'numeric', month:'long' }).format(new Date());
+    journals.forEach(area => { area.value = state.journal || ''; area.addEventListener('input', () => journals.filter(other => other !== area).forEach(other => other.value = area.value)); });
+    const renderCharacter = () => {
+      const key = activeClassKey(); const gender = activeGender(); const profile = profileFor(); const name = profileName();
+      document.querySelectorAll('.class-portrait,.mini-art').forEach(element => element.dataset.gender = gender);
+      document.querySelectorAll('.class-portrait').forEach(element => { element.dataset.class = key; element.setAttribute('aria-label', `Retrato de ${name}`); });
+      document.getElementById('className').textContent = name;
+      document.getElementById('classDescription').textContent = profile.description;
+      document.getElementById('classMeta').textContent = profile.meta;
+      document.getElementById('realmName').textContent = name;
+      document.getElementById('realmDescription').textContent = profile.description;
+      document.getElementById('realmGender').textContent = gender === 'feminino' ? 'Feminino' : 'Masculino';
+      document.getElementById('realmGold').textContent = state.gold;
+      document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
+      document.querySelectorAll('[data-gender-choice]').forEach(element => { const selected = state.gender === element.dataset.genderChoice; element.classList.toggle('selected', selected); element.setAttribute('aria-pressed', String(selected)); });
+      document.querySelectorAll('[data-gate-class]').forEach(element => { const selected = state.selectedClass === element.dataset.gateClass; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
+    };
+    const renderGate = () => {
+      const ready = Boolean(state.gender && state.selectedClass);
+      gate.classList.toggle('hidden', Boolean(state.journeyStarted));
+      shell.inert = !state.journeyStarted;
+      shell.setAttribute('aria-hidden', String(!state.journeyStarted));
+      const start = document.getElementById('startJourney'); start.disabled = !ready;
+      document.getElementById('gateStatus').textContent = ready ? `Tudo pronto: ${profileName()}.` : 'Escolha um gênero e uma classe para continuar.';
+    };
+    const setActiveTab = tab => {
+      const selected = ['hoje','campanhas','diario','reino'].includes(tab) ? tab : 'hoje';
+      state.activeTab = selected;
+      document.querySelectorAll('[data-tab]').forEach(button => { const active = button.dataset.tab === selected; button.classList.toggle('active', active); button.setAttribute('aria-current', active ? 'page' : 'false'); });
+      document.querySelectorAll('[data-view]').forEach(view => view.classList.toggle('active', view.dataset.view === selected));
+    };
+    const render = () => {
+      document.getElementById('waterBar').style.width = `${Math.min(100,state.water / 3 * 100)}%`;
+      document.getElementById('waterLabel').textContent = `${state.water.toFixed(1).replace('.',',')} / 3 L`;
+      document.getElementById('readingBar').style.width = `${Math.min(100,state.reading / 5 * 100)}%`;
+      document.getElementById('readingLabel').textContent = `${state.reading} / 5 páginas`;
+      document.getElementById('goldValue').textContent = state.gold; document.getElementById('goldValueSide').textContent = state.gold;
+      document.getElementById('xpValue').textContent = `${state.xp} / 400 XP`; document.getElementById('xpBar').style.width = `${Math.min(100,state.xp / 400 * 100)}%`;
+      document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', Boolean(state.done[mission.dataset.mission])));
+      const completed = Object.keys(state.done).length; document.getElementById('missionCount').textContent = completed === 4 ? 'Jornada concluída' : `${4 - completed} aguardando`;
+      renderCharacter(); renderGate(); setActiveTab(state.activeTab);
+    };
+    const award = (xp,gold,mission) => { if (state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
+    const saveJournal = (source, savedId) => { state.journal = source.value; journals.filter(other => other !== source).forEach(other => other.value = state.journal); save(); const notice = document.getElementById(savedId); notice.classList.add('show'); setTimeout(() => notice.classList.remove('show'),2200); };
+    const exportBackup = () => {
+      const backup = { app:'reino-em-evolucao', version:1, exportedAt:new Date().toISOString(), state:{ water:state.water, reading:state.reading, gold:state.gold, xp:state.xp, done:state.done, journal:state.journal, selectedClass:state.selectedClass, gender:state.gender, journeyStarted:state.journeyStarted, activeTab:state.activeTab } };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob); const link = document.createElement('a');
+      link.href = url; link.download = `reino-em-evolucao-backup-${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+      setBackupStatus('Backup baixado. Guarde este arquivo em um local seguro.'); message('Backup da jornada criado.');
+    };
+    const restoreState = backup => {
+      if (!backup || backup.app !== 'reino-em-evolucao' || backup.version !== 1 || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
+      const source = backup.state;
+      const number = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback; };
+      const done = Object.fromEntries(Object.entries(source.done || {}).filter(([key,value]) => missionIds.has(key) && value === true));
+      const selectedClass = classProfiles[source.selectedClass] ? source.selectedClass : null;
+      const gender = ['masculino','feminino'].includes(source.gender) ? source.gender : null;
+      const journeyStarted = source.journeyStarted === true && Boolean(selectedClass && gender);
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,152,0,1000000000)), xp:Math.round(number(source.xp,280,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', selectedClass:journeyStarted ? selectedClass : null, gender:journeyStarted ? gender : null, journeyStarted, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje' };
+    };
+    const importBackup = async file => {
+      if (!file) return;
+      if (file.size > 1024 * 1024) { setBackupStatus('Esse arquivo é grande demais para ser um backup da jornada.'); return; }
+      try {
+        const restored = restoreState(JSON.parse(await file.text()));
+        Object.assign(state, restored); journals.forEach(area => area.value = state.journal); save(); render();
+        setBackupStatus('Backup importado com sucesso. Sua jornada foi restaurada.'); message('Jornada restaurada a partir do backup.');
+      } catch (error) { setBackupStatus('Não foi possível importar este arquivo. Verifique se é um backup do Reino em Evolução.'); }
+    };
+    const resetJourney = () => {
+      const confirmed = window.confirm('Reiniciar a jornada? Isso apagará personagem, missões, ouro e diário deste dispositivo. Faça um backup antes se quiser guardar seu progresso.');
+      if (!confirmed) return;
+      localStorage.removeItem('reino-state'); window.location.reload();
+    };
+    backupInput.addEventListener('change', () => { const [file] = backupInput.files; backupInput.value = ''; importBackup(file); });
+    document.addEventListener('click', event => {
+      const tab = event.target.closest('[data-tab]');
+      if (tab) { setActiveTab(tab.dataset.tab); save(); return; }
+      const genderChoice = event.target.closest('[data-gender-choice]');
+      if (genderChoice) { state.gender = genderChoice.dataset.genderChoice; if (state.journeyStarted) save(); renderCharacter(); renderGate(); return; }
+      const gateClass = event.target.closest('[data-gate-class]');
+      if (gateClass) { state.selectedClass = gateClass.dataset.gateClass; renderCharacter(); renderGate(); return; }
+      const classChoice = event.target.closest('[data-class].class-option');
+      if (classChoice) { state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
+      if (event.target.id === 'startJourney') { if (!state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message('Sua jornada começou. A fogueira está acesa.'); return; }
+      const action = event.target.dataset.action; if (!action) return;
+      if (action === 'water') { state.water = Math.min(3, +(state.water + .5).toFixed(1)); save(); render(); if (state.water === 3) award(20,8,'water'); }
+      if (action === 'finish-water') { state.water = 3; award(20,8,'water'); }
+      if (action === 'reading') { state.reading = Math.min(5, state.reading + 1); save(); render(); if (state.reading === 5) award(15,6,'reading'); }
+      if (action === 'finish-reading') { state.reading = 5; award(15,6,'reading'); }
+      if (action === 'clear-food') award(15,6,'food');
+      if (action === 'clear-adult') award(15,6,'adult');
+      if (action === 'record-food') message('Ocorrência registrada. Amanhã a jornada continua.');
+      if (action === 'record-adult') message('Ocorrência registrada com honestidade. Sem perdas.');
+      if (action === 'shop') { setActiveTab('reino'); save(); message('A loja de equipamentos será a próxima sala do reino.'); }
+      if (action === 'save-journal') saveJournal(document.getElementById('journal'), 'saved');
+      if (action === 'save-journal-full') saveJournal(document.getElementById('journalFull'), 'savedFull');
+      if (action === 'export-backup') exportBackup();
+      if (action === 'reset-journey') resetJourney();
+    });
+    render();
+  </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ Projetos públicos, publicados no GitHub Pages.
 | --- | --- |
 | [`netrunner-os/`](netrunner-os/) | https://ygorfortunato.github.io/publicados/netrunner-os/ |
 | [`legado-tcg/`](legado-tcg/) | https://ygorfortunato.github.io/publicados/legado-tcg/ |
+| [`reino-em-evolucao/`](reino-em-evolucao/) | https://ygorfortunato.github.io/publicados/reino-em-evolucao/ |
 
 ## Como publicar um projeto novo
 
