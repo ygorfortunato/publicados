@@ -230,6 +230,21 @@
     .memory { padding:13px; border-left:2px solid var(--fogo); border-radius:0 8px 8px 0; background:rgba(244,230,208,.045); }
     .memory strong { display:block; color:var(--ocre); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; }
     .memory span { display:block; margin-top:4px; color:var(--pergaminho); font-family:Fraunces,Georgia,serif; font-size:1rem; }
+    .mission-board { display:grid; grid-template-columns:1.1fr .9fr; gap:20px; }
+    .mission-manager,.mission-history { padding:22px; }
+    .mission-manager h3,.mission-history h3 { margin:6px 0 7px; font-size:1.48rem; }
+    .mission-manager > p,.mission-history > p { margin:0 0 16px; color:var(--muted); font-size:.83rem; line-height:1.48; }
+    .mission-manager-list,.history-list { display:grid; gap:10px; }
+    .managed-mission { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; padding:14px; border:1px solid rgba(203,155,100,.22); border-radius:10px; background:rgba(17,9,17,.26); }
+    .managed-mission strong { display:block; font-family:Fraunces,Georgia,serif; font-size:1.02rem; }
+    .managed-mission small { display:block; margin-top:4px; color:var(--muted); font-size:.74rem; line-height:1.35; }
+    .managed-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:7px; }
+    .managed-actions button { padding:7px 9px; color:var(--pergaminho); font-size:.72rem; border:1px solid rgba(203,155,100,.4); border-radius:7px; background:rgba(203,155,100,.07); }
+    .managed-actions .delete { color:var(--por-do-sol); }
+    .history-entry { padding:12px 13px; border-left:2px solid var(--fogo); border-radius:0 8px 8px 0; background:rgba(244,230,208,.045); }
+    .history-entry strong { display:block; color:var(--pergaminho); font-family:Fraunces,Georgia,serif; font-size:.98rem; }
+    .history-entry span { display:block; margin-top:4px; color:var(--ocre); font-size:.71rem; }
+    .empty-list { padding:19px; color:var(--muted); font-size:.83rem; line-height:1.5; text-align:center; border:1px dashed rgba(203,155,100,.35); border-radius:9px; }
     .realm-character { min-height:340px; display:grid; grid-template-columns:200px minmax(0,1fr); align-items:center; gap:25px; padding:25px; }
     .realm-character .class-portrait { width:170px; justify-self:center; }
     .realm-character h3 { margin:7px 0 8px; font-size:1.8rem; }
@@ -325,7 +340,7 @@
     @media (max-width:570px) { .shell { width:min(100% - 20px,1190px); padding-top:15px; } .topbar { align-items:flex-start; flex-direction:column; } .nav { width:100%; } .hero { min-height:425px; } .hero-copy { padding:34px 24px 15px; } h1 { font-size:3.05rem; } .hero-stats { padding:15px 24px 24px; } .customizer-copy { padding:22px 18px; } .appearance-choices { grid-template-columns:1fr; gap:10px; } .mission { grid-template-columns:auto 1fr; } .reward { grid-column:2; } .mission-action { grid-column:1 / 3; margin-left:52px; } .camp-body { max-width:70%; } }
     @media (max-width:840px) { .class-customizer { grid-template-columns:1fr; } .class-showcase { min-height:395px; border-right:0; border-bottom:1px solid rgba(244,230,208,.12); } .class-portrait { width:196px; } }
     @media (max-width:570px) { .class-content { padding:24px 17px; } .class-options { grid-template-columns:1fr; } .class-option { display:grid; grid-template-columns:64px 1fr; column-gap:9px; align-items:center; } .class-option .mini-art { grid-row:span 2; margin:0; } .class-option small { align-self:start; } }
-    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .character-sheet { grid-template-columns:1fr; } .character-sheet .class-portrait { width:160px; } .attributes-grid { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .journey-gate { display:block; padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom)); } .gate-card { margin:0 auto; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
+    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle,.mission-board { grid-template-columns:1fr; } .character-sheet { grid-template-columns:1fr; } .character-sheet .class-portrait { width:160px; } .attributes-grid { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .journey-gate { display:block; padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom)); } .gate-card { margin:0 auto; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
     @media (max-width:480px) { .gate-top,.gate-step,.gate-footer { padding-right:18px; padding-left:18px; } .gate-footer { align-items:stretch; flex-direction:column; } .start-button { width:100%; } .form-grid { grid-template-columns:1fr; } .form-field.full { grid-column:auto; } .forge-form { padding:21px 17px; } }
     @media (max-width:570px) { .shop-heading { align-items:flex-start; flex-direction:column; } .shop-grid { grid-template-columns:1fr; } .shop-item { display:grid; grid-template-columns:90px 1fr; column-gap:11px; align-items:start; } .item-art { grid-row:span 4; margin:0; } .shop-buy { grid-column:2; } }
   </style>
@@ -335,7 +350,7 @@
     <header class="topbar">
       <div class="brand"><span class="brand-mark">✦</span><span>Fogueira</span></div>
       <nav class="nav" aria-label="Navegação principal">
-        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="personagem">Personagem</button><button type="button" data-tab="reino">Reino</button><a href="guia-do-usuario.html">Guia</a>
+        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="missoes">Missões</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="personagem">Personagem</button><button type="button" data-tab="reino">Reino</button><a href="guia-do-usuario.html">Guia</a>
       </nav>
     </header>
     <section class="hero" aria-label="Resumo da jornada">
@@ -363,7 +378,7 @@
       <section class="main-grid">
         <section class="panel">
           <div class="panel-heading"><h2>Missões de hoje</h2><div class="panel-heading-actions"><span id="missionCount">Sem missões</span><button class="add-quest" type="button" data-action="open-mission-dialog">+ missão</button></div></div>
-          <div class="empty-journey" id="emptyMissionState"><span class="eyebrow">Jornada em branco</span><h3>Acenda sua primeira missão.</h3><p>Crie uma missão com a sua própria meta ou, se fizer sentido, carregue a jornada-base. Nenhuma opção é obrigatória.</p><div class="empty-actions"><button class="action-button" type="button" data-action="open-mission-dialog">Criar minha missão</button><button class="action-button secondary-action" type="button" data-action="activate-starter">Carregar jornada-base</button></div></div>
+          <div class="empty-journey" id="emptyMissionState"><span class="eyebrow">Jornada em branco</span><h3 id="emptyMissionTitle">Acenda sua primeira missão.</h3><p id="emptyMissionCopy">Crie uma missão com a sua própria meta ou, se fizer sentido, carregue a jornada-base. Nenhuma opção é obrigatória.</p><div class="empty-actions"><button class="action-button" type="button" data-action="open-mission-dialog">Criar minha missão</button><button class="action-button secondary-action" type="button" data-action="activate-starter">Carregar jornada-base</button></div></div>
           <div class="mission-list" id="missionList" hidden>
             <article class="mission positive" data-mission="water"><div class="sigil">◈</div><div><strong>Fonte da Vitalidade</strong><small>Saúde e energia · Beber 3 litros de água</small></div><div class="reward">+20 XP · +8 ouro</div><div class="mission-action"><div class="track" aria-label="Progresso de água"><span id="waterBar" style="width:0%"></span></div><span id="waterLabel">0 / 3 L</span><button type="button" data-action="water">+ 500 ml</button><button class="complete" type="button" data-action="finish-water">Concluir</button></div></article>
             <article class="mission reduce" data-mission="food"><div class="sigil">◒</div><div><strong>Escolha Consciente</strong><small>Saúde e energia · Reduzir doces e fast food</small></div><div class="reward">+15 XP · +6 ouro</div><div class="mission-action"><span>O registro é uma bússola, nunca uma punição.</span><button class="complete" type="button" data-action="clear-food">Hoje não ocorreu</button><button type="button" data-action="record-food">Registrar ocorrência</button></div></article>
@@ -379,6 +394,14 @@
           <section class="panel diary"><span class="eyebrow">Diário de aventura</span><h3>Qual foi sua pequena vitória?</h3><p>Registre o que merece ser lembrado nesta noite.</p><textarea id="journal" placeholder="Escreva livremente…"></textarea><div class="diary-footer"><span class="saved" id="saved">Guardado neste dispositivo</span><button class="action-button" type="button" data-action="save-journal">Guardar no diário</button></div></section>
         </aside>
       </section>
+    </section>
+
+    <section class="tab-view" data-view="missoes">
+      <div class="view-header"><div><span class="eyebrow">Planejamento</span><h2>Missões do reino</h2></div><p>Crie tarefas simples para hoje ou para uma data futura. Apenas o que estiver devido aparece na aba Hoje.</p><button class="add-quest" type="button" data-action="open-mission-dialog">+ nova missão</button></div>
+      <div class="mission-board">
+        <section class="panel mission-manager"><span class="eyebrow">Próximas missões</span><h3>Seu mapa de tarefas</h3><p>Edite ou remova missões pendentes. Escolha uma data para, por exemplo, deixar uma tarefa pronta para daqui a três dias.</p><div class="mission-manager-list" id="missionManagerList"></div></section>
+        <section class="panel mission-history"><span class="eyebrow">Memórias concluídas</span><h3>Histórico da jornada</h3><p>As tarefas e missões concluídas ficam registradas aqui.</p><div class="history-list" id="missionHistoryList"></div></section>
+      </div>
     </section>
 
     <section class="tab-view" data-view="campanhas">
@@ -421,13 +444,14 @@
 
   <dialog class="forge-dialog" id="missionDialog" aria-labelledby="missionDialogTitle">
     <form class="forge-form" id="missionForm">
-      <div class="forge-form-header"><div><span class="eyebrow">Forjar missão</span><h2 id="missionDialogTitle">Uma escolha para hoje</h2></div><button class="dialog-close" type="button" data-action="close-mission-dialog" aria-label="Fechar">×</button></div>
-      <p class="form-copy">Escolha a área que esta missão fortalece e uma recompensa que pareça justa para você.</p>
+      <div class="forge-form-header"><div><span class="eyebrow">Forjar missão</span><h2 id="missionDialogTitle">Nova missão</h2></div><button class="dialog-close" type="button" data-action="close-mission-dialog" aria-label="Fechar">×</button></div>
+      <p class="form-copy">Escolha a área que esta missão fortalece, a data em que ela deve aparecer e uma recompensa que pareça justa para você.</p>
       <div class="form-grid">
         <label class="form-field full">Nome da missão<input name="title" maxlength="64" required placeholder="Ex.: Caminhar no parque"></label>
         <label class="form-field full">Detalhe ou meta (opcional)<input name="detail" maxlength="110" placeholder="Ex.: 20 minutos após o trabalho"></label>
         <label class="form-field">Tipo<select name="kind"><option value="positive">Quero manter</option><option value="reduce">Quero reduzir</option></select></label>
         <label class="form-field">Frequência<select name="cadence"><option value="diaria">Diária</option><option value="esporadica">Esporádica</option></select></label>
+        <label class="form-field">Executar em<input name="dueDate" type="date" required></label>
         <label class="form-field">Atributo<select name="attribute"><option value="vitalidade">Vitalidade</option><option value="sabedoria">Sabedoria</option><option value="maestria">Maestria</option><option value="prosperidade">Prosperidade</option><option value="vinculos">Vínculos</option><option value="espirito">Espírito</option></select></label>
         <label class="form-field">Recompensa de XP<input name="xp" type="number" min="1" max="100" value="15" required></label>
         <label class="form-field">Recompensa de ouro<input name="gold" type="number" min="0" max="50" value="5" required></label>
@@ -477,10 +501,13 @@
     const cleanText = (value, max) => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0,max) : '';
     const safeId = (value, prefix, fallback) => { const id = typeof value === 'string' ? value.replace(/[^a-zA-Z0-9_-]/g, '').slice(0,80) : ''; return id.startsWith(prefix) && id.length > prefix.length ? id : `${prefix}${fallback}`; };
     const boundedInteger = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.round(Math.min(max, Math.max(min, parsed))) : fallback; };
+    const todayKey = () => { const date = new Date(); const month = String(date.getMonth() + 1).padStart(2,'0'); const day = String(date.getDate()).padStart(2,'0'); return `${date.getFullYear()}-${month}-${day}`; };
+    const validDateKey = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(new Date(`${value}T12:00:00`).getTime());
+    const dateLabel = value => validDateKey(value) ? new Intl.DateTimeFormat('pt-BR',{ day:'numeric', month:'short', year:'numeric' }).format(new Date(`${value}T12:00:00`)) : 'Hoje';
     const sanitizeCustomMissions = missions => (Array.isArray(missions) ? missions : []).slice(-100).map((entry,index) => {
       const title = cleanText(entry?.title,64); if (!title) return null;
       const attribute = Object.prototype.hasOwnProperty.call(defaultAttributes, entry?.attribute) ? entry.attribute : 'vitalidade';
-      return { id:safeId(entry?.id,'mission-',`${index}`), title, detail:cleanText(entry?.detail,110), kind:entry?.kind === 'reduce' ? 'reduce' : 'positive', cadence:entry?.cadence === 'esporadica' ? 'esporadica' : 'diaria', attribute, xp:boundedInteger(entry?.xp,15,1,100), gold:boundedInteger(entry?.gold,5,0,50) };
+      return { id:safeId(entry?.id,'mission-',`${index}`), title, detail:cleanText(entry?.detail,110), kind:entry?.kind === 'reduce' ? 'reduce' : 'positive', cadence:entry?.cadence === 'esporadica' ? 'esporadica' : 'diaria', dueDate:validDateKey(entry?.dueDate) ? entry.dueDate : todayKey(), attribute, xp:boundedInteger(entry?.xp,15,1,100), gold:boundedInteger(entry?.gold,5,0,50) };
     }).filter(Boolean);
     const sanitizeCustomCampaigns = campaigns => (Array.isArray(campaigns) ? campaigns : []).slice(-50).map((entry,index) => {
       const title = cleanText(entry?.title,64); if (!title) return null;
@@ -579,7 +606,7 @@
       document.getElementById('gateStatus').textContent = ready ? `Tudo pronto, ${state.playerName}: ${profileName()}.` : 'Informe seu nome, escolha um gênero e uma classe para continuar.';
     };
     const setActiveTab = tab => {
-      const selected = ['hoje','campanhas','diario','personagem','reino'].includes(tab) ? tab : 'hoje';
+      const selected = ['hoje','missoes','campanhas','diario','personagem','reino'].includes(tab) ? tab : 'hoje';
       state.activeTab = selected;
       document.querySelectorAll('[data-tab]').forEach(button => { const active = button.dataset.tab === selected; button.classList.toggle('active', active); button.setAttribute('aria-current', active ? 'page' : 'false'); });
       document.querySelectorAll('[data-view]').forEach(view => view.classList.toggle('active', view.dataset.view === selected));
@@ -593,16 +620,26 @@
       ...(state.starterMissionsActive ? Object.values(starterCampaigns).map(campaign => ({ ...campaign, ...state.campaigns[campaign.id], starter:true })) : []),
       ...state.customCampaigns.map(campaign => ({ ...campaign, starter:false }))
     ];
+    const starterMissionTitles = { water:'Fonte da Vitalidade', food:'Escolha Consciente', reading:'Páginas da Biblioteca', adult:'Mente Presente' };
+    const dueCustomMissions = () => state.customMissions.filter(mission => mission.dueDate <= todayKey());
     const renderCustomMissions = () => {
       const list = document.getElementById('customMissionList');
-      list.hidden = state.customMissions.length === 0;
-      list.innerHTML = state.customMissions.map(mission => {
+      const missions = dueCustomMissions();
+      list.hidden = missions.length === 0;
+      list.innerHTML = missions.map(mission => {
         const done = Boolean(state.done[mission.id]); const typeText = mission.kind === 'reduce' ? 'Hábito a reduzir' : 'Hábito positivo';
         const cadence = mission.cadence === 'esporadica' ? 'Esporádica' : 'Diária';
         const detail = mission.detail || `${typeText} · ${cadence}`;
         const completion = mission.kind === 'reduce' ? `<button class="complete" type="button" data-action="complete-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Hoje não ocorreu</button><button type="button" data-action="record-custom-occurrence" data-mission-id="${escapeHtml(mission.id)}">Registrar ocorrência</button>` : `<button class="complete" type="button" data-action="complete-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Concluir</button>`;
-        return `<article class="mission ${mission.kind === 'reduce' ? 'reduce' : 'positive'}${done ? ' done' : ''}" data-mission="${escapeHtml(mission.id)}"><div class="sigil">${mission.kind === 'reduce' ? '◒' : '✦'}</div><div><strong>${escapeHtml(mission.title)}</strong><small>${escapeHtml(attributeLabels[mission.attribute])} · ${escapeHtml(detail)}</small></div><div class="reward">+${mission.xp} XP · +${mission.gold} ouro</div><div class="mission-action"><span>${done ? 'Concluída nesta jornada.' : `${typeText} · ${cadence}`}</span>${done ? '' : completion}<button class="remove-mission" type="button" data-action="remove-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Remover</button></div></article>`;
+        return `<article class="mission ${mission.kind === 'reduce' ? 'reduce' : 'positive'}${done ? ' done' : ''}" data-mission="${escapeHtml(mission.id)}"><div class="sigil">${mission.kind === 'reduce' ? '◒' : '✦'}</div><div><strong>${escapeHtml(mission.title)}</strong><small>${escapeHtml(attributeLabels[mission.attribute])} · ${escapeHtml(detail)}</small></div><div class="reward">+${mission.xp} XP · +${mission.gold} ouro</div><div class="mission-action"><span>${done ? 'Concluída nesta jornada.' : `${typeText} · ${cadence}`}</span>${done ? '' : completion}</div></article>`;
       }).join('');
+    };
+    const renderMissionManager = () => {
+      const manager = document.getElementById('missionManagerList'); const history = document.getElementById('missionHistoryList');
+      const pending = state.customMissions.filter(mission => !state.done[mission.id]).sort((a,b) => a.dueDate.localeCompare(b.dueDate));
+      manager.innerHTML = pending.length ? pending.map(mission => `<article class="managed-mission"><div><strong>${escapeHtml(mission.title)}</strong><small>${escapeHtml(attributeLabels[mission.attribute])} · ${mission.cadence === 'esporadica' ? 'Esporádica' : 'Diária'} · executar em ${escapeHtml(dateLabel(mission.dueDate))}</small></div><div class="managed-actions"><button type="button" data-action="edit-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Editar</button><button class="delete" type="button" data-action="remove-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Excluir</button></div></article>`).join('') : '<div class="empty-list">Nenhuma missão pendente. Crie uma tarefa para hoje ou programe seu próximo passo.</div>';
+      const historyEntries = [...state.missionHistory].reverse().slice(0,80);
+      history.innerHTML = historyEntries.length ? historyEntries.map(entry => { const fallback = state.customMissions.find(mission => mission.id === entry.id)?.title || starterMissionTitles[entry.id] || 'Missão concluída'; const completedAt = new Intl.DateTimeFormat('pt-BR',{ day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }).format(new Date(entry.completedAt)); return `<article class="history-entry"><strong>${escapeHtml(entry.title || fallback)}</strong><span>${escapeHtml(completedAt)} · +${entry.xp} XP · +${entry.gold} ouro</span></article>`; }).join('') : '<div class="empty-list">Quando uma missão for concluída, a memória dela aparecerá aqui.</div>';
     };
     const renderCampaigns = () => {
       const campaigns = allCampaigns(); const hasCampaigns = campaigns.length > 0;
@@ -650,26 +687,39 @@
       const level = Math.floor(state.xp / 100) + 1; const xpIntoLevel = state.xp % 100;
       document.getElementById('goldValue').textContent = state.gold; document.getElementById('goldValueSide').textContent = state.gold;
       document.getElementById('levelValue').textContent = level; document.getElementById('xpValue').textContent = `${xpIntoLevel} / 100 XP`; document.getElementById('xpBar').style.width = `${xpIntoLevel}%`;
-      const hasMissions = state.starterMissionsActive === true || state.customMissions.length > 0;
+      const todayCustom = dueCustomMissions(); const hasMissions = state.starterMissionsActive === true || todayCustom.length > 0;
       document.getElementById('missionList').hidden = !state.starterMissionsActive;
       document.getElementById('emptyMissionState').hidden = hasMissions;
+      document.getElementById('emptyMissionTitle').textContent = state.customMissions.length ? 'Nenhuma missão está marcada para hoje.' : 'Acenda sua primeira missão.';
+      document.getElementById('emptyMissionCopy').textContent = state.customMissions.length ? 'As próximas tarefas estão guardadas na aba Missões. Você também pode criar uma missão para hoje.' : 'Crie uma missão com a sua própria meta ou, se fizer sentido, carregue a jornada-base. Nenhuma opção é obrigatória.';
       document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', Boolean(state.done[mission.dataset.mission])));
-      const allMissionIds = [...(state.starterMissionsActive ? [...missionIds] : []), ...state.customMissions.map(mission => mission.id)];
+      const allMissionIds = [...(state.starterMissionsActive ? [...missionIds] : []), ...todayCustom.map(mission => mission.id)];
       const completed = allMissionIds.filter(id => state.done[id]).length;
       document.getElementById('missionCount').textContent = allMissionIds.length ? (completed === allMissionIds.length ? 'Jornada concluída' : `${allMissionIds.length - completed} aguardando`) : 'Sem missões';
-      renderCustomMissions(); renderCampaigns(); renderAttributes(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
+      renderCustomMissions(); renderMissionManager(); renderCampaigns(); renderAttributes(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
     };
     const missionAttributes = { water:'vitalidade', food:'vitalidade', reading:'sabedoria', adult:'sabedoria' };
-    const award = (xp,gold,mission,attribute = missionAttributes[mission]) => { if (state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; if (attribute && Object.prototype.hasOwnProperty.call(state.attributes, attribute)) state.attributes[attribute] += xp; state.missionHistory = [...state.missionHistory, { id:mission, completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
+    const award = (xp,gold,mission,attribute = missionAttributes[mission], title = starterMissionTitles[mission] || '') => { if (state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; if (attribute && Object.prototype.hasOwnProperty.call(state.attributes, attribute)) state.attributes[attribute] += xp; state.missionHistory = [...state.missionHistory, { id:mission, title:cleanText(title,64), completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
     const createLocalId = prefix => `${prefix}${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
     const openDialog = dialog => { if (dialog && !dialog.open) dialog.showModal(); };
     const closeDialog = dialog => { if (dialog?.open) dialog.close(); };
+    let editingMissionId = null;
+    const openMissionDialog = mission => {
+      editingMissionId = mission?.id || null; missionForm.reset();
+      document.getElementById('missionDialogTitle').textContent = mission ? 'Editar missão' : 'Nova missão';
+      missionForm.querySelector('button[type="submit"]').textContent = mission ? 'Salvar alterações' : 'Criar missão';
+      missionForm.elements.dueDate.value = mission?.dueDate || todayKey();
+      if (mission) { missionForm.elements.title.value = mission.title; missionForm.elements.detail.value = mission.detail; missionForm.elements.kind.value = mission.kind; missionForm.elements.cadence.value = mission.cadence; missionForm.elements.attribute.value = mission.attribute; missionForm.elements.xp.value = mission.xp; missionForm.elements.gold.value = mission.gold; }
+      openDialog(missionDialog);
+    };
     const createMission = form => {
       const data = new FormData(form); const title = cleanText(data.get('title'),64);
       if (!title) { message('Dê um nome para a missão.'); return; }
       const attribute = Object.prototype.hasOwnProperty.call(defaultAttributes, data.get('attribute')) ? data.get('attribute') : 'vitalidade';
-      state.customMissions = [...state.customMissions, { id:createLocalId('mission-'), title, detail:cleanText(data.get('detail'),110), kind:data.get('kind') === 'reduce' ? 'reduce' : 'positive', cadence:data.get('cadence') === 'esporadica' ? 'esporadica' : 'diaria', attribute, xp:boundedInteger(data.get('xp'),15,1,100), gold:boundedInteger(data.get('gold'),5,0,50) }];
-      form.reset(); save(); closeDialog(missionDialog); render(); message('Missão criada. A fogueira ganhou um novo propósito.');
+      const mission = { id:editingMissionId || createLocalId('mission-'), title, detail:cleanText(data.get('detail'),110), kind:data.get('kind') === 'reduce' ? 'reduce' : 'positive', cadence:data.get('cadence') === 'esporadica' ? 'esporadica' : 'diaria', dueDate:validDateKey(data.get('dueDate')) ? data.get('dueDate') : todayKey(), attribute, xp:boundedInteger(data.get('xp'),15,1,100), gold:boundedInteger(data.get('gold'),5,0,50) };
+      const editing = Boolean(editingMissionId);
+      state.customMissions = editing ? state.customMissions.map(item => item.id === editingMissionId ? mission : item) : [...state.customMissions, mission];
+      editingMissionId = null; form.reset(); save(); closeDialog(missionDialog); render(); message(editing ? 'Missão atualizada.' : 'Missão criada. A fogueira ganhou um novo propósito.');
     };
     const createCampaign = form => {
       const data = new FormData(form); const title = cleanText(data.get('title'),64);
@@ -700,7 +750,7 @@
       save(); render(); message(equipping ? `${item.name} equipado.` : `${item.name} guardado no inventário.`);
     };
     const exportBackup = () => {
-      const backup = { app:'reino-em-evolucao', version:7, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
+      const backup = { app:'reino-em-evolucao', version:8, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
       const url = URL.createObjectURL(blob); const link = document.createElement('a');
       link.href = url; link.download = `reino-em-evolucao-backup-${new Date().toISOString().slice(0,10)}.json`;
@@ -708,7 +758,7 @@
       setBackupStatus('Backup baixado. Guarde este arquivo em um local seguro.'); message('Backup da jornada criado.');
     };
     const restoreState = backup => {
-      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5,6,7].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
+      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5,6,7,8].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
       const source = backup.state;
       const number = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback; };
       const customMissions = sanitizeCustomMissions(source.customMissions); const customMissionIds = new Set(customMissions.map(mission => mission.id));
@@ -717,11 +767,11 @@
       const gender = ['masculino','feminino'].includes(source.gender) ? source.gender : null;
       const journeyStarted = source.journeyStarted === true && Boolean(selectedClass && gender);
       const campaign = (key, fallback) => { const value = source.campaigns?.[key] || {}; const targetDays = Math.round(number(value.targetDays, fallback.targetDays, 1, 365)); return { completedDays:Math.round(number(value.completedDays, fallback.completedDays, 0, targetDays)), targetDays }; };
-      const missionHistory = Array.isArray(source.missionHistory) ? source.missionHistory.filter(entry => entry && (missionIds.has(entry.id) || customMissionIds.has(entry.id)) && typeof entry.completedAt === 'string').slice(-365).map(entry => ({ id:entry.id, completedAt:entry.completedAt, xp:Math.round(number(entry.xp,0,0,1000000000)), gold:Math.round(number(entry.gold,0,0,1000000000)) })) : [];
+      const missionHistory = Array.isArray(source.missionHistory) ? source.missionHistory.filter(entry => entry && (missionIds.has(entry.id) || customMissionIds.has(entry.id) || cleanText(entry.title,64)) && typeof entry.completedAt === 'string').slice(-365).map(entry => ({ id:entry.id, title:cleanText(entry.title,64), completedAt:entry.completedAt, xp:Math.round(number(entry.xp,0,0,1000000000)), gold:Math.round(number(entry.gold,0,0,1000000000)) })) : [];
       const customCampaigns = sanitizeCustomCampaigns(source.customCampaigns);
       const inventory = sanitizeInventory(source.inventory); const equipped = sanitizeEquipped(source.equipped, inventory);
       const playerName = normalizePlayerName(source.playerName); const restoredJourney = journeyStarted && playerName.length >= 2;
-      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','campanhas','diario','personagem','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', starterMissionsActive:source.starterMissionsActive === true, missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, customMissions, customCampaigns, attributes:sanitizeAttributes(source.attributes), inventory, equipped };
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','missoes','campanhas','diario','personagem','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', starterMissionsActive:source.starterMissionsActive === true, missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, customMissions, customCampaigns, attributes:sanitizeAttributes(source.attributes), inventory, equipped };
     };
     const importBackup = async file => {
       if (!file) return;
@@ -751,13 +801,14 @@
       if (classChoice) { if (state.journeyStarted) { message('A classe só pode ser alterada ao reiniciar a jornada.'); return; } state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
       if (event.target.id === 'startJourney') { if (state.playerName.length < 2 || !state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message(`Sua jornada começou, ${state.playerName}. A fogueira está acesa.`); return; }
       const action = event.target.dataset.action; if (!action) return;
-      if (action === 'open-mission-dialog') { openDialog(missionDialog); return; }
-      if (action === 'close-mission-dialog') { closeDialog(missionDialog); return; }
+      if (action === 'open-mission-dialog') { openMissionDialog(); return; }
+      if (action === 'close-mission-dialog') { editingMissionId = null; closeDialog(missionDialog); return; }
       if (action === 'open-campaign-dialog') { openDialog(campaignDialog); return; }
       if (action === 'close-campaign-dialog') { closeDialog(campaignDialog); return; }
       if (action === 'activate-starter') { state.starterMissionsActive = true; state.water = 0; state.reading = 0; Object.keys(state.done).filter(id => missionIds.has(id)).forEach(id => delete state.done[id]); state.campaigns = JSON.parse(JSON.stringify(defaultCampaigns)); save(); render(); message('Jornada-base carregada. Suas primeiras missões e campanhas estão prontas.'); return; }
-      if (action === 'complete-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) award(mission.xp,mission.gold,mission.id,mission.attribute); return; }
+      if (action === 'complete-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) award(mission.xp,mission.gold,mission.id,mission.attribute,mission.title); return; }
       if (action === 'record-custom-occurrence') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) message(`Ocorrência registrada em “${mission.title}”. Amanhã a jornada continua.`); return; }
+      if (action === 'edit-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) openMissionDialog(mission); return; }
       if (action === 'remove-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (!mission || !window.confirm(`Remover a missão “${mission.title}”?`)) return; state.customMissions = state.customMissions.filter(item => item.id !== mission.id); delete state.done[mission.id]; save(); render(); message('Missão removida.'); return; }
       if (action === 'advance-starter-campaign') { const key = event.target.dataset.campaignKey; const campaign = state.campaigns[key]; if (campaign && starterCampaigns[key]) { campaign.attribute = starterCampaigns[key].attribute; advanceCampaign(campaign); } return; }
       if (action === 'advance-custom-campaign') { advanceCampaign(state.customCampaigns.find(campaign => campaign.id === event.target.dataset.campaignId)); return; }
