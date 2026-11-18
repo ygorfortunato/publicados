@@ -131,6 +131,10 @@
     .mission-action .track { min-width:110px; flex:1; margin:0; }
     .mission-action .track span { background:linear-gradient(90deg,var(--terracota),var(--ocre)); }
     .mission-action span { color:var(--muted); font-size:.75rem; }
+    .empty-journey { margin:14px; padding:27px 22px; text-align:center; border:1px dashed rgba(203,155,100,.42); border-radius:11px; background:linear-gradient(145deg,rgba(84,42,47,.13),rgba(17,9,17,.19)); }
+    .empty-journey h3 { margin:7px 0; font-size:1.35rem; }
+    .empty-journey p { max-width:490px; margin:0 auto 16px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .empty-journey .action-button { color:var(--sombra); font-weight:700; border-color:var(--brilho); background:var(--brilho); }
     .mission button,.action-button { padding:7px 10px; color:var(--pergaminho); font-size:.76rem; border:1px solid rgba(203,155,100,.45); border-radius:7px; background:rgba(203,155,100,.08); transition:transform .15s,background .15s; }
     .mission button:hover,.action-button:hover { transform:translateY(-1px); background:rgba(203,155,100,.18); }
     .mission button.complete { color:var(--sombra); font-weight:700; border-color:var(--fogo); background:var(--fogo); }
@@ -145,6 +149,9 @@
     .camp-card .track { margin-top:8px; }
     .camp-card .track span { width:29%; }
     .camp-note { position:relative; z-index:1; margin-top:25px; color:var(--muted); font-size:.69rem; }
+    .empty-campaign { min-height:260px; padding:24px; }
+    .empty-campaign h3 { margin:8px 0; font-size:1.35rem; }
+    .empty-campaign p { max-width:310px; margin:0; color:var(--muted); font-size:.83rem; line-height:1.5; }
     .wallet { display:flex; align-items:center; gap:12px; padding:16px 18px; border-color:rgba(203,155,100,.48); background:linear-gradient(110deg,#3c2633,#2c1d25); }
     .coin { display:grid; flex:0 0 auto; width:42px; height:42px; place-items:center; color:var(--vinho); font-size:19px; border:3px solid var(--brilho); border-radius:50%; background:var(--fogo); }
     .wallet small { display:block; color:var(--ocre); font-size:.74rem; }
@@ -204,6 +211,23 @@
     .building strong,.building small { display:block; }
     .building strong { font-family:Fraunces,Georgia,serif; font-size:.98rem; }
     .building small { margin-top:2px; color:var(--muted); font-size:.72rem; }
+    .character-sheet { display:grid; grid-template-columns:230px minmax(0,1fr); align-items:center; gap:24px; min-height:320px; padding:25px; }
+    .character-sheet .class-portrait { width:174px; justify-self:center; }
+    .character-sheet h3 { margin:7px 0 8px; font-size:1.9rem; }
+    .character-sheet p { margin:0; color:var(--muted); font-size:.87rem; line-height:1.5; }
+    .attributes-panel { grid-column:1 / -1; padding:22px; }
+    .attributes-panel h3 { margin:6px 0 16px; font-size:1.5rem; }
+    .attributes-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .attribute-card { min-width:0; padding:15px; border:1px solid rgba(203,155,100,.23); border-radius:10px; background:rgba(17,9,17,.25); }
+    .attribute-card .attribute-top { display:flex; align-items:flex-start; justify-content:space-between; gap:9px; }
+    .attribute-card h4 { margin:0; font-family:Fraunces,Georgia,serif; font-size:1.04rem; }
+    .attribute-card p { min-height:2.8em; margin:5px 0 10px; color:var(--muted); font-size:.72rem; line-height:1.4; }
+    .attribute-level { color:var(--brilho); font-size:.72rem; font-weight:700; white-space:nowrap; }
+    .attribute-xp { display:block; margin-top:7px; color:var(--ocre); font-size:.69rem; font-weight:700; }
+    .attribute-card .track { margin-top:8px; }
+    .attribute-card[data-attribute="vitalidade"] .track span { background:linear-gradient(90deg,#cf5f45,var(--brilho)); }
+    .attribute-card[data-attribute="conhecimento"] .track span { background:linear-gradient(90deg,#537bb7,#9fc9ff); }
+    .attribute-card[data-attribute="proposito"] .track span { background:linear-gradient(90deg,#6f5a95,#d6a7f1); }
     .armory-shop { grid-column:1 / -1; padding:22px; scroll-margin-top:18px; }
     .shop-heading { display:flex; align-items:end; justify-content:space-between; gap:14px; margin-bottom:16px; }
     .shop-heading h3 { margin:6px 0 0; font-size:1.48rem; }
@@ -267,7 +291,7 @@
     @media (max-width:570px) { .shell { width:min(100% - 20px,1190px); padding-top:15px; } .topbar { align-items:flex-start; flex-direction:column; } .nav { width:100%; } .hero { min-height:425px; } .hero-copy { padding:34px 24px 15px; } h1 { font-size:3.05rem; } .hero-stats { padding:15px 24px 24px; } .customizer-copy { padding:22px 18px; } .appearance-choices { grid-template-columns:1fr; gap:10px; } .mission { grid-template-columns:auto 1fr; } .reward { grid-column:2; } .mission-action { grid-column:1 / 3; margin-left:52px; } .camp-body { max-width:70%; } }
     @media (max-width:840px) { .class-customizer { grid-template-columns:1fr; } .class-showcase { min-height:395px; border-right:0; border-bottom:1px solid rgba(244,230,208,.12); } .class-portrait { width:196px; } }
     @media (max-width:570px) { .class-content { padding:24px 17px; } .class-options { grid-template-columns:1fr; } .class-option { display:grid; grid-template-columns:64px 1fr; column-gap:9px; align-items:center; } .class-option .mini-art { grid-row:span 2; margin:0; } .class-option small { align-self:start; } }
-    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .journey-gate { display:block; padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom)); } .gate-card { margin:0 auto; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
+    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .character-sheet { grid-template-columns:1fr; } .character-sheet .class-portrait { width:160px; } .attributes-grid { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .journey-gate { display:block; padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom)); } .gate-card { margin:0 auto; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
     @media (max-width:480px) { .gate-top,.gate-step,.gate-footer { padding-right:18px; padding-left:18px; } .gate-footer { align-items:stretch; flex-direction:column; } .start-button { width:100%; } }
     @media (max-width:570px) { .shop-heading { align-items:flex-start; flex-direction:column; } .shop-grid { grid-template-columns:1fr; } .shop-item { display:grid; grid-template-columns:90px 1fr; column-gap:11px; align-items:start; } .item-art { grid-row:span 4; margin:0; } .shop-buy { grid-column:2; } }
   </style>
@@ -277,7 +301,7 @@
     <header class="topbar">
       <div class="brand"><span class="brand-mark">✦</span><span>Fogueira</span></div>
       <nav class="nav" aria-label="Navegação principal">
-        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="reino">Reino</button>
+        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="personagem">Personagem</button><button type="button" data-tab="reino">Reino</button>
       </nav>
     </header>
     <section class="hero" aria-label="Resumo da jornada">
@@ -304,8 +328,9 @@
       </section>
       <section class="main-grid">
         <section class="panel">
-          <div class="panel-heading"><h2>Missões de hoje</h2><span id="missionCount">4 aguardando</span></div>
-          <div class="mission-list">
+          <div class="panel-heading"><h2>Missões de hoje</h2><span id="missionCount">Sem missões</span></div>
+          <div class="empty-journey" id="emptyMissionState"><span class="eyebrow">Jornada em branco</span><h3>Escolha suas primeiras missões.</h3><p>Sua jornada começa sem tarefas, campanhas ou recompensas predefinidas. Quando quiser, você pode carregar esta jornada-base e depois ajustá-la ao seu ritmo.</p><button class="action-button" type="button" data-action="activate-starter">Carregar jornada-base</button></div>
+          <div class="mission-list" id="missionList" hidden>
             <article class="mission positive" data-mission="water"><div class="sigil">◈</div><div><strong>Fonte da Vitalidade</strong><small>Saúde e energia · Beber 3 litros de água</small></div><div class="reward">+20 XP · +8 ouro</div><div class="mission-action"><div class="track" aria-label="Progresso de água"><span id="waterBar" style="width:0%"></span></div><span id="waterLabel">0 / 3 L</span><button type="button" data-action="water">+ 500 ml</button><button class="complete" type="button" data-action="finish-water">Concluir</button></div></article>
             <article class="mission reduce" data-mission="food"><div class="sigil">◒</div><div><strong>Escolha Consciente</strong><small>Saúde e energia · Reduzir doces e fast food</small></div><div class="reward">+15 XP · +6 ouro</div><div class="mission-action"><span>O registro é uma bússola, nunca uma punição.</span><button class="complete" type="button" data-action="clear-food">Hoje não ocorreu</button><button type="button" data-action="record-food">Registrar ocorrência</button></div></article>
             <article class="mission positive" data-mission="reading"><div class="sigil">✧</div><div><strong>Páginas da Biblioteca</strong><small>Conhecimento e equilíbrio · Ler ao menos 5 páginas</small></div><div class="reward">+15 XP · +6 ouro</div><div class="mission-action"><div class="track" aria-label="Progresso de leitura"><span id="readingBar" style="width:0%"></span></div><span id="readingLabel">0 / 5 páginas</span><button type="button" data-action="reading">+ 1 página</button><button class="complete" type="button" data-action="finish-reading">Concluir</button></div></article>
@@ -313,7 +338,8 @@
           </div>
         </section>
         <aside class="side-stack">
-          <section class="panel camp-card"><img class="camp-art" src="assets/towers-campfire.png" alt="Torres de fantasia junto a uma fogueira"><div class="camp-body"><span class="eyebrow">Campanha ativa</span><h3>Ritual de Vitalidade</h3><p>Construa uma rotina de cuidado possível, um dia de cada vez.</p><div class="meter"><span>Semana 1</span><span id="vitalityCampLabel">0 de 7 dias</span></div><div class="track"><span id="vitalityCampBar"></span></div></div><p class="camp-note">O seu reino cresce com constância, não perfeição.</p></section>
+          <section class="panel camp-card" id="activeCampaignCard" hidden><img class="camp-art" src="assets/towers-campfire.png" alt="Torres de fantasia junto a uma fogueira"><div class="camp-body"><span class="eyebrow">Campanha ativa</span><h3>Ritual de Vitalidade</h3><p>Construa uma rotina de cuidado possível, um dia de cada vez.</p><div class="meter"><span>Semana 1</span><span id="vitalityCampLabel">0 de 7 dias</span></div><div class="track"><span id="vitalityCampBar"></span></div></div><p class="camp-note">O seu reino cresce com constância, não perfeição.</p></section>
+          <section class="panel empty-campaign" id="emptyCampaignCard"><span class="eyebrow">Campanhas</span><h3>Nenhuma campanha ativa</h3><p>As campanhas aparecem quando você escolher uma jornada. Por enquanto, seu reino está livre para começar no seu próprio passo.</p></section>
           <section class="panel wallet"><span class="coin">●</span><div><small>Ouro disponível</small><strong><span id="goldValueSide">0</span> moedas</strong></div><button class="shop-button" type="button" data-action="shop">Ver loja</button></section>
           <section class="panel diary"><span class="eyebrow">Diário de aventura</span><h3>Qual foi sua pequena vitória?</h3><p>Registre o que merece ser lembrado nesta noite.</p><textarea id="journal" placeholder="Escreva livremente…"></textarea><div class="diary-footer"><span class="saved" id="saved">Guardado neste dispositivo</span><button class="action-button" type="button" data-action="save-journal">Guardar no diário</button></div></section>
         </aside>
@@ -322,7 +348,8 @@
 
     <section class="tab-view" data-view="campanhas">
       <div class="view-header"><div><span class="eyebrow">Arcos de evolução</span><h2>Campanhas do reino</h2></div><p>Missões de longo prazo que dão ritmo à jornada. Você define o próximo capítulo quando estiver pronto.</p></div>
-      <div class="campaign-grid">
+      <section class="panel empty-journey" id="emptyCampaignsState"><span class="eyebrow">Seu próximo capítulo</span><h3>O mapa ainda está em branco.</h3><p>Carregue a jornada-base na aba Hoje para incluir as campanhas de Vitalidade e Biblioteca Interior.</p></section>
+      <div class="campaign-grid" id="campaignGrid" hidden>
         <article class="campaign-large"><span class="eyebrow">Em curso · semana 1</span><h3>Ritual de Vitalidade</h3><p>Uma base de cuidado para recuperar energia: água, escolhas conscientes e constância sem dureza.</p><div class="campaign-progress"><span id="vitalityCampaignLabel">0 de 7 dias</span><div class="track"><span id="vitalityCampaignBar"></span></div></div></article>
         <article class="campaign-large alt"><span class="eyebrow">Próxima fogueira</span><h3>Biblioteca Interior</h3><p>Pequenas leituras para ampliar repertório e criar um espaço de clareza dentro da rotina.</p><div class="campaign-progress"><span id="libraryCampaignLabel">0 de 7 dias</span><div class="track"><span id="libraryCampaignBar"></span></div></div></article>
       </div>
@@ -336,13 +363,21 @@
       </div>
     </section>
 
+    <section class="tab-view" data-view="personagem">
+      <div class="view-header"><div><span class="eyebrow">Ficha do herói</span><h2>Personagem e atributos</h2></div><p>Acompanhe os traços que sua constância está fortalecendo. Cada missão concluída também alimenta um atributo.</p></div>
+      <div class="realm-grid">
+        <section class="panel character-sheet"><div class="class-portrait" id="characterSheetPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="characterSheetPlayerName">Habitante do reino</span><h3 id="characterSheetClass">Guardião da Brasa</h3><p id="characterSheetDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="characterSheetGender">Masculino</span><span id="characterSheetLevel">Nível 1</span><span><span id="characterSheetGold">0</span> ouro</span></div></div></section>
+        <section class="panel attributes-panel"><span class="eyebrow">Progresso de atributos</span><h3>O que seu reino está fortalecendo</h3><div class="attributes-grid"><article class="attribute-card" data-attribute="vitalidade"><div class="attribute-top"><h4>Vitalidade</h4><span class="attribute-level">Nível 1</span></div><p>Saúde, energia e cuidado do corpo.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="conhecimento"><div class="attribute-top"><h4>Conhecimento</h4><span class="attribute-level">Nível 1</span></div><p>Leitura, clareza e equilíbrio emocional.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="proposito"><div class="attribute-top"><h4>Propósito</h4><span class="attribute-level">Nível 1</span></div><p>Trabalho, direção e construção do futuro.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article></div></section>
+      </div>
+    </section>
+
     <section class="tab-view" data-view="reino">
       <div class="view-header"><div><span class="eyebrow">Seu espaço de progresso</span><h2>O reino em evolução</h2></div><p>Ouro, itens e construções serão os sinais visuais da constância que você está acumulando.</p></div>
       <div class="realm-grid">
         <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="realmPlayerName">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span id="realmLevel">Nível 1</span><span><span id="realmGold">0</span> ouro</span></div></div></section>
         <section class="panel buildings"><span class="eyebrow">Construções</span><div class="building"><span class="building-icon">♨</span><div><strong>Fogueira central</strong><small>Nível 1 · aquece o início da jornada</small></div></div><div class="building"><span class="building-icon">⌂</span><div><strong>Biblioteca</strong><small>Em breve · cresce com suas leituras</small></div></div><div class="building"><span class="building-icon">✦</span><div><strong>Arsenal de aparências</strong><small>Em breve · compre itens com ouro</small></div></div></section>
         <section class="panel armory-shop" id="armoryShop"><div class="shop-heading"><div><span class="eyebrow">Arsenal de aparências</span><h3>Mercador da Fogueira</h3></div><p>Use o ouro conquistado nas missões para comprar peças. Ao equipá-las, elas aparecem no retrato do seu personagem.</p></div><div class="shop-grid"><article class="shop-item" data-shop-item="manto-brasa"><div class="item-art" data-item="manto-brasa" aria-hidden="true"></div><span class="item-slot">Manto</span><h4>Manto das Brasas</h4><p>Uma capa cerimonial em vermelho profundo, com o calor da fogueira.</p><button class="shop-buy" type="button" data-item="manto-brasa"></button></article><article class="shop-item" data-shop-item="coroa-vigia"><div class="item-art" data-item="coroa-vigia" aria-hidden="true"></div><span class="item-slot">Cabeça</span><h4>Coroa do Vigia</h4><p>Metal dourado e uma gema âmbar para quem sustenta sua vigília.</p><button class="shop-buy" type="button" data-item="coroa-vigia"></button></article><article class="shop-item" data-shop-item="selo-aurora"><div class="item-art" data-item="selo-aurora" aria-hidden="true"></div><span class="item-slot">Relíquia</span><h4>Selo da Aurora</h4><p>Um amuleto que leva uma pequena chama junto ao coração.</p><button class="shop-buy" type="button" data-item="selo-aurora"></button></article><article class="shop-item" data-shop-item="espada-alvorada"><div class="item-art relic" data-item="espada-alvorada" aria-hidden="true"></div><span class="item-slot">Arma</span><h4>Espada da Alvorada</h4><p>Uma lâmina rúnica que acompanha quem escolhe recomeçar.</p><button class="shop-buy" type="button" data-item="espada-alvorada"></button></article><article class="shop-item" data-shop-item="grimorio-trilhas"><div class="item-art relic" data-item="grimorio-trilhas" aria-hidden="true"></div><span class="item-slot">Grimório</span><h4>Grimório das Trilhas</h4><p>Um livro vivo para transformar intenção em próximos passos.</p><button class="shop-buy" type="button" data-item="grimorio-trilhas"></button></article><article class="shop-item" data-shop-item="orbe-nevoa"><div class="item-art relic" data-item="orbe-nevoa" aria-hidden="true"></div><span class="item-slot">Aura</span><h4>Orbe da Névoa</h4><p>Uma esfera de clareza para lembrar que o caminho se revela aos poucos.</p><button class="shop-buy" type="button" data-item="orbe-nevoa"></button></article></div></section>
-        <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um backup completo: personagem, ouro, diário, missões, histórico de conclusões e campanhas. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup completo</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
+        <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um backup completo: personagem, atributos, ouro, diário, missões, histórico de conclusões, campanhas e equipamentos. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup completo</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
       </div>
     </section>
     <p class="source-note">Arte de abertura: <a href="https://pixabay.com/photos/fantasy-people-bonfire-group-5583344/" target="_blank" rel="noreferrer">PatoLenin / Pixabay</a>. Carta de construção: <a href="https://commons.wikimedia.org/wiki/File:Quaternius_-_3D_Card_Kit_-_Fantasy_-_16_Belltowers.png" target="_blank" rel="noreferrer">Quaternius / CC0</a>. Artes de classe e equipamentos: ilustrações originais geradas para este protótipo.</p>
@@ -370,6 +405,7 @@
     if (legacyDemoSeed) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } } };
     const normalizePlayerName = value => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0,32) : '';
     const defaultCampaigns = { vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } };
+    const defaultAttributes = { vitalidade:0, conhecimento:0, proposito:0 };
     const equipmentCatalog = {
       'manto-brasa': { slot:'cloak', name:'Manto das Brasas', cost:80 },
       'coroa-vigia': { slot:'head', name:'Coroa do Vigia', cost:120 },
@@ -381,9 +417,12 @@
     const equipmentSlots = ['cloak','head','amulet','weapon','relic','aura'];
     const sanitizeInventory = inventory => [...new Set(Array.isArray(inventory) ? inventory.filter(id => equipmentCatalog[id]) : [])];
     const sanitizeEquipped = (equipped, inventory) => Object.fromEntries(equipmentSlots.map(slot => { const item = equipped?.[slot]; return [slot, inventory.includes(item) && equipmentCatalog[item]?.slot === slot ? item : null]; }));
+    const sanitizeAttributes = attributes => Object.fromEntries(Object.keys(defaultAttributes).map(key => { const value = Number(attributes?.[key]); return [key, Number.isFinite(value) ? Math.round(Math.min(1000000000, Math.max(0, value))) : 0]; }));
+    const isPreBlankJourneyState = Object.keys(savedState).length > 0 && !Object.prototype.hasOwnProperty.call(savedState, 'starterMissionsActive');
+    if (isPreBlankJourneyState) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ ...defaultCampaigns }, attributes:{ ...defaultAttributes }, inventory:[], equipped:{}, starterMissionsActive:false };
     const savedInventory = sanitizeInventory(savedState.inventory);
     const savedPlayerName = normalizePlayerName(savedState.playerName);
-    const state = { water:0, reading:0, gold:0, xp:0, done:{}, journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
+    const state = { water:0, reading:0, gold:0, xp:0, done:{}, journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', starterMissionsActive:false, missionHistory:[], campaigns:{ ...defaultCampaigns }, attributes:{ ...defaultAttributes }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, starterMissionsActive:savedState.starterMissionsActive === true, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, attributes:sanitizeAttributes(savedState.attributes), missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
     if (!state.journeyStarted) { state.selectedClass = null; state.gender = null; }
     if (!state.playerName) state.journeyStarted = false;
     const classProfiles = {
@@ -422,6 +461,12 @@
       document.getElementById('realmGender').textContent = gender === 'feminino' ? 'Feminino' : 'Masculino';
       document.getElementById('realmGold').textContent = state.gold;
       document.getElementById('realmLevel').textContent = `Nível ${Math.floor(state.xp / 100) + 1}`;
+      document.getElementById('characterSheetPlayerName').textContent = state.playerName ? `${state.playerName} · habitante do reino` : 'Habitante do reino';
+      document.getElementById('characterSheetClass').textContent = name;
+      document.getElementById('characterSheetDescription').textContent = profile.description;
+      document.getElementById('characterSheetGender').textContent = gender === 'feminino' ? 'Feminino' : 'Masculino';
+      document.getElementById('characterSheetGold').textContent = state.gold;
+      document.getElementById('characterSheetLevel').textContent = `Nível ${Math.floor(state.xp / 100) + 1}`;
       document.getElementById('chapterLabel').textContent = state.playerName ? `Capítulo 1 · ${state.playerName}` : 'Capítulo 1 · Reconstrução';
       document.getElementById('realmPlayerName').textContent = state.playerName ? `${state.playerName} · habitante do reino` : 'Habitante do reino';
       document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.disabled = state.journeyStarted; element.setAttribute('aria-selected', String(selected)); });
@@ -448,12 +493,18 @@
       document.getElementById('gateStatus').textContent = ready ? `Tudo pronto, ${state.playerName}: ${profileName()}.` : 'Informe seu nome, escolha um gênero e uma classe para continuar.';
     };
     const setActiveTab = tab => {
-      const selected = ['hoje','campanhas','diario','reino'].includes(tab) ? tab : 'hoje';
+      const selected = ['hoje','campanhas','diario','personagem','reino'].includes(tab) ? tab : 'hoje';
       state.activeTab = selected;
       document.querySelectorAll('[data-tab]').forEach(button => { const active = button.dataset.tab === selected; button.classList.toggle('active', active); button.setAttribute('aria-current', active ? 'page' : 'false'); });
       document.querySelectorAll('[data-view]').forEach(view => view.classList.toggle('active', view.dataset.view === selected));
     };
     const renderCampaigns = () => {
+      const hasCampaigns = state.starterMissionsActive === true;
+      document.getElementById('activeCampaignCard').hidden = !hasCampaigns;
+      document.getElementById('emptyCampaignCard').hidden = hasCampaigns;
+      document.getElementById('campaignGrid').hidden = !hasCampaigns;
+      document.getElementById('emptyCampaignsState').hidden = hasCampaigns;
+      if (!hasCampaigns) return;
       const draw = (campaign, labels, bars) => {
         const target = Math.max(1, Number(campaign?.targetDays) || 7); const completed = Math.min(target, Math.max(0, Number(campaign?.completedDays) || 0));
         labels.forEach(id => document.getElementById(id).textContent = `${completed} de ${target} dias`);
@@ -461,6 +512,16 @@
       };
       draw(state.campaigns.vitalidade, ['vitalityCampLabel','vitalityCampaignLabel'], ['vitalityCampBar','vitalityCampaignBar']);
       draw(state.campaigns.biblioteca, ['libraryCampaignLabel'], ['libraryCampaignBar']);
+    };
+    const renderAttributes = () => {
+      document.querySelectorAll('[data-attribute]').forEach(card => {
+        const total = state.attributes[card.dataset.attribute] || 0;
+        const level = Math.floor(total / 100) + 1;
+        const xpIntoLevel = total % 100;
+        card.querySelector('.attribute-level').textContent = `Nível ${level}`;
+        card.querySelector('.attribute-xp').textContent = `${xpIntoLevel} / 100 XP`;
+        card.querySelector('.track span').style.width = `${xpIntoLevel}%`;
+      });
     };
     const render = () => {
       document.getElementById('waterBar').style.width = `${Math.min(100,state.water / 3 * 100)}%`;
@@ -470,11 +531,16 @@
       const level = Math.floor(state.xp / 100) + 1; const xpIntoLevel = state.xp % 100;
       document.getElementById('goldValue').textContent = state.gold; document.getElementById('goldValueSide').textContent = state.gold;
       document.getElementById('levelValue').textContent = level; document.getElementById('xpValue').textContent = `${xpIntoLevel} / 100 XP`; document.getElementById('xpBar').style.width = `${xpIntoLevel}%`;
-      document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', Boolean(state.done[mission.dataset.mission])));
-      const completed = Object.keys(state.done).length; document.getElementById('missionCount').textContent = completed === 4 ? 'Jornada concluída' : `${4 - completed} aguardando`;
-      renderCampaigns(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
+      const hasMissions = state.starterMissionsActive === true;
+      document.getElementById('missionList').hidden = !hasMissions;
+      document.getElementById('emptyMissionState').hidden = hasMissions;
+      document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', hasMissions && Boolean(state.done[mission.dataset.mission])));
+      const completed = hasMissions ? Object.keys(state.done).length : 0;
+      document.getElementById('missionCount').textContent = hasMissions ? (completed === 4 ? 'Jornada concluída' : `${4 - completed} aguardando`) : 'Sem missões';
+      renderCampaigns(); renderAttributes(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
     };
-    const award = (xp,gold,mission) => { if (state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; state.missionHistory = [...state.missionHistory, { id:mission, completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
+    const missionAttributes = { water:'vitalidade', food:'vitalidade', reading:'conhecimento', adult:'conhecimento' };
+    const award = (xp,gold,mission) => { if (!state.starterMissionsActive || state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; const attribute = missionAttributes[mission]; if (attribute) state.attributes[attribute] += xp; state.missionHistory = [...state.missionHistory, { id:mission, completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
     const saveJournal = (source, savedId) => { state.journal = source.value; journals.filter(other => other !== source).forEach(other => other.value = state.journal); save(); const notice = document.getElementById(savedId); notice.classList.add('show'); setTimeout(() => notice.classList.remove('show'),2200); };
     const buyEquipment = id => {
       const item = equipmentCatalog[id];
@@ -490,7 +556,7 @@
       save(); render(); message(equipping ? `${item.name} equipado.` : `${item.name} guardado no inventário.`);
     };
     const exportBackup = () => {
-      const backup = { app:'reino-em-evolucao', version:5, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
+      const backup = { app:'reino-em-evolucao', version:6, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
       const url = URL.createObjectURL(blob); const link = document.createElement('a');
       link.href = url; link.download = `reino-em-evolucao-backup-${new Date().toISOString().slice(0,10)}.json`;
@@ -498,7 +564,7 @@
       setBackupStatus('Backup baixado. Guarde este arquivo em um local seguro.'); message('Backup da jornada criado.');
     };
     const restoreState = backup => {
-      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
+      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5,6].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
       const source = backup.state;
       const number = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback; };
       const done = Object.fromEntries(Object.entries(source.done || {}).filter(([key,value]) => missionIds.has(key) && value === true));
@@ -509,7 +575,7 @@
       const missionHistory = Array.isArray(source.missionHistory) ? source.missionHistory.filter(entry => entry && missionIds.has(entry.id) && typeof entry.completedAt === 'string').slice(-365).map(entry => ({ id:entry.id, completedAt:entry.completedAt, xp:Math.round(number(entry.xp,0,0,1000000000)), gold:Math.round(number(entry.gold,0,0,1000000000)) })) : [];
       const inventory = sanitizeInventory(source.inventory); const equipped = sanitizeEquipped(source.equipped, inventory);
       const playerName = normalizePlayerName(source.playerName); const restoredJourney = journeyStarted && playerName.length >= 2;
-      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, inventory, equipped };
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','campanhas','diario','personagem','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', starterMissionsActive:source.starterMissionsActive === true, missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, attributes:sanitizeAttributes(source.attributes), inventory, equipped };
     };
     const importBackup = async file => {
       if (!file) return;
@@ -537,6 +603,8 @@
       if (classChoice) { if (state.journeyStarted) { message('A classe só pode ser alterada ao reiniciar a jornada.'); return; } state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
       if (event.target.id === 'startJourney') { if (state.playerName.length < 2 || !state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message(`Sua jornada começou, ${state.playerName}. A fogueira está acesa.`); return; }
       const action = event.target.dataset.action; if (!action) return;
+      if (action === 'activate-starter') { state.starterMissionsActive = true; state.water = 0; state.reading = 0; state.done = {}; state.missionHistory = []; state.campaigns = JSON.parse(JSON.stringify(defaultCampaigns)); save(); render(); message('Jornada-base carregada. Suas primeiras missões estão prontas.'); return; }
+      if (['water','finish-water','reading','finish-reading','clear-food','clear-adult','record-food','record-adult'].includes(action) && !state.starterMissionsActive) return;
       if (action === 'water') { state.water = Math.min(3, +(state.water + .5).toFixed(1)); save(); render(); if (state.water === 3) award(20,8,'water'); }
       if (action === 'finish-water') { state.water = 3; award(20,8,'water'); }
       if (action === 'reading') { state.reading = Math.min(5, state.reading + 1); save(); render(); if (state.reading === 5) award(15,6,'reading'); }
