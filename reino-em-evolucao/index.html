@@ -307,6 +307,15 @@
     .data-action.danger { color:#ffd4d7; border-color:rgba(212,114,122,.65); background:rgba(212,114,122,.1); }
     .data-action.danger:hover { border-color:var(--por-do-sol); background:rgba(212,114,122,.2); }
     .backup-status { display:block; min-height:1.2em; margin-top:11px; color:var(--ocre); font-size:.73rem; }
+    .account-status { display:block; min-height:1.2em; margin-top:11px; color:var(--ocre); font-size:.73rem; line-height:1.45; }
+    .account-status.is-error { color:var(--por-do-sol); }
+    .account-status.is-synced { color:#91d5b5; }
+    .account-dialog-copy { margin:0 0 17px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .account-form { display:grid; gap:12px; }
+    .account-switch { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 15px; }
+    .account-switch button { padding:8px 10px; color:var(--pergaminho); font-size:.75rem; border:1px solid rgba(203,155,100,.35); border-radius:7px; background:rgba(203,155,100,.07); }
+    .account-switch button.active { color:var(--sombra); border-color:var(--brilho); background:var(--brilho); }
+    .account-note { margin:4px 0 0; color:var(--muted); font-size:.72rem; line-height:1.42; }
     .journey-gate { position:fixed; z-index:10; inset:0; display:grid; align-items:start; justify-items:center; padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom)); overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; background:linear-gradient(145deg,rgba(17,9,17,.78),rgba(22,20,38,.89)); backdrop-filter:blur(7px); }
     .journey-gate.hidden { display:none; }
     .gate-card { width:min(920px,100%); margin:auto 0; overflow:hidden; border:1px solid rgba(203,155,100,.58); border-radius:18px; background:linear-gradient(130deg,#171427,#29223a 62%,#331d26); box-shadow:0 30px 80px rgba(0,0,0,.55); }
@@ -436,6 +445,7 @@
         <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="realmPlayerName">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span id="realmLevel">Nível 1</span><span><span id="realmGold">0</span> ouro</span></div></div></section>
         <section class="panel buildings"><span class="eyebrow">Construções</span><div class="building"><span class="building-icon">♨</span><div><strong>Fogueira central</strong><small>Nível 1 · aquece o início da jornada</small></div></div><div class="building"><span class="building-icon">⌂</span><div><strong>Biblioteca</strong><small>Em breve · cresce com suas leituras</small></div></div><div class="building"><span class="building-icon">✦</span><div><strong>Arsenal de aparências</strong><small>Em breve · compre itens com ouro</small></div></div></section>
         <section class="panel armory-shop" id="armoryShop"><div class="shop-heading"><div><span class="eyebrow">Arsenal de aparências</span><h3>Mercador da Fogueira</h3></div><p>Use o ouro conquistado nas missões para comprar peças. Ao equipá-las, elas aparecem no retrato do seu personagem.</p></div><div class="shop-grid"><article class="shop-item" data-shop-item="manto-brasa"><div class="item-art" data-item="manto-brasa" aria-hidden="true"></div><span class="item-slot">Manto</span><h4>Manto das Brasas</h4><p>Uma capa cerimonial em vermelho profundo, com o calor da fogueira.</p><button class="shop-buy" type="button" data-item="manto-brasa"></button></article><article class="shop-item" data-shop-item="coroa-vigia"><div class="item-art" data-item="coroa-vigia" aria-hidden="true"></div><span class="item-slot">Cabeça</span><h4>Coroa do Vigia</h4><p>Metal dourado e uma gema âmbar para quem sustenta sua vigília.</p><button class="shop-buy" type="button" data-item="coroa-vigia"></button></article><article class="shop-item" data-shop-item="selo-aurora"><div class="item-art" data-item="selo-aurora" aria-hidden="true"></div><span class="item-slot">Relíquia</span><h4>Selo da Aurora</h4><p>Um amuleto que leva uma pequena chama junto ao coração.</p><button class="shop-buy" type="button" data-item="selo-aurora"></button></article><article class="shop-item" data-shop-item="espada-alvorada"><div class="item-art relic" data-item="espada-alvorada" aria-hidden="true"></div><span class="item-slot">Arma</span><h4>Espada da Alvorada</h4><p>Uma lâmina rúnica que acompanha quem escolhe recomeçar.</p><button class="shop-buy" type="button" data-item="espada-alvorada"></button></article><article class="shop-item" data-shop-item="grimorio-trilhas"><div class="item-art relic" data-item="grimorio-trilhas" aria-hidden="true"></div><span class="item-slot">Grimório</span><h4>Grimório das Trilhas</h4><p>Um livro vivo para transformar intenção em próximos passos.</p><button class="shop-buy" type="button" data-item="grimorio-trilhas"></button></article><article class="shop-item" data-shop-item="orbe-nevoa"><div class="item-art relic" data-item="orbe-nevoa" aria-hidden="true"></div><span class="item-slot">Aura</span><h4>Orbe da Névoa</h4><p>Uma esfera de clareza para lembrar que o caminho se revela aos poucos.</p><button class="shop-buy" type="button" data-item="orbe-nevoa"></button></article></div></section>
+        <section class="panel journey-data"><span class="eyebrow">Conta da fogueira</span><h3>Leve seu reino para qualquer dispositivo</h3><p>Entre com seu e-mail para guardar na nuvem personagem, atributos, ouro, itens, missões, campanhas, diário e histórico. Seus dados locais continuam preservados até você escolher migrá-los.</p><div class="data-actions"><button class="data-action" id="accountButton" type="button" data-action="open-account-dialog">Entrar ou criar conta</button><button class="data-action danger" id="signOutButton" type="button" data-action="sign-out" hidden>Sair da conta</button></div><span class="account-status" id="accountStatus" role="status" aria-live="polite"></span></section>
         <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um backup completo: personagem, atributos, ouro, diário, missões, histórico de conclusões, campanhas e equipamentos. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup completo</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
       </div>
     </section>
@@ -474,6 +484,16 @@
     </form>
   </dialog>
 
+  <dialog class="forge-dialog" id="accountDialog" aria-labelledby="accountDialogTitle">
+    <form class="forge-form" id="accountForm">
+      <div class="forge-form-header"><div><span class="eyebrow">Conta da fogueira</span><h2 id="accountDialogTitle">Guardar meu reino</h2></div><button class="dialog-close" type="button" data-action="close-account-dialog" aria-label="Fechar">×</button></div>
+      <p class="account-dialog-copy" id="accountDialogCopy">Entre para sincronizar sua jornada entre dispositivos. Senhas são protegidas pelo Supabase e nunca ficam salvas no app.</p>
+      <div class="account-switch" aria-label="Modo da conta"><button class="active" type="button" data-auth-mode="signin">Entrar</button><button type="button" data-auth-mode="signup">Criar conta</button><button type="button" data-auth-mode="reset">Recuperar senha</button></div>
+      <div class="account-form"><label class="form-field">E-mail<input id="accountEmail" name="email" type="email" autocomplete="email" required placeholder="voce@exemplo.com"></label><label class="form-field" id="accountPasswordField">Senha<input id="accountPassword" name="password" type="password" minlength="8" autocomplete="current-password" required placeholder="No mínimo 8 caracteres"></label><p class="account-note" id="accountNote">Ainda não possui conta? Escolha “Criar conta”.</p></div>
+      <div class="form-actions"><button class="cancel" type="button" data-action="close-account-dialog">Cancelar</button><button class="submit" id="accountSubmit" type="submit">Entrar</button></div>
+    </form>
+  </dialog>
+
   <section class="journey-gate" id="journeyGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <div class="gate-card">
       <div class="gate-top"><span class="eyebrow">Antes da primeira fogueira</span><h2 id="gateTitle">Escolha quem vai iniciar esta jornada.</h2><p>Defina seu nome, a identidade visual do personagem e sua classe. A jornada só começa quando você confirmar essas escolhas.</p><label class="name-field" for="playerNameInput"><span>Passo 1 · Seu nome</span><input id="playerNameInput" type="text" maxlength="32" minlength="2" autocomplete="given-name" placeholder="Como devemos chamar você?"></label></div>
@@ -489,6 +509,8 @@
     </div>
   </section>
   <div class="toast" id="toast" role="status"></div>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
   <script>
     let savedState = {};
     try { savedState = JSON.parse(localStorage.getItem('reino-state') || '{}'); } catch { savedState = {}; }
@@ -546,12 +568,27 @@
     const playerNameInput = document.getElementById('playerNameInput');
     const backupInput = document.getElementById('backupFile');
     const backupStatus = document.getElementById('backupStatus');
+    const accountDialog = document.getElementById('accountDialog');
+    const accountForm = document.getElementById('accountForm');
+    const accountStatus = document.getElementById('accountStatus');
+    const accountButton = document.getElementById('accountButton');
+    const signOutButton = document.getElementById('signOutButton');
     const missionDialog = document.getElementById('missionDialog');
     const campaignDialog = document.getElementById('campaignDialog');
     const missionForm = document.getElementById('missionForm');
     const campaignForm = document.getElementById('campaignForm');
     const missionIds = new Set(['water','food','reading','adult']);
-    const save = () => localStorage.setItem('reino-state', JSON.stringify(state));
+    const supabaseSettings = window.REINO_SUPABASE || {};
+    const supabaseConfigured = typeof supabaseSettings.url === 'string' && /^https:\/\//.test(supabaseSettings.url) && typeof supabaseSettings.anonKey === 'string' && supabaseSettings.anonKey.length > 20;
+    let cloudClient = null; let cloudUser = null; let cloudSaveTimer; let cloudHydrating = false; let accountMode = 'signin';
+    const setAccountStatus = (text, type = '') => { accountStatus.textContent = text; accountStatus.className = `account-status${type ? ` is-${type}` : ''}`; };
+    const renderAccount = () => {
+      if (!supabaseConfigured) { accountButton.textContent = 'Configurar sincronização'; accountButton.hidden = false; signOutButton.hidden = true; setAccountStatus('A sincronização será ativada ao conectar o projeto Supabase.'); return; }
+      if (!cloudUser) { accountButton.textContent = 'Entrar ou criar conta'; accountButton.hidden = false; signOutButton.hidden = true; setAccountStatus('Entre para sincronizar sua jornada em qualquer dispositivo.'); return; }
+      accountButton.textContent = cloudUser.email || 'Conta conectada'; accountButton.hidden = false; signOutButton.hidden = false; setAccountStatus('Conta conectada · suas alterações serão sincronizadas automaticamente.', 'synced');
+    };
+    const hasMeaningfulLocalJourney = () => Boolean(state.journeyStarted || state.xp || state.gold || state.journal || state.starterMissionsActive || state.customMissions.length || state.customCampaigns.length || state.missionHistory.length || state.inventory.length);
+    const save = () => { localStorage.setItem('reino-state', JSON.stringify(state)); queueCloudSave(); };
     const message = text => { toast.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2600); };
     const setBackupStatus = text => { backupStatus.textContent = text; };
     const activeClassKey = () => classProfiles[state.selectedClass] ? state.selectedClass : 'guardiao';
@@ -773,6 +810,85 @@
       const playerName = normalizePlayerName(source.playerName); const restoredJourney = journeyStarted && playerName.length >= 2;
       return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','missoes','campanhas','diario','personagem','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', starterMissionsActive:source.starterMissionsActive === true, missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, customMissions, customCampaigns, attributes:sanitizeAttributes(source.attributes), inventory, equipped };
     };
+    const syncCloud = async (immediate = false) => {
+      if (!cloudClient || !cloudUser || cloudHydrating) return;
+      if (!immediate && document.hidden) return;
+      setAccountStatus('Sincronizando sua jornada…');
+      const snapshot = JSON.parse(JSON.stringify(state));
+      const { error } = await cloudClient.from('journeys').upsert({ user_id:cloudUser.id, state:snapshot, updated_at:new Date().toISOString() }, { onConflict:'user_id' });
+      if (error) { setAccountStatus('Não foi possível sincronizar agora. O progresso continua salvo neste dispositivo.', 'error'); return; }
+      setAccountStatus('Sincronizado com segurança · ' + new Intl.DateTimeFormat('pt-BR',{ hour:'2-digit', minute:'2-digit' }).format(new Date()), 'synced');
+    };
+    const queueCloudSave = () => {
+      if (!cloudClient || !cloudUser || cloudHydrating) return;
+      clearTimeout(cloudSaveTimer); cloudSaveTimer = setTimeout(() => syncCloud(), 700);
+    };
+    const loadCloudJourney = async () => {
+      if (!cloudClient || !cloudUser) return;
+      setAccountStatus('Buscando sua jornada salva…');
+      const { data, error } = await cloudClient.from('journeys').select('state, updated_at').eq('user_id', cloudUser.id).maybeSingle();
+      if (error) { setAccountStatus('Não foi possível acessar a jornada na nuvem. Confira a configuração do Supabase.', 'error'); return; }
+      if (!data?.state || typeof data.state !== 'object') {
+        if (hasMeaningfulLocalJourney()) {
+          const migrate = window.confirm('Encontramos uma jornada neste dispositivo e nenhuma cópia na nuvem. Deseja migrar este progresso para sua conta agora?');
+          if (migrate) { await syncCloud(true); message('Sua jornada local foi protegida na nuvem.'); }
+          else setAccountStatus('Conta conectada. Sua próxima alteração poderá ser sincronizada.', 'synced');
+        } else setAccountStatus('Conta conectada. A primeira alteração será salva na nuvem.', 'synced');
+        return;
+      }
+      if (hasMeaningfulLocalJourney()) {
+        const useCloud = window.confirm('Existe uma jornada salva na nuvem. Pressione OK para carregá-la neste dispositivo ou Cancelar para manter o progresso local e substituí-la na nuvem.');
+        if (!useCloud) { await syncCloud(true); message('O progresso local foi enviado para sua conta.'); return; }
+      }
+      try {
+        cloudHydrating = true;
+        const restored = restoreState({ app:'reino-em-evolucao', version:8, state:data.state });
+        Object.assign(state, restored); playerNameInput.value = state.playerName; journals.forEach(area => area.value = state.journal); localStorage.setItem('reino-state', JSON.stringify(state)); render();
+        setAccountStatus('Jornada carregada da nuvem · ' + new Intl.DateTimeFormat('pt-BR',{ day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }).format(new Date(data.updated_at)), 'synced');
+        message('Sua jornada foi restaurada da nuvem.');
+      } catch { setAccountStatus('A jornada salva na nuvem não pôde ser lida.', 'error'); }
+      finally { cloudHydrating = false; }
+    };
+    const handleCloudUser = async user => {
+      cloudUser = user || null; renderAccount();
+      if (cloudUser) await loadCloudJourney();
+    };
+    const initCloudSync = async () => {
+      if (!supabaseConfigured) { renderAccount(); return; }
+      if (!window.supabase?.createClient) { setAccountStatus('A biblioteca de sincronização não foi carregada. Tente atualizar a página.', 'error'); return; }
+      cloudClient = window.supabase.createClient(supabaseSettings.url, supabaseSettings.anonKey, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } });
+      const { data:{ session } } = await cloudClient.auth.getSession();
+      await handleCloudUser(session?.user || null);
+      cloudClient.auth.onAuthStateChange((event, session) => {
+        if (event === 'INITIAL_SESSION') return;
+        if (event === 'PASSWORD_RECOVERY') { setAccountMode('update'); openDialog(accountDialog); return; }
+        handleCloudUser(session?.user || null);
+      });
+    };
+    const setAccountMode = mode => {
+      accountMode = mode;
+      document.querySelectorAll('[data-auth-mode]').forEach(button => button.classList.toggle('active', button.dataset.authMode === mode));
+      const passwordField = document.getElementById('accountPasswordField'); const password = document.getElementById('accountPassword'); const email = document.getElementById('accountEmail');
+      const title = document.getElementById('accountDialogTitle'); const copy = document.getElementById('accountDialogCopy'); const note = document.getElementById('accountNote'); const submit = document.getElementById('accountSubmit');
+      const reset = mode === 'reset'; const update = mode === 'update'; passwordField.hidden = reset; password.disabled = reset; password.required = !reset; email.disabled = update; email.required = !update;
+      if (mode === 'signup') { title.textContent = 'Criar conta'; copy.textContent = 'Crie sua conta para que sua jornada acompanhe você em todos os dispositivos.'; note.textContent = 'Enviaremos uma confirmação para o seu e-mail.'; submit.textContent = 'Criar conta'; password.autocomplete = 'new-password'; }
+      else if (reset) { title.textContent = 'Recuperar senha'; copy.textContent = 'Enviaremos um link seguro para você escolher uma nova senha.'; note.textContent = 'Use o mesmo e-mail da sua conta.'; submit.textContent = 'Enviar link'; }
+      else if (update) { title.textContent = 'Nova senha'; copy.textContent = 'Escolha uma nova senha para continuar protegendo o seu reino.'; note.textContent = 'Use ao menos 8 caracteres.'; submit.textContent = 'Salvar nova senha'; password.autocomplete = 'new-password'; }
+      else { title.textContent = 'Guardar meu reino'; copy.textContent = 'Entre para sincronizar sua jornada entre dispositivos. Senhas são protegidas pelo Supabase e nunca ficam salvas no app.'; note.textContent = 'Ainda não possui conta? Escolha “Criar conta”.'; submit.textContent = 'Entrar'; password.autocomplete = 'current-password'; }
+    };
+    const submitAccount = async () => {
+      if (!cloudClient) { setAccountStatus('Conecte o projeto Supabase antes de usar contas.'); return; }
+      const email = document.getElementById('accountEmail').value.trim(); const password = document.getElementById('accountPassword').value;
+      const submit = document.getElementById('accountSubmit'); submit.disabled = true;
+      try {
+        if (accountMode === 'reset') { const { error } = await cloudClient.auth.resetPasswordForEmail(email, { redirectTo:window.location.href }); if (error) throw error; setAccountStatus('Link de recuperação enviado. Verifique seu e-mail.', 'synced'); closeDialog(accountDialog); return; }
+        if (accountMode === 'update') { const { error } = await cloudClient.auth.updateUser({ password }); if (error) throw error; setAccountStatus('Senha atualizada com sucesso.', 'synced'); closeDialog(accountDialog); return; }
+        if (password.length < 8) throw new Error('Use uma senha com pelo menos 8 caracteres.');
+        if (accountMode === 'signup') { const { data, error } = await cloudClient.auth.signUp({ email, password, options:{ emailRedirectTo:window.location.href } }); if (error) throw error; if (!data.session) { setAccountStatus('Conta criada. Confirme o e-mail para entrar.', 'synced'); closeDialog(accountDialog); } return; }
+        const { error } = await cloudClient.auth.signInWithPassword({ email, password }); if (error) throw error; closeDialog(accountDialog);
+      } catch (error) { setAccountStatus(error?.message || 'Não foi possível concluir a ação da conta.', 'error'); }
+      finally { submit.disabled = false; }
+    };
     const importBackup = async file => {
       if (!file) return;
       if (file.size > 1024 * 1024) { setBackupStatus('Esse arquivo é grande demais para ser um backup da jornada.'); return; }
@@ -790,6 +906,7 @@
     backupInput.addEventListener('change', () => { const [file] = backupInput.files; backupInput.value = ''; importBackup(file); });
     missionForm.addEventListener('submit', event => { event.preventDefault(); createMission(missionForm); });
     campaignForm.addEventListener('submit', event => { event.preventDefault(); createCampaign(campaignForm); });
+    accountForm.addEventListener('submit', event => { event.preventDefault(); submitAccount(); });
     document.addEventListener('click', event => {
       const tab = event.target.closest('[data-tab]');
       if (tab) { setActiveTab(tab.dataset.tab); save(); return; }
@@ -800,7 +917,12 @@
       const classChoice = event.target.closest('[data-class].class-option');
       if (classChoice) { if (state.journeyStarted) { message('A classe só pode ser alterada ao reiniciar a jornada.'); return; } state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
       if (event.target.id === 'startJourney') { if (state.playerName.length < 2 || !state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message(`Sua jornada começou, ${state.playerName}. A fogueira está acesa.`); return; }
+      const authModeButton = event.target.closest('[data-auth-mode]');
+      if (authModeButton) { setAccountMode(authModeButton.dataset.authMode); return; }
       const action = event.target.dataset.action; if (!action) return;
+      if (action === 'open-account-dialog') { if (!supabaseConfigured) { setAccountStatus('Para ativar contas, preencha URL e chave pública em supabase-config.js e publique o app.', 'error'); return; } setAccountMode('signin'); openDialog(accountDialog); return; }
+      if (action === 'close-account-dialog') { closeDialog(accountDialog); return; }
+      if (action === 'sign-out') { if (cloudClient) cloudClient.auth.signOut(); return; }
       if (action === 'open-mission-dialog') { openMissionDialog(); return; }
       if (action === 'close-mission-dialog') { editingMissionId = null; closeDialog(missionDialog); return; }
       if (action === 'open-campaign-dialog') { openDialog(campaignDialog); return; }
@@ -831,6 +953,7 @@
       if (action === 'toggle-equipment') toggleEquipment(event.target.dataset.item);
     });
     render();
+    initCloudSync();
   </script>
 </body>
 </html>
