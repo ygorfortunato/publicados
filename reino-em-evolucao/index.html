@@ -231,12 +231,17 @@
     .data-action.danger { color:#ffd4d7; border-color:rgba(212,114,122,.65); background:rgba(212,114,122,.1); }
     .data-action.danger:hover { border-color:var(--por-do-sol); background:rgba(212,114,122,.2); }
     .backup-status { display:block; min-height:1.2em; margin-top:11px; color:var(--ocre); font-size:.73rem; }
-    .journey-gate { position:fixed; z-index:10; inset:0; display:grid; place-items:center; padding:20px; overflow:auto; background:linear-gradient(145deg,rgba(17,9,17,.78),rgba(22,20,38,.89)); backdrop-filter:blur(7px); }
+    .journey-gate { position:fixed; z-index:10; inset:0; display:grid; align-items:start; justify-items:center; padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom)); overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; background:linear-gradient(145deg,rgba(17,9,17,.78),rgba(22,20,38,.89)); backdrop-filter:blur(7px); }
     .journey-gate.hidden { display:none; }
-    .gate-card { width:min(920px,100%); overflow:hidden; border:1px solid rgba(203,155,100,.58); border-radius:18px; background:linear-gradient(130deg,#171427,#29223a 62%,#331d26); box-shadow:0 30px 80px rgba(0,0,0,.55); }
+    .gate-card { width:min(920px,100%); margin:auto 0; overflow:hidden; border:1px solid rgba(203,155,100,.58); border-radius:18px; background:linear-gradient(130deg,#171427,#29223a 62%,#331d26); box-shadow:0 30px 80px rgba(0,0,0,.55); }
     .gate-top { padding:28px 30px 18px; border-bottom:1px solid rgba(244,230,208,.12); background:radial-gradient(circle at 83% 10%,rgba(242,140,40,.24),transparent 19rem); }
     .gate-top h2 { max-width:660px; margin:7px 0 8px; font-size:clamp(2rem,4vw,3.25rem); line-height:.94; }
     .gate-top p { max-width:570px; margin:0; color:#dac8b7; font-size:.9rem; line-height:1.5; }
+    .name-field { display:block; max-width:520px; margin-top:18px; }
+    .name-field > span { display:block; margin-bottom:7px; color:var(--ocre); font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    .name-field input { width:100%; min-height:44px; padding:10px 12px; color:var(--pergaminho); font:600 .95rem "DM Sans",system-ui,sans-serif; border:1px solid rgba(203,155,100,.54); border-radius:8px; outline:none; background:rgba(17,9,17,.34); }
+    .name-field input::placeholder { color:#aa9a90; font-weight:400; }
+    .name-field input:focus { border-color:var(--brilho); box-shadow:0 0 0 3px rgba(242,140,40,.12); }
     .gate-content { display:grid; grid-template-columns:.72fr 1.28fr; gap:0; }
     .gate-step { padding:23px 30px 27px; }
     .gate-step + .gate-step { border-left:1px solid rgba(244,230,208,.12); }
@@ -259,7 +264,7 @@
     @media (max-width:570px) { .shell { width:min(100% - 20px,1190px); padding-top:15px; } .topbar { align-items:flex-start; flex-direction:column; } .nav { width:100%; } .hero { min-height:425px; } .hero-copy { padding:34px 24px 15px; } h1 { font-size:3.05rem; } .hero-stats { padding:15px 24px 24px; } .customizer-copy { padding:22px 18px; } .appearance-choices { grid-template-columns:1fr; gap:10px; } .mission { grid-template-columns:auto 1fr; } .reward { grid-column:2; } .mission-action { grid-column:1 / 3; margin-left:52px; } .camp-body { max-width:70%; } }
     @media (max-width:840px) { .class-customizer { grid-template-columns:1fr; } .class-showcase { min-height:395px; border-right:0; border-bottom:1px solid rgba(244,230,208,.12); } .class-portrait { width:196px; } }
     @media (max-width:570px) { .class-content { padding:24px 17px; } .class-options { grid-template-columns:1fr; } .class-option { display:grid; grid-template-columns:64px 1fr; column-gap:9px; align-items:center; } .class-option .mini-art { grid-row:span 2; margin:0; } .class-option small { align-self:start; } }
-    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
+    @media (max-width:760px) { .view-header { display:block; } .view-header p { margin-top:10px; } .campaign-grid,.realm-grid,.chronicle { grid-template-columns:1fr; } .shop-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .journey-gate { display:block; padding:calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom)); } .gate-card { margin:0 auto; } .gate-content { grid-template-columns:1fr; } .gate-step + .gate-step { border-top:1px solid rgba(244,230,208,.12); border-left:0; } .gate-classes { grid-template-columns:1fr; } .gate-class { display:grid; grid-template-columns:92px 1fr; column-gap:10px; min-height:0; } .gate-class .mini-art { grid-row:span 2; height:auto; margin:0; } .realm-character { grid-template-columns:1fr; } .realm-character .class-portrait { width:160px; } }
     @media (max-width:480px) { .gate-top,.gate-step,.gate-footer { padding-right:18px; padding-left:18px; } .gate-footer { align-items:stretch; flex-direction:column; } .start-button { width:100%; } }
     @media (max-width:570px) { .shop-heading { align-items:flex-start; flex-direction:column; } .shop-grid { grid-template-columns:1fr; } .shop-item { display:grid; grid-template-columns:90px 1fr; column-gap:11px; align-items:start; } .item-art { grid-row:span 4; margin:0; } .shop-buy { grid-column:2; } }
   </style>
@@ -273,7 +278,7 @@
       </nav>
     </header>
     <section class="hero" aria-label="Resumo da jornada">
-      <div class="hero-copy"><span class="eyebrow">Capítulo 1 · Reconstrução</span><h1>A luz que reúne sua jornada.</h1><p class="lead">Pequenas escolhas ao redor da mesma fogueira: cuidar do corpo, clarear a mente e fazer o seu reino avançar.</p><p class="today" id="todayDate"></p></div>
+      <div class="hero-copy"><span class="eyebrow" id="chapterLabel">Capítulo 1 · Reconstrução</span><h1>A luz que reúne sua jornada.</h1><p class="lead">Pequenas escolhas ao redor da mesma fogueira: cuidar do corpo, clarear a mente e fazer o seu reino avançar.</p><p class="today" id="todayDate"></p></div>
       <div class="hero-stats"><div class="level-orb">7<span>nível</span></div><div class="hud"><div class="hud-line"><span>Experiência</span><strong id="xpValue">280 / 400 XP</strong></div><div class="track"><span id="xpBar"></span></div></div><div class="hud gold-hud"><span>Bolsa de ouro</span><strong><span id="goldValue">152</span> ✦</strong></div></div>
     </section>
 
@@ -331,7 +336,7 @@
     <section class="tab-view" data-view="reino">
       <div class="view-header"><div><span class="eyebrow">Seu espaço de progresso</span><h2>O reino em evolução</h2></div><p>Ouro, itens e construções serão os sinais visuais da constância que você está acumulando.</p></div>
       <div class="realm-grid">
-        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span>Nível 7</span><span><span id="realmGold">152</span> ouro</span></div></div></section>
+        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="realmPlayerName">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span>Nível 7</span><span><span id="realmGold">152</span> ouro</span></div></div></section>
         <section class="panel buildings"><span class="eyebrow">Construções</span><div class="building"><span class="building-icon">♨</span><div><strong>Fogueira central</strong><small>Nível 1 · aquece o início da jornada</small></div></div><div class="building"><span class="building-icon">⌂</span><div><strong>Biblioteca</strong><small>Em breve · cresce com suas leituras</small></div></div><div class="building"><span class="building-icon">✦</span><div><strong>Arsenal de aparências</strong><small>Em breve · compre itens com ouro</small></div></div></section>
         <section class="panel armory-shop" id="armoryShop"><div class="shop-heading"><div><span class="eyebrow">Arsenal de aparências</span><h3>Mercador da Fogueira</h3></div><p>Use o ouro conquistado nas missões para comprar peças. Ao equipá-las, elas aparecem no retrato do seu personagem.</p></div><div class="shop-grid"><article class="shop-item" data-shop-item="manto-brasa"><div class="item-art" data-item="manto-brasa" aria-hidden="true"></div><span class="item-slot">Manto</span><h4>Manto das Brasas</h4><p>Uma capa cerimonial em vermelho profundo, com o calor da fogueira.</p><button class="shop-buy" type="button" data-item="manto-brasa"></button></article><article class="shop-item" data-shop-item="coroa-vigia"><div class="item-art" data-item="coroa-vigia" aria-hidden="true"></div><span class="item-slot">Cabeça</span><h4>Coroa do Vigia</h4><p>Metal dourado e uma gema âmbar para quem sustenta sua vigília.</p><button class="shop-buy" type="button" data-item="coroa-vigia"></button></article><article class="shop-item" data-shop-item="selo-aurora"><div class="item-art" data-item="selo-aurora" aria-hidden="true"></div><span class="item-slot">Relíquia</span><h4>Selo da Aurora</h4><p>Um amuleto que leva uma pequena chama junto ao coração.</p><button class="shop-buy" type="button" data-item="selo-aurora"></button></article><article class="shop-item" data-shop-item="espada-alvorada"><div class="item-art relic" data-item="espada-alvorada" aria-hidden="true"></div><span class="item-slot">Arma</span><h4>Espada da Alvorada</h4><p>Uma lâmina rúnica que acompanha quem escolhe recomeçar.</p><button class="shop-buy" type="button" data-item="espada-alvorada"></button></article><article class="shop-item" data-shop-item="grimorio-trilhas"><div class="item-art relic" data-item="grimorio-trilhas" aria-hidden="true"></div><span class="item-slot">Grimório</span><h4>Grimório das Trilhas</h4><p>Um livro vivo para transformar intenção em próximos passos.</p><button class="shop-buy" type="button" data-item="grimorio-trilhas"></button></article><article class="shop-item" data-shop-item="orbe-nevoa"><div class="item-art relic" data-item="orbe-nevoa" aria-hidden="true"></div><span class="item-slot">Aura</span><h4>Orbe da Névoa</h4><p>Uma esfera de clareza para lembrar que o caminho se revela aos poucos.</p><button class="shop-buy" type="button" data-item="orbe-nevoa"></button></article></div></section>
         <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um backup completo: personagem, ouro, diário, missões, histórico de conclusões e campanhas. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup completo</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
@@ -342,22 +347,23 @@
 
   <section class="journey-gate" id="journeyGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <div class="gate-card">
-      <div class="gate-top"><span class="eyebrow">Antes da primeira fogueira</span><h2 id="gateTitle">Escolha quem vai iniciar esta jornada.</h2><p>Defina a identidade visual do personagem e sua classe. A jornada só começa quando você confirmar essa escolha.</p></div>
+      <div class="gate-top"><span class="eyebrow">Antes da primeira fogueira</span><h2 id="gateTitle">Escolha quem vai iniciar esta jornada.</h2><p>Defina seu nome, a identidade visual do personagem e sua classe. A jornada só começa quando você confirmar essas escolhas.</p><label class="name-field" for="playerNameInput"><span>Passo 1 · Seu nome</span><input id="playerNameInput" type="text" maxlength="32" minlength="2" autocomplete="given-name" placeholder="Como devemos chamar você?"></label></div>
       <div class="gate-content">
-        <div class="gate-step"><span class="eyebrow">Passo 1</span><h3>Gênero</h3><p>Ele define qual retrato ilustrado acompanhará sua classe.</p><div class="gate-gender-list"><button class="gate-choice" type="button" data-gender-choice="masculino">Masculino</button><button class="gate-choice" type="button" data-gender-choice="feminino">Feminino</button></div></div>
-        <div class="gate-step"><span class="eyebrow">Passo 2</span><h3>Classe</h3><p>Cada classe tem uma arte e uma identidade própria.</p><div class="gate-classes" role="listbox" aria-label="Classes disponíveis">
+        <div class="gate-step"><span class="eyebrow">Passo 2</span><h3>Gênero</h3><p>Ele define qual retrato ilustrado acompanhará sua classe.</p><div class="gate-gender-list"><button class="gate-choice" type="button" data-gender-choice="masculino">Masculino</button><button class="gate-choice" type="button" data-gender-choice="feminino">Feminino</button></div></div>
+        <div class="gate-step"><span class="eyebrow">Passo 3</span><h3>Classe</h3><p>Cada classe tem uma arte e uma identidade própria.</p><div class="gate-classes" role="listbox" aria-label="Classes disponíveis">
           <button class="gate-class" type="button" data-gate-class="guardiao" role="option"><span class="mini-art" data-class="guardiao"></span><strong>Guardião da Brasa</strong><small>Proteção e vitalidade</small></button>
           <button class="gate-class" type="button" data-gate-class="exploradora" role="option"><span class="mini-art" data-class="exploradora"></span><strong>Explorador da Mata</strong><small>Descoberta e movimento</small></button>
           <button class="gate-class" type="button" data-gate-class="arcanista" role="option"><span class="mini-art" data-class="arcanista"></span><strong>Arcanista do Fogo</strong><small>Clareza e conhecimento</small></button>
         </div></div>
       </div>
-      <div class="gate-footer"><span class="gate-status" id="gateStatus">Escolha um gênero e uma classe para continuar.</span><button class="start-button" id="startJourney" type="button" disabled>Salvar e começar jornada</button></div>
+      <div class="gate-footer"><span class="gate-status" id="gateStatus">Informe seu nome, escolha um gênero e uma classe para continuar.</span><button class="start-button" id="startJourney" type="button" disabled>Salvar e começar jornada</button></div>
     </div>
   </section>
   <div class="toast" id="toast" role="status"></div>
   <script>
     let savedState = {};
     try { savedState = JSON.parse(localStorage.getItem('reino-state') || '{}'); } catch { savedState = {}; }
+    const normalizePlayerName = value => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0,32) : '';
     const defaultCampaigns = { vitalidade:{ completedDays:2, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } };
     const equipmentCatalog = {
       'manto-brasa': { slot:'cloak', name:'Manto das Brasas', cost:80 },
@@ -371,8 +377,10 @@
     const sanitizeInventory = inventory => [...new Set(Array.isArray(inventory) ? inventory.filter(id => equipmentCatalog[id]) : [])];
     const sanitizeEquipped = (equipped, inventory) => Object.fromEntries(equipmentSlots.map(slot => { const item = equipped?.[slot]; return [slot, inventory.includes(item) && equipmentCatalog[item]?.slot === slot ? item : null]; }));
     const savedInventory = sanitizeInventory(savedState.inventory);
-    const state = { water:0, reading:0, gold:152, xp:280, done:{}, journal:'', selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
+    const savedPlayerName = normalizePlayerName(savedState.playerName);
+    const state = { water:0, reading:0, gold:152, xp:280, done:{}, journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
     if (!state.journeyStarted) { state.selectedClass = null; state.gender = null; }
+    if (!state.playerName) state.journeyStarted = false;
     const classProfiles = {
       guardiao: { names:{masculino:'Guardião da Brasa',feminino:'Guardiã da Brasa'}, description:'Fica de vigia quando a noite se alonga. É uma presença firme, que transforma disciplina em abrigo para o próprio reino.', meta:'Foco narrativo · Vitalidade e proteção' },
       exploradora: { names:{masculino:'Explorador da Mata',feminino:'Exploradora da Mata'}, description:'Enxerga caminhos onde antes havia névoa. Move-se com curiosidade, leveza e coragem para descobrir o que vem depois.', meta:'Foco narrativo · Movimento e descoberta' },
@@ -382,6 +390,7 @@
     const gate = document.getElementById('journeyGate');
     const toast = document.getElementById('toast'); let toastTimer;
     const journals = [document.getElementById('journal'), document.getElementById('journalFull')];
+    const playerNameInput = document.getElementById('playerNameInput');
     const backupInput = document.getElementById('backupFile');
     const backupStatus = document.getElementById('backupStatus');
     const missionIds = new Set(['water','food','reading','adult']);
@@ -393,6 +402,8 @@
     const profileFor = () => classProfiles[activeClassKey()];
     const profileName = () => profileFor().names[activeGender()];
     document.getElementById('todayDate').textContent = new Intl.DateTimeFormat('pt-BR', { weekday:'long', day:'numeric', month:'long' }).format(new Date());
+    playerNameInput.value = state.playerName;
+    playerNameInput.addEventListener('input', () => { state.playerName = normalizePlayerName(playerNameInput.value); renderGate(); });
     journals.forEach(area => { area.value = state.journal || ''; area.addEventListener('input', () => journals.filter(other => other !== area).forEach(other => other.value = area.value)); });
     const renderCharacter = () => {
       const key = activeClassKey(); const gender = activeGender(); const profile = profileFor(); const name = profileName();
@@ -405,6 +416,8 @@
       document.getElementById('realmDescription').textContent = profile.description;
       document.getElementById('realmGender').textContent = gender === 'feminino' ? 'Feminino' : 'Masculino';
       document.getElementById('realmGold').textContent = state.gold;
+      document.getElementById('chapterLabel').textContent = state.playerName ? `Capítulo 1 · ${state.playerName}` : 'Capítulo 1 · Reconstrução';
+      document.getElementById('realmPlayerName').textContent = state.playerName ? `${state.playerName} · habitante do reino` : 'Habitante do reino';
       document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
       document.querySelectorAll('[data-gender-choice]').forEach(element => { const selected = state.gender === element.dataset.genderChoice; element.classList.toggle('selected', selected); element.setAttribute('aria-pressed', String(selected)); });
       document.querySelectorAll('[data-gate-class]').forEach(element => { const selected = state.selectedClass === element.dataset.gateClass; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
@@ -420,12 +433,12 @@
       });
     };
     const renderGate = () => {
-      const ready = Boolean(state.gender && state.selectedClass);
+      const ready = Boolean(state.playerName.length >= 2 && state.gender && state.selectedClass);
       gate.classList.toggle('hidden', Boolean(state.journeyStarted));
       shell.inert = !state.journeyStarted;
       shell.setAttribute('aria-hidden', String(!state.journeyStarted));
       const start = document.getElementById('startJourney'); start.disabled = !ready;
-      document.getElementById('gateStatus').textContent = ready ? `Tudo pronto: ${profileName()}.` : 'Escolha um gênero e uma classe para continuar.';
+      document.getElementById('gateStatus').textContent = ready ? `Tudo pronto, ${state.playerName}: ${profileName()}.` : 'Informe seu nome, escolha um gênero e uma classe para continuar.';
     };
     const setActiveTab = tab => {
       const selected = ['hoje','campanhas','diario','reino'].includes(tab) ? tab : 'hoje';
@@ -469,7 +482,7 @@
       save(); render(); message(equipping ? `${item.name} equipado.` : `${item.name} guardado no inventário.`);
     };
     const exportBackup = () => {
-      const backup = { app:'reino-em-evolucao', version:4, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
+      const backup = { app:'reino-em-evolucao', version:5, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
       const url = URL.createObjectURL(blob); const link = document.createElement('a');
       link.href = url; link.download = `reino-em-evolucao-backup-${new Date().toISOString().slice(0,10)}.json`;
@@ -477,7 +490,7 @@
       setBackupStatus('Backup baixado. Guarde este arquivo em um local seguro.'); message('Backup da jornada criado.');
     };
     const restoreState = backup => {
-      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
+      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
       const source = backup.state;
       const number = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback; };
       const done = Object.fromEntries(Object.entries(source.done || {}).filter(([key,value]) => missionIds.has(key) && value === true));
@@ -487,14 +500,15 @@
       const campaign = (key, fallback) => { const value = source.campaigns?.[key] || {}; const targetDays = Math.round(number(value.targetDays, fallback.targetDays, 1, 365)); return { completedDays:Math.round(number(value.completedDays, fallback.completedDays, 0, targetDays)), targetDays }; };
       const missionHistory = Array.isArray(source.missionHistory) ? source.missionHistory.filter(entry => entry && missionIds.has(entry.id) && typeof entry.completedAt === 'string').slice(-365).map(entry => ({ id:entry.id, completedAt:entry.completedAt, xp:Math.round(number(entry.xp,0,0,1000000000)), gold:Math.round(number(entry.gold,0,0,1000000000)) })) : [];
       const inventory = sanitizeInventory(source.inventory); const equipped = sanitizeEquipped(source.equipped, inventory);
-      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,152,0,1000000000)), xp:Math.round(number(source.xp,280,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', selectedClass:journeyStarted ? selectedClass : null, gender:journeyStarted ? gender : null, journeyStarted, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, inventory, equipped };
+      const playerName = normalizePlayerName(source.playerName); const restoredJourney = journeyStarted && playerName.length >= 2;
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,152,0,1000000000)), xp:Math.round(number(source.xp,280,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, inventory, equipped };
     };
     const importBackup = async file => {
       if (!file) return;
       if (file.size > 1024 * 1024) { setBackupStatus('Esse arquivo é grande demais para ser um backup da jornada.'); return; }
       try {
         const restored = restoreState(JSON.parse(await file.text()));
-        Object.assign(state, restored); journals.forEach(area => area.value = state.journal); save(); render();
+        Object.assign(state, restored); playerNameInput.value = state.playerName; journals.forEach(area => area.value = state.journal); save(); render();
         setBackupStatus('Backup importado com sucesso. Sua jornada foi restaurada.'); message('Jornada restaurada a partir do backup.');
       } catch (error) { setBackupStatus('Não foi possível importar este arquivo. Verifique se é um backup do Reino em Evolução.'); }
     };
@@ -513,7 +527,7 @@
       if (gateClass) { state.selectedClass = gateClass.dataset.gateClass; renderCharacter(); renderGate(); return; }
       const classChoice = event.target.closest('[data-class].class-option');
       if (classChoice) { state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
-      if (event.target.id === 'startJourney') { if (!state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message('Sua jornada começou. A fogueira está acesa.'); return; }
+      if (event.target.id === 'startJourney') { if (state.playerName.length < 2 || !state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message(`Sua jornada começou, ${state.playerName}. A fogueira está acesa.`); return; }
       const action = event.target.dataset.action; if (!action) return;
       if (action === 'water') { state.water = Math.min(3, +(state.water + .5).toFixed(1)); save(); render(); if (state.water === 3) award(20,8,'water'); }
       if (action === 'finish-water') { state.water = 3; award(20,8,'water'); }
