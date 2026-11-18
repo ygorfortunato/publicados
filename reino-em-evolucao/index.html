@@ -202,6 +202,8 @@
     .gender-option,.gate-choice { padding:8px 11px; color:var(--muted); font-size:.78rem; border:1px solid rgba(203,155,100,.42); border-radius:7px; background:rgba(17,9,17,.31); transition:transform .15s,border-color .15s,background .15s,color .15s; }
     .gender-option:hover,.gate-choice:hover { color:var(--pergaminho); border-color:var(--ocre); transform:translateY(-1px); }
     .gender-option.selected,.gate-choice.selected { color:var(--sombra); font-weight:700; border-color:var(--brilho); background:var(--brilho); }
+    .gender-option:disabled { cursor:not-allowed; opacity:.62; }
+    .gender-option:disabled:hover { color:var(--muted); border-color:rgba(203,155,100,.42); transform:none; background:rgba(17,9,17,.31); }
     .view-header { display:flex; align-items:end; justify-content:space-between; gap:18px; margin:25px 2px 15px; }
     .view-header h2 { margin:4px 0 0; font-size:clamp(1.8rem,3vw,2.55rem); line-height:1; }
     .view-header p { max-width:480px; margin:0; color:var(--muted); font-size:.86rem; line-height:1.5; }
@@ -554,8 +556,8 @@
       document.getElementById('chapterLabel').textContent = state.playerName ? `Capítulo 1 · ${state.playerName}` : 'Capítulo 1 · Reconstrução';
       document.getElementById('realmPlayerName').textContent = state.playerName ? `${state.playerName} · habitante do reino` : 'Habitante do reino';
       document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.disabled = state.journeyStarted; element.setAttribute('aria-selected', String(selected)); });
-      document.getElementById('classFoot').textContent = state.journeyStarted ? 'Sua classe está selada para esta jornada. Para escolher outra, use Reiniciar jornada na aba Reino.' : 'A classe escolhida no início define a identidade do personagem. Para trocar de classe, reinicie a jornada.';
-      document.querySelectorAll('[data-gender-choice]').forEach(element => { const selected = state.gender === element.dataset.genderChoice; element.classList.toggle('selected', selected); element.setAttribute('aria-pressed', String(selected)); });
+      document.getElementById('classFoot').textContent = state.journeyStarted ? 'Sua classe e seu gênero estão selados para esta jornada. Para escolher outra identidade, use Reiniciar jornada na aba Reino.' : 'A classe e o gênero escolhidos no início definem a identidade do personagem. Para trocar, reinicie a jornada.';
+      document.querySelectorAll('[data-gender-choice]').forEach(element => { const selected = state.gender === element.dataset.genderChoice; element.classList.toggle('selected', selected); element.disabled = state.journeyStarted; element.setAttribute('aria-pressed', String(selected)); });
       document.querySelectorAll('[data-gate-class]').forEach(element => { const selected = state.selectedClass === element.dataset.gateClass; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
     };
     const renderShop = () => {
@@ -742,7 +744,7 @@
       const tab = event.target.closest('[data-tab]');
       if (tab) { setActiveTab(tab.dataset.tab); save(); return; }
       const genderChoice = event.target.closest('[data-gender-choice]');
-      if (genderChoice) { state.gender = genderChoice.dataset.genderChoice; if (state.journeyStarted) save(); renderCharacter(); renderGate(); return; }
+      if (genderChoice) { if (state.journeyStarted) { message('O gênero só pode ser alterado ao reiniciar a jornada.'); return; } state.gender = genderChoice.dataset.genderChoice; renderCharacter(); renderGate(); return; }
       const gateClass = event.target.closest('[data-gate-class]');
       if (gateClass) { state.selectedClass = gateClass.dataset.gateClass; renderCharacter(); renderGate(); return; }
       const classChoice = event.target.closest('[data-class].class-option');
