@@ -322,6 +322,10 @@
     .gate-top { padding:28px 30px 18px; border-bottom:1px solid rgba(244,230,208,.12); background:radial-gradient(circle at 83% 10%,rgba(242,140,40,.24),transparent 19rem); }
     .gate-top h2 { max-width:660px; margin:7px 0 8px; font-size:clamp(2rem,4vw,3.25rem); line-height:.94; }
     .gate-top p { max-width:570px; margin:0; color:#dac8b7; font-size:.9rem; line-height:1.5; }
+    .gate-account-entry { display:flex; flex-wrap:wrap; align-items:center; gap:10px; max-width:520px; margin-top:18px; padding:11px 12px; border:1px solid rgba(203,155,100,.28); border-radius:9px; background:rgba(17,9,17,.24); }
+    .gate-account-entry span { flex:1 1 190px; color:#dac8b7; font-size:.78rem; line-height:1.35; }
+    .gate-account-entry button { padding:9px 11px; color:var(--sombra); font:700 .76rem "DM Sans",system-ui,sans-serif; border:0; border-radius:7px; background:var(--brilho); box-shadow:0 5px 12px rgba(17,9,17,.2); }
+    .gate-account-entry button:hover { background:#ffd463; transform:translateY(-1px); }
     .name-field { display:block; max-width:520px; margin-top:18px; }
     .name-field > span { display:block; margin-bottom:7px; color:var(--ocre); font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
     .name-field input { width:100%; min-height:44px; padding:10px 12px; color:var(--pergaminho); font:600 .95rem "DM Sans",system-ui,sans-serif; border:1px solid rgba(203,155,100,.54); border-radius:8px; outline:none; background:rgba(17,9,17,.34); }
@@ -496,7 +500,7 @@
 
   <section class="journey-gate" id="journeyGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <div class="gate-card">
-      <div class="gate-top"><span class="eyebrow">Antes da primeira fogueira</span><h2 id="gateTitle">Escolha quem vai iniciar esta jornada.</h2><p>Defina seu nome, a identidade visual do personagem e sua classe. A jornada só começa quando você confirmar essas escolhas.</p><label class="name-field" for="playerNameInput"><span>Passo 1 · Seu nome</span><input id="playerNameInput" type="text" maxlength="32" minlength="2" autocomplete="given-name" placeholder="Como devemos chamar você?"></label></div>
+      <div class="gate-top"><span class="eyebrow">Antes da primeira fogueira</span><h2 id="gateTitle">Escolha quem vai iniciar esta jornada.</h2><p>Defina seu nome, a identidade visual do personagem e sua classe. A jornada só começa quando você confirmar essas escolhas.</p><div class="gate-account-entry"><span>Já possui uma jornada salva?</span><button type="button" data-action="open-account-dialog">Entrar na minha conta</button></div><label class="name-field" for="playerNameInput"><span>Passo 1 · Seu nome</span><input id="playerNameInput" type="text" maxlength="32" minlength="2" autocomplete="given-name" placeholder="Como devemos chamar você?"></label></div>
       <div class="gate-content">
         <div class="gate-step"><span class="eyebrow">Passo 2</span><h3>Gênero</h3><p>Ele define qual retrato ilustrado acompanhará sua classe.</p><div class="gate-gender-list"><button class="gate-choice" type="button" data-gender-choice="masculino">Masculino</button><button class="gate-choice" type="button" data-gender-choice="feminino">Feminino</button></div></div>
         <div class="gate-step"><span class="eyebrow">Passo 3</span><h3>Classe</h3><p>Cada classe tem uma arte e uma identidade própria.</p><div class="gate-classes" role="listbox" aria-label="Classes disponíveis">
