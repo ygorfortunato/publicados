@@ -514,6 +514,7 @@
   <script>
     let savedState = {};
     try { savedState = JSON.parse(localStorage.getItem('reino-state') || '{}'); } catch { savedState = {}; }
+    const requireAccountLogin = localStorage.getItem('reino-require-login') === 'true';
     const legacyDemoSeed = savedState.gold === 152 && savedState.xp === 280 && !Object.keys(savedState.done || {}).length && !(savedState.missionHistory || []).length && !(savedState.inventory || []).length;
     if (legacyDemoSeed) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } } };
     const normalizePlayerName = value => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0,32) : '';
@@ -851,7 +852,8 @@
     };
     const handleCloudUser = async user => {
       cloudUser = user || null; renderAccount();
-      if (cloudUser) await loadCloudJourney();
+      if (cloudUser) { if (requireAccountLogin) localStorage.removeItem('reino-require-login'); await loadCloudJourney(); return; }
+      if (requireAccountLogin) { setAccountMode('signin'); openDialog(accountDialog); }
     };
     const initCloudSync = async () => {
       if (!supabaseConfigured) { renderAccount(); return; }
@@ -898,10 +900,17 @@
         setBackupStatus('Backup importado com sucesso. Sua jornada foi restaurada.'); message('Jornada restaurada a partir do backup.');
       } catch (error) { setBackupStatus('Não foi possível importar este arquivo. Verifique se é um backup do Reino em Evolução.'); }
     };
-    const resetJourney = () => {
-      const confirmed = window.confirm('Reiniciar a jornada? Isso apagará personagem, missões, campanhas, ouro, inventário e diário deste dispositivo. Faça um backup antes se quiser guardar seu progresso.');
+    const resetJourney = async () => {
+      const scope = cloudUser ? 'deste dispositivo e da conta conectada' : 'deste dispositivo';
+      const confirmed = window.confirm(`Reiniciar a jornada? Isso apagará personagem, missões, campanhas, ouro, inventário e diário ${scope}. Você precisará entrar novamente antes de iniciar uma nova jornada. Faça um backup antes se quiser guardar seu progresso.`);
       if (!confirmed) return;
-      localStorage.removeItem('reino-state'); window.location.reload();
+      if (cloudClient && cloudUser) {
+        setAccountStatus('Apagando a jornada salva na nuvem…');
+        const { error } = await cloudClient.from('journeys').delete().eq('user_id', cloudUser.id);
+        if (error) { setAccountStatus('Não foi possível apagar a jornada na nuvem. O reinício foi cancelado.', 'error'); return; }
+        await cloudClient.auth.signOut({ scope:'local' });
+      }
+      localStorage.removeItem('reino-state'); localStorage.setItem('reino-require-login', 'true'); window.location.reload();
     };
     backupInput.addEventListener('change', () => { const [file] = backupInput.files; backupInput.value = ''; importBackup(file); });
     missionForm.addEventListener('submit', event => { event.preventDefault(); createMission(missionForm); });
@@ -922,7 +931,7 @@
       const action = event.target.dataset.action; if (!action) return;
       if (action === 'open-account-dialog') { if (!supabaseConfigured) { setAccountStatus('Para ativar contas, preencha URL e chave pública em supabase-config.js e publique o app.', 'error'); return; } setAccountMode('signin'); openDialog(accountDialog); return; }
       if (action === 'close-account-dialog') { closeDialog(accountDialog); return; }
-      if (action === 'sign-out') { if (cloudClient) cloudClient.auth.signOut(); return; }
+      if (action === 'sign-out') { if (cloudClient) cloudClient.auth.signOut({ scope:'local' }); return; }
       if (action === 'open-mission-dialog') { openMissionDialog(); return; }
       if (action === 'close-mission-dialog') { editingMissionId = null; closeDialog(missionDialog); return; }
       if (action === 'open-campaign-dialog') { openDialog(campaignDialog); return; }
