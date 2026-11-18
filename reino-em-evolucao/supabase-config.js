@@ -7,6 +7,6 @@
  * service_role key neste arquivo ou em qualquer código do navegador.
  */
 window.REINO_SUPABASE = {
-  url: '',
-  anonKey: ''
+  url: 'https://jqrjjpxutdqxsdyzuwxf.supabase.co',
+  anonKey: 'sb_publishable_mWb9HQB0h9het0qQvrNBIg_eR-VzCMm'
 };
