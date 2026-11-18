@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#262643">
+  <meta name="description" content="Guia de uso do Reino em Evolução, o app Fogueira.">
+  <title>Guia do usuário · Fogueira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root { --noite:#262643; --ocre:#cb9b64; --fogo:#f28c28; --pergaminho:#f4e6d0; --brilho:#ffc53d; --por-do-sol:#d4727a; --terracota:#8c5a51; --vinho:#542a2f; --azul-profundo:#161426; --base-quente:#2b151d; --sombra:#110911; --muted:#c7bcae; --line:rgba(244,230,208,.15); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { min-height:100vh; margin:0; color:var(--pergaminho); font-family:"DM Sans",system-ui,sans-serif; background:radial-gradient(circle at 85% 5%,rgba(212,114,122,.18),transparent 26rem),radial-gradient(circle at 5% 72%,rgba(140,90,81,.22),transparent 30rem),linear-gradient(145deg,var(--azul-profundo),var(--noite) 52%,var(--base-quente)); }
+    a { color:inherit; }
+    .shell { width:min(1080px,calc(100% - 36px)); margin:0 auto; padding:24px 0 54px; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--ocre); font-family:Fraunces,Georgia,serif; font-size:1.2rem; font-weight:700; text-decoration:none; }
+    .brand-mark { position:relative; display:grid; width:39px; height:42px; place-items:center; color:var(--brilho); font-family:"DM Sans",sans-serif; font-size:21px; border:1px solid rgba(203,155,100,.7); border-radius:48% 48% 44% 44%; background:var(--vinho); box-shadow:inset 0 0 16px rgba(242,140,40,.25); }
+    .brand-mark::after { content:""; position:absolute; inset:5px; border:1px solid rgba(255,197,61,.35); border-radius:50%; }
+    .back { display:inline-flex; align-items:center; gap:8px; padding:9px 13px; color:var(--pergaminho); font-size:.82rem; font-weight:700; text-decoration:none; border:1px solid rgba(203,155,100,.48); border-radius:8px; background:rgba(17,9,17,.24); }
+    .back:hover { border-color:var(--brilho); background:rgba(242,140,40,.13); }
+    .hero { position:relative; isolation:isolate; min-height:365px; display:flex; align-items:end; overflow:hidden; padding:46px; border:1px solid rgba(203,155,100,.46); border-radius:18px; background:var(--noite); box-shadow:0 22px 50px rgba(17,9,17,.35); }
+    .hero::before { content:""; position:absolute; z-index:-2; inset:0; background:url("assets/fantasy-bonfire.jpg") center 44% / cover no-repeat; filter:saturate(.78) contrast(1.05); }
+    .hero::after { content:""; position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(22,20,38,.98),rgba(38,38,67,.9) 42%,rgba(38,38,67,.16) 100%),linear-gradient(0deg,rgba(43,21,29,.72),transparent 68%); }
+    .hero-copy { max-width:680px; }
+    .eyebrow { color:var(--ocre); font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+    h1,h2,h3 { font-family:Fraunces,Georgia,serif; }
+    h1 { max-width:660px; margin:10px 0 14px; color:var(--pergaminho); font-size:clamp(2.7rem,6vw,5.2rem); line-height:.91; letter-spacing:-.055em; }
+    .lead { max-width:600px; margin:0; color:#dfd2c1; font-size:1.04rem; line-height:1.55; }
+    .toc { display:flex; flex-wrap:wrap; gap:8px; margin:20px 0 28px; }
+    .toc a { padding:8px 10px; color:var(--ocre); font-size:.75rem; font-weight:700; text-decoration:none; border:1px solid rgba(203,155,100,.33); border-radius:999px; background:rgba(17,9,17,.26); }
+    .toc a:hover { color:var(--sombra); border-color:var(--brilho); background:var(--brilho); }
+    .section-heading { display:flex; align-items:end; justify-content:space-between; gap:18px; margin:40px 2px 15px; }
+    .section-heading h2 { margin:5px 0 0; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1; }
+    .section-heading p { max-width:470px; margin:0; color:var(--muted); font-size:.88rem; line-height:1.5; }
+    .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .panel { border:1px solid var(--line); border-radius:14px; background:rgba(22,20,38,.84); box-shadow:0 12px 28px rgba(17,9,17,.14); }
+    .step { min-height:220px; padding:22px; }
+    .number { display:grid; width:35px; height:35px; place-items:center; margin-bottom:18px; color:var(--sombra); font-family:Fraunces,Georgia,serif; font-weight:700; border:2px solid var(--brilho); border-radius:50%; background:var(--fogo); box-shadow:0 0 0 5px rgba(84,42,47,.35); }
+    .step h3,.guide-card h3 { margin:0 0 8px; font-size:1.28rem; }
+    .step p,.guide-card p { margin:0; color:var(--muted); font-size:.84rem; line-height:1.55; }
+    .notice { display:flex; gap:13px; margin-top:20px; padding:17px 19px; border:1px solid rgba(255,197,61,.4); border-radius:12px; background:linear-gradient(110deg,rgba(84,42,47,.55),rgba(43,21,29,.54)); }
+    .notice strong { color:var(--brilho); }
+    .notice p { margin:3px 0 0; color:#e2c9b6; font-size:.84rem; line-height:1.5; }
+    .notice-icon { display:grid; flex:0 0 auto; width:35px; height:35px; place-items:center; color:var(--brilho); border:1px solid rgba(255,197,61,.4); border-radius:50%; background:rgba(242,140,40,.14); }
+    .flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .flow-card { position:relative; min-height:162px; padding:18px; border:1px solid rgba(203,155,100,.23); border-radius:12px; background:linear-gradient(145deg,rgba(17,9,17,.3),rgba(84,42,47,.15)); }
+    .flow-card:not(:last-child)::after { content:"→"; position:absolute; z-index:2; right:-17px; top:calc(50% - 14px); display:grid; width:28px; height:28px; place-items:center; color:var(--brilho); border:1px solid rgba(203,155,100,.35); border-radius:50%; background:var(--noite); }
+    .flow-card span { display:block; margin-bottom:11px; color:var(--brilho); font-size:1.1rem; }
+    .flow-card strong { display:block; margin-bottom:6px; font-family:Fraunces,Georgia,serif; font-size:1.05rem; }
+    .flow-card p { margin:0; color:var(--muted); font-size:.77rem; line-height:1.45; }
+    .two-col { display:grid; grid-template-columns:1.05fr .95fr; gap:20px; }
+    .guide-card { padding:24px; }
+    .guide-card h3 { font-size:1.5rem; }
+    .guide-card ul { display:grid; gap:10px; margin:16px 0 0; padding:0; list-style:none; }
+    .guide-card li { position:relative; padding-left:20px; color:var(--muted); font-size:.84rem; line-height:1.45; }
+    .guide-card li::before { content:"✦"; position:absolute; left:0; color:var(--brilho); font-size:.72rem; }
+    .attribute-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .attribute { min-height:155px; padding:16px; border:1px solid rgba(203,155,100,.25); border-radius:11px; background:rgba(17,9,17,.25); }
+    .attribute .sigil { display:grid; width:34px; height:34px; place-items:center; margin-bottom:13px; color:var(--brilho); border:1px solid rgba(255,197,61,.4); border-radius:50%; background:rgba(242,140,40,.1); }
+    .attribute h3 { margin:0 0 5px; font-size:1.08rem; }
+    .attribute p { margin:0; color:var(--muted); font-size:.74rem; line-height:1.42; }
+    .attribute.vitalidade .sigil { color:#ffd16b; border-color:#cf5f45; }
+    .attribute.sabedoria .sigil { color:#9fc9ff; border-color:#537bb7; }
+    .attribute.maestria .sigil { color:#d6a7f1; border-color:#6f5a95; }
+    .attribute.prosperidade .sigil { color:#f5d779; border-color:#b0752f; }
+    .attribute.vinculos .sigil { color:#f6a9bd; border-color:#bd5a7d; }
+    .attribute.espirito .sigil { color:#9be2c7; border-color:#4e998b; }
+    .tab-list { display:grid; gap:9px; }
+    .tab-row { display:grid; grid-template-columns:112px minmax(0,1fr); gap:13px; align-items:center; padding:13px; border:1px solid rgba(244,230,208,.09); border-radius:9px; background:rgba(244,230,208,.035); }
+    .tab-row strong { color:var(--ocre); font-size:.77rem; text-transform:uppercase; letter-spacing:.07em; }
+    .tab-row span { color:var(--muted); font-size:.81rem; line-height:1.4; }
+    .final { margin-top:24px; padding:31px; text-align:center; border:1px solid rgba(203,155,100,.46); border-radius:15px; background:linear-gradient(135deg,var(--vinho),var(--noite)); }
+    .final h2 { margin:6px 0 8px; font-size:2rem; }
+    .final p { max-width:590px; margin:0 auto 20px; color:var(--muted); font-size:.9rem; line-height:1.5; }
+    .start { display:inline-block; padding:11px 15px; color:var(--sombra); font-size:.84rem; font-weight:700; text-decoration:none; border-radius:8px; background:var(--brilho); box-shadow:0 7px 18px rgba(17,9,17,.2); }
+    .start:hover { transform:translateY(-1px); background:#ffd463; }
+    .footer { margin:22px 3px 0; color:#aaa09c; font-size:.7rem; text-align:center; }
+    @media (max-width:780px) { .hero { min-height:325px; padding:32px 25px; } .section-heading { display:block; } .section-heading p { margin-top:10px; } .steps,.attribute-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .flow { grid-template-columns:repeat(2,minmax(0,1fr)); } .flow-card:nth-child(2)::after { display:none; } .two-col { grid-template-columns:1fr; } }
+    @media (max-width:520px) { .shell { width:min(100% - 20px,1080px); padding-top:15px; } .topbar { align-items:flex-start; flex-direction:column; } h1 { font-size:3rem; } .hero { min-height:350px; } .steps,.attribute-grid,.flow { grid-template-columns:1fr; } .flow-card::after { display:none; } .tab-row { grid-template-columns:1fr; gap:4px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="Voltar para o Reino em Evolução"><span class="brand-mark">✦</span><span>Fogueira</span></a>
+      <a class="back" href="index.html">← Voltar ao aplicativo</a>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy"><span class="eyebrow">Guia do usuário</span><h1>Uma luz por vez, um reino de cada vez.</h1><p class="lead">Este guia mostra como transformar pequenas escolhas em progresso visível dentro do Reino em Evolução — sem perfeccionismo e no seu próprio ritmo.</p></div>
+    </section>
+
+    <nav class="toc" aria-label="Índice do guia"><a href="#primeira-fogueira">Primeira fogueira</a><a href="#jornada">Jornada diária</a><a href="#atributos">Atributos</a><a href="#abas">Abas do app</a><a href="#dados">Dados e backup</a></nav>
+
+    <section id="primeira-fogueira">
+      <div class="section-heading"><div><span class="eyebrow">Começo da jornada</span><h2>Acenda a primeira fogueira</h2></div><p>O personagem representa a sua história no app. A escolha inicial deixa a experiência com a sua identidade.</p></div>
+      <div class="steps">
+        <article class="panel step"><span class="number">1</span><h3>Escreva seu nome</h3><p>Informe como você quer ser chamado. Ele aparece no seu capítulo e na ficha do personagem.</p></article>
+        <article class="panel step"><span class="number">2</span><h3>Escolha o gênero</h3><p>Selecione o retrato masculino ou feminino que acompanhará a sua classe durante a jornada.</p></article>
+        <article class="panel step"><span class="number">3</span><h3>Selecione uma classe</h3><p>Guardião, Explorador ou Arcanista: cada classe tem uma arte e uma personalidade visual próprias.</p></article>
+      </div>
+      <div class="notice"><span class="notice-icon">✦</span><div><strong>Uma escolha para esta jornada</strong><p>Depois de salvar e começar, a classe fica selada. Para escolher outra identidade, use “Reiniciar jornada” na aba Reino. Seu nome, gênero e equipamentos acompanham a ficha do personagem.</p></div></div>
+    </section>
+
+    <section id="jornada">
+      <div class="section-heading"><div><span class="eyebrow">Ritual diário</span><h2>Como avançar sem pressa</h2></div><p>A intenção do app é registrar o que está sendo construído, não punir dias difíceis. Pequenos passos também são progresso.</p></div>
+      <div class="flow">
+        <article class="flow-card"><span>01</span><strong>Comece em branco</strong><p>Uma nova jornada inicia no nível 1, com 0 XP, 0 ouro e sem tarefas ou campanhas ativas.</p></article>
+        <article class="flow-card"><span>02</span><strong>Escolha uma base</strong><p>Se quiser, toque em “Carregar jornada-base” na aba Hoje para ativar as primeiras missões de saúde e leitura.</p></article>
+        <article class="flow-card"><span>03</span><strong>Registre a ação</strong><p>Use os botões das missões para avançar água e páginas, concluir hábitos positivos ou registrar um hábito que ocorreu.</p></article>
+        <article class="flow-card"><span>04</span><strong>Veja a evolução</strong><p>Missões concluídas concedem XP, ouro e XP para o atributo relacionado. O registro é uma bússola, nunca uma punição.</p></article>
+      </div>
+      <div class="two-col" style="margin-top:20px">
+        <article class="panel guide-card"><span class="eyebrow">Hábitos positivos</span><h3>Construa o que quer manter</h3><p>Hábitos positivos possuem uma ação ou meta clara. Na jornada-base atual, beber água e ler páginas acumulam progresso até a conclusão.</p><ul><li>Use “+ 500 ml” para registrar água.</li><li>Use “+ 1 página” para registrar leitura.</li><li>Ao atingir a meta, conclua a missão para receber a recompensa.</li></ul></article>
+        <article class="panel guide-card"><span class="eyebrow">Hábitos a reduzir</span><h3>Observe sem se julgar</h3><p>Hábitos que você quer parar podem ser marcados como “Hoje não ocorreu” ou como uma ocorrência. Registrar uma ocorrência não tira XP nem ouro.</p><ul><li>Marque o dia em que a escolha consciente aconteceu.</li><li>Registre com honestidade quando houver uma ocorrência.</li><li>Retome no dia seguinte, sem quebrar a narrativa da jornada.</li></ul></article>
+      </div>
+    </section>
+
+    <section id="atributos">
+      <div class="section-heading"><div><span class="eyebrow">Ficha do herói</span><h2>Os seis atributos do reino</h2></div><p>Aba Personagem é onde você acompanha os níveis de cada parte importante da sua vida. A cada 100 XP, aquele atributo sobe um nível.</p></div>
+      <div class="attribute-grid">
+        <article class="attribute vitalidade"><span class="sigil">◈</span><h3>Vitalidade</h3><p>Saúde e disposição: treinar, dormir bem, fazer exames, beber água e cuidar do corpo.</p></article>
+        <article class="attribute sabedoria"><span class="sigil">✧</span><h3>Sabedoria</h3><p>Conhecimento e equilíbrio emocional: estudar, ler, refletir e fortalecer a mente.</p></article>
+        <article class="attribute maestria"><span class="sigil">△</span><h3>Maestria</h3><p>Trabalho e projetos: concluir entregas, desenvolver habilidades e avançar no ofício.</p></article>
+        <article class="attribute prosperidade"><span class="sigil">◉</span><h3>Prosperidade</h3><p>Finanças: registrar gastos, organizar dívidas, investir e construir estabilidade.</p></article>
+        <article class="attribute vinculos"><span class="sigil">♡</span><h3>Vínculos</h3><p>Família, amigos e relacionamento: conversar, estar presente e marcar encontros importantes.</p></article>
+        <article class="attribute espirito"><span class="sigil">☽</span><h3>Espírito</h3><p>Lazer e propósito: praticar hobbies, descansar, viver experiências e alimentar o sentido da jornada.</p></article>
+      </div>
+    </section>
+
+    <section id="abas">
+      <div class="section-heading"><div><span class="eyebrow">Navegação</span><h2>O que existe em cada aba</h2></div><p>Use a barra superior para percorrer o seu reino. Em telas pequenas, deslize a barra lateralmente para revelar todas as opções.</p></div>
+      <section class="panel guide-card"><div class="tab-list"><div class="tab-row"><strong>Hoje</strong><span>Central de missões, progresso do dia, campanha ativa, bolsa de ouro e um atalho para o diário.</span></div><div class="tab-row"><strong>Campanhas</strong><span>Arcos de longo prazo. A jornada-base inclui Ritual de Vitalidade e Biblioteca Interior.</span></div><div class="tab-row"><strong>Diário</strong><span>Espaço para registrar vitórias, dificuldades e aprendizados. O conteúdo fica salvo neste dispositivo.</span></div><div class="tab-row"><strong>Personagem</strong><span>Ficha visual, nível geral, ouro e a evolução separada dos seis atributos da vida.</span></div><div class="tab-row"><strong>Reino</strong><span>Personagem equipado, Mercador da Fogueira, backup, importação e reinício da jornada.</span></div></div></section>
+    </section>
+
+    <section id="dados">
+      <div class="section-heading"><div><span class="eyebrow">Seu reino, seus dados</span><h2>Backup, troca de aparelho e reinício</h2></div><p>O app funciona com armazenamento local. O backup é a forma segura de levar seu reino para outro navegador ou aparelho.</p></div>
+      <div class="two-col">
+        <article class="panel guide-card"><span class="eyebrow">Levar a jornada</span><h3>Fazer e importar backup</h3><ul><li>Abra a aba Reino e vá até “Seus dados, sob seu controle”.</li><li>Toque em “Baixar backup completo” e guarde o arquivo JSON em local seguro.</li><li>No novo aparelho, abra o app e selecione “Importar backup”.</li><li>O arquivo restaura personagem, atributos, ouro, diário, missões, campanhas e equipamentos.</li></ul></article>
+        <article class="panel guide-card"><span class="eyebrow">Novo começo</span><h3>Reiniciar a jornada</h3><p>Em Reino, o botão “Reiniciar jornada” apaga os dados deste dispositivo para permitir uma nova escolha de personagem, classe e caminho.</p><div class="notice" style="margin-top:17px"><span class="notice-icon">!</span><div><strong>Faça backup antes</strong><p>O reinício não pode ser desfeito. Baixe o backup se houver qualquer lembrança ou progresso que você queira guardar.</p></div></div></article>
+      </div>
+    </section>
+
+    <section class="final"><span class="eyebrow">Pronto para começar</span><h2>Não busque perfeição. Proteja a chama.</h2><p>Uma ação honesta hoje vale mais do que uma jornada idealizada amanhã. Volte ao app e acenda a sua primeira fogueira.</p><a class="start" href="index.html">Abrir Reino em Evolução</a></section>
+    <p class="footer">Fogueira · Reino em Evolução · Guia de uso</p>
+  </main>
+</body>
+</html>

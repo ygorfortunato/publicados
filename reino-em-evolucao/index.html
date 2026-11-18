@@ -21,8 +21,8 @@
     .brand-mark { position:relative; display:grid; width:39px; height:42px; place-items:center; color:var(--brilho); font-size:21px; border:1px solid rgba(203,155,100,.7); border-radius:48% 48% 44% 44%; background:var(--vinho); box-shadow:inset 0 0 16px rgba(242,140,40,.25); }
     .brand-mark::after { content:""; position:absolute; inset:5px; border:1px solid rgba(255,197,61,.35); border-radius:50%; }
     .nav { display:flex; gap:5px; overflow-x:auto; }
-    .nav button { padding:9px 12px; color:var(--muted); font-size:.88rem; border:0; border-radius:8px; background:transparent; white-space:nowrap; }
-    .nav button.active,.nav button:hover { color:var(--pergaminho); background:rgba(244,230,208,.1); }
+    .nav button,.nav a { padding:9px 12px; color:var(--muted); font-size:.88rem; text-decoration:none; border:0; border-radius:8px; background:transparent; white-space:nowrap; }
+    .nav button.active,.nav button:hover,.nav a:hover { color:var(--pergaminho); background:rgba(244,230,208,.1); }
     .hero { position:relative; isolation:isolate; display:grid; grid-template-columns:minmax(0,1fr) 265px; min-height:355px; overflow:hidden; border:1px solid rgba(203,155,100,.44); border-radius:18px; background:var(--noite); box-shadow:0 22px 50px rgba(17,9,17,.35); }
     .hero::before { content:""; position:absolute; z-index:-2; inset:0; background:url("assets/fantasy-bonfire.jpg") center 46% / cover no-repeat; filter:saturate(.78) contrast(1.05); }
     .hero::after { content:""; position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(22,20,38,.98) 2%,rgba(38,38,67,.91) 42%,rgba(38,38,67,.17) 100%),linear-gradient(0deg,rgba(43,21,29,.5),transparent 65%); }
@@ -226,8 +226,11 @@
     .attribute-xp { display:block; margin-top:7px; color:var(--ocre); font-size:.69rem; font-weight:700; }
     .attribute-card .track { margin-top:8px; }
     .attribute-card[data-attribute="vitalidade"] .track span { background:linear-gradient(90deg,#cf5f45,var(--brilho)); }
-    .attribute-card[data-attribute="conhecimento"] .track span { background:linear-gradient(90deg,#537bb7,#9fc9ff); }
-    .attribute-card[data-attribute="proposito"] .track span { background:linear-gradient(90deg,#6f5a95,#d6a7f1); }
+    .attribute-card[data-attribute="sabedoria"] .track span { background:linear-gradient(90deg,#537bb7,#9fc9ff); }
+    .attribute-card[data-attribute="maestria"] .track span { background:linear-gradient(90deg,#6f5a95,#d6a7f1); }
+    .attribute-card[data-attribute="prosperidade"] .track span { background:linear-gradient(90deg,#b0752f,#f5d779); }
+    .attribute-card[data-attribute="vinculos"] .track span { background:linear-gradient(90deg,#bd5a7d,#f6a9bd); }
+    .attribute-card[data-attribute="espirito"] .track span { background:linear-gradient(90deg,#4e998b,#9be2c7); }
     .armory-shop { grid-column:1 / -1; padding:22px; scroll-margin-top:18px; }
     .shop-heading { display:flex; align-items:end; justify-content:space-between; gap:14px; margin-bottom:16px; }
     .shop-heading h3 { margin:6px 0 0; font-size:1.48rem; }
@@ -301,7 +304,7 @@
     <header class="topbar">
       <div class="brand"><span class="brand-mark">✦</span><span>Fogueira</span></div>
       <nav class="nav" aria-label="Navegação principal">
-        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="personagem">Personagem</button><button type="button" data-tab="reino">Reino</button>
+        <button class="active" type="button" data-tab="hoje">Hoje</button><button type="button" data-tab="campanhas">Campanhas</button><button type="button" data-tab="diario">Diário</button><button type="button" data-tab="personagem">Personagem</button><button type="button" data-tab="reino">Reino</button><a href="guia-do-usuario.html">Guia</a>
       </nav>
     </header>
     <section class="hero" aria-label="Resumo da jornada">
@@ -367,7 +370,7 @@
       <div class="view-header"><div><span class="eyebrow">Ficha do herói</span><h2>Personagem e atributos</h2></div><p>Acompanhe os traços que sua constância está fortalecendo. Cada missão concluída também alimenta um atributo.</p></div>
       <div class="realm-grid">
         <section class="panel character-sheet"><div class="class-portrait" id="characterSheetPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="characterSheetPlayerName">Habitante do reino</span><h3 id="characterSheetClass">Guardião da Brasa</h3><p id="characterSheetDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="characterSheetGender">Masculino</span><span id="characterSheetLevel">Nível 1</span><span><span id="characterSheetGold">0</span> ouro</span></div></div></section>
-        <section class="panel attributes-panel"><span class="eyebrow">Progresso de atributos</span><h3>O que seu reino está fortalecendo</h3><div class="attributes-grid"><article class="attribute-card" data-attribute="vitalidade"><div class="attribute-top"><h4>Vitalidade</h4><span class="attribute-level">Nível 1</span></div><p>Saúde, energia e cuidado do corpo.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="conhecimento"><div class="attribute-top"><h4>Conhecimento</h4><span class="attribute-level">Nível 1</span></div><p>Leitura, clareza e equilíbrio emocional.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="proposito"><div class="attribute-top"><h4>Propósito</h4><span class="attribute-level">Nível 1</span></div><p>Trabalho, direção e construção do futuro.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article></div></section>
+        <section class="panel attributes-panel"><span class="eyebrow">Progresso de atributos</span><h3>O que seu reino está fortalecendo</h3><div class="attributes-grid"><article class="attribute-card" data-attribute="vitalidade"><div class="attribute-top"><h4>Vitalidade</h4><span class="attribute-level">Nível 1</span></div><p>Saúde e disposição: energia, sono e cuidado do corpo.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="sabedoria"><div class="attribute-top"><h4>Sabedoria</h4><span class="attribute-level">Nível 1</span></div><p>Conhecimento e equilíbrio emocional.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="maestria"><div class="attribute-top"><h4>Maestria</h4><span class="attribute-level">Nível 1</span></div><p>Trabalho, projetos e construção de habilidades.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="prosperidade"><div class="attribute-top"><h4>Prosperidade</h4><span class="attribute-level">Nível 1</span></div><p>Finanças, organização e decisões de longo prazo.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="vinculos"><div class="attribute-top"><h4>Vínculos</h4><span class="attribute-level">Nível 1</span></div><p>Família, amigos e relacionamentos presentes.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article><article class="attribute-card" data-attribute="espirito"><div class="attribute-top"><h4>Espírito</h4><span class="attribute-level">Nível 1</span></div><p>Lazer, propósito, descanso e significado.</p><div class="track"><span></span></div><span class="attribute-xp">0 / 100 XP</span></article></div></section>
       </div>
     </section>
 
@@ -405,7 +408,7 @@
     if (legacyDemoSeed) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } } };
     const normalizePlayerName = value => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0,32) : '';
     const defaultCampaigns = { vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } };
-    const defaultAttributes = { vitalidade:0, conhecimento:0, proposito:0 };
+    const defaultAttributes = { vitalidade:0, sabedoria:0, maestria:0, prosperidade:0, vinculos:0, espirito:0 };
     const equipmentCatalog = {
       'manto-brasa': { slot:'cloak', name:'Manto das Brasas', cost:80 },
       'coroa-vigia': { slot:'head', name:'Coroa do Vigia', cost:120 },
@@ -417,7 +420,8 @@
     const equipmentSlots = ['cloak','head','amulet','weapon','relic','aura'];
     const sanitizeInventory = inventory => [...new Set(Array.isArray(inventory) ? inventory.filter(id => equipmentCatalog[id]) : [])];
     const sanitizeEquipped = (equipped, inventory) => Object.fromEntries(equipmentSlots.map(slot => { const item = equipped?.[slot]; return [slot, inventory.includes(item) && equipmentCatalog[item]?.slot === slot ? item : null]; }));
-    const sanitizeAttributes = attributes => Object.fromEntries(Object.keys(defaultAttributes).map(key => { const value = Number(attributes?.[key]); return [key, Number.isFinite(value) ? Math.round(Math.min(1000000000, Math.max(0, value))) : 0]; }));
+    const legacyAttributeKeys = { sabedoria:'conhecimento', maestria:'proposito' };
+    const sanitizeAttributes = attributes => Object.fromEntries(Object.keys(defaultAttributes).map(key => { const value = Number(attributes?.[key] ?? attributes?.[legacyAttributeKeys[key]]); return [key, Number.isFinite(value) ? Math.round(Math.min(1000000000, Math.max(0, value))) : 0]; }));
     const isPreBlankJourneyState = Object.keys(savedState).length > 0 && !Object.prototype.hasOwnProperty.call(savedState, 'starterMissionsActive');
     if (isPreBlankJourneyState) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ ...defaultCampaigns }, attributes:{ ...defaultAttributes }, inventory:[], equipped:{}, starterMissionsActive:false };
     const savedInventory = sanitizeInventory(savedState.inventory);
@@ -539,7 +543,7 @@
       document.getElementById('missionCount').textContent = hasMissions ? (completed === 4 ? 'Jornada concluída' : `${4 - completed} aguardando`) : 'Sem missões';
       renderCampaigns(); renderAttributes(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
     };
-    const missionAttributes = { water:'vitalidade', food:'vitalidade', reading:'conhecimento', adult:'conhecimento' };
+    const missionAttributes = { water:'vitalidade', food:'vitalidade', reading:'sabedoria', adult:'sabedoria' };
     const award = (xp,gold,mission) => { if (!state.starterMissionsActive || state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; const attribute = missionAttributes[mission]; if (attribute) state.attributes[attribute] += xp; state.missionHistory = [...state.missionHistory, { id:mission, completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
     const saveJournal = (source, savedId) => { state.journal = source.value; journals.filter(other => other !== source).forEach(other => other.value = state.journal); save(); const notice = document.getElementById(savedId); notice.classList.add('show'); setTimeout(() => notice.classList.remove('show'),2200); };
     const buyEquipment = id => {
