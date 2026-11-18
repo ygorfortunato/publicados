@@ -34,6 +34,7 @@
     .today { margin:15px 0 0; color:var(--ocre); font-size:.84rem; text-transform:capitalize; }
     .hero-stats { display:grid; align-content:center; gap:10px; padding:28px 28px 28px 0; }
     .level-orb { display:grid; width:92px; height:92px; place-items:center; margin-left:auto; color:var(--azul-profundo); font-family:Fraunces,Georgia,serif; font-size:2.05rem; font-weight:700; border:4px solid var(--brilho); border-radius:50%; background:var(--fogo); box-shadow:0 0 0 8px rgba(84,42,47,.7),0 10px 28px rgba(17,9,17,.42); }
+    .level-orb strong { display:block; line-height:.72; }
     .level-orb span { display:block; margin-top:-7px; font-family:"DM Sans",sans-serif; font-size:.56rem; font-weight:700; letter-spacing:.1em; text-align:center; text-transform:uppercase; }
     .hud { padding:12px; border:1px solid rgba(244,230,208,.2); border-radius:10px; background:rgba(22,20,38,.76); backdrop-filter:blur(5px); }
     .hud-line { display:flex; justify-content:space-between; gap:8px; color:var(--ocre); font-size:.72rem; font-weight:700; }
@@ -100,6 +101,8 @@
     .class-option { min-width:0; padding:7px; color:var(--pergaminho); text-align:left; border:1px solid rgba(203,155,100,.24); border-radius:9px; background:rgba(17,9,17,.31); transition:transform .18s,border-color .18s,background .18s; }
     .class-option:hover { transform:translateY(-2px); border-color:var(--ocre); background:rgba(203,155,100,.1); }
     .class-option.selected { border-color:var(--fogo); background:rgba(242,140,40,.13); box-shadow:inset 0 0 0 1px rgba(255,197,61,.18); }
+    .class-option:disabled { cursor:not-allowed; opacity:.72; }
+    .class-option:disabled:hover { transform:none; border-color:rgba(203,155,100,.24); background:rgba(17,9,17,.31); }
     .mini-art { display:block; width:100%; aspect-ratio:1 / 1; margin-bottom:7px; border-radius:5px; background-image:linear-gradient(0deg,rgba(17,9,17,.12),rgba(17,9,17,0)),url("assets/classes-fogueira-masculino.png"); background-repeat:no-repeat; background-size:100% 100%,300% auto; }
     .mini-art[data-gender="feminino"] { background-image:linear-gradient(0deg,rgba(17,9,17,.12),rgba(17,9,17,0)),url("assets/classes-fogueira-feminino.png"); }
     .mini-art[data-class="guardiao"] { background-position:0 0,0 50%; }
@@ -279,7 +282,7 @@
     </header>
     <section class="hero" aria-label="Resumo da jornada">
       <div class="hero-copy"><span class="eyebrow" id="chapterLabel">Capítulo 1 · Reconstrução</span><h1>A luz que reúne sua jornada.</h1><p class="lead">Pequenas escolhas ao redor da mesma fogueira: cuidar do corpo, clarear a mente e fazer o seu reino avançar.</p><p class="today" id="todayDate"></p></div>
-      <div class="hero-stats"><div class="level-orb">7<span>nível</span></div><div class="hud"><div class="hud-line"><span>Experiência</span><strong id="xpValue">280 / 400 XP</strong></div><div class="track"><span id="xpBar"></span></div></div><div class="hud gold-hud"><span>Bolsa de ouro</span><strong><span id="goldValue">152</span> ✦</strong></div></div>
+      <div class="hero-stats"><div class="level-orb"><strong id="levelValue">1</strong><span>nível</span></div><div class="hud"><div class="hud-line"><span>Experiência</span><strong id="xpValue">0 / 100 XP</strong></div><div class="track"><span id="xpBar"></span></div></div><div class="hud gold-hud"><span>Bolsa de ouro</span><strong><span id="goldValue">0</span> ✦</strong></div></div>
     </section>
 
     <section class="tab-view active" data-view="hoje">
@@ -296,7 +299,7 @@
             <button class="class-option" type="button" data-class="exploradora" role="option"><span class="mini-art" data-class="exploradora"></span><strong>Explorador da Mata</strong><small>Curiosidade, movimento e descoberta.</small></button>
             <button class="class-option" type="button" data-class="arcanista" role="option"><span class="mini-art" data-class="arcanista"></span><strong>Arcanista do Fogo</strong><small>Conhecimento, clareza e intenção.</small></button>
           </div>
-          <p class="class-foot">Classe e gênero trocam a arte do personagem; não há vantagem de produtividade entre elas.</p>
+          <p class="class-foot" id="classFoot">A classe escolhida no início define a identidade do personagem. Para trocar de classe, reinicie a jornada.</p>
         </div>
       </section>
       <section class="main-grid">
@@ -310,8 +313,8 @@
           </div>
         </section>
         <aside class="side-stack">
-          <section class="panel camp-card"><img class="camp-art" src="assets/towers-campfire.png" alt="Torres de fantasia junto a uma fogueira"><div class="camp-body"><span class="eyebrow">Campanha ativa</span><h3>Ritual de Vitalidade</h3><p>Construa uma rotina de cuidado possível, um dia de cada vez.</p><div class="meter"><span>Semana 1</span><span id="vitalityCampLabel">2 de 7 dias</span></div><div class="track"><span id="vitalityCampBar"></span></div></div><p class="camp-note">O seu reino cresce com constância, não perfeição.</p></section>
-          <section class="panel wallet"><span class="coin">●</span><div><small>Ouro disponível</small><strong><span id="goldValueSide">152</span> moedas</strong></div><button class="shop-button" type="button" data-action="shop">Ver loja</button></section>
+          <section class="panel camp-card"><img class="camp-art" src="assets/towers-campfire.png" alt="Torres de fantasia junto a uma fogueira"><div class="camp-body"><span class="eyebrow">Campanha ativa</span><h3>Ritual de Vitalidade</h3><p>Construa uma rotina de cuidado possível, um dia de cada vez.</p><div class="meter"><span>Semana 1</span><span id="vitalityCampLabel">0 de 7 dias</span></div><div class="track"><span id="vitalityCampBar"></span></div></div><p class="camp-note">O seu reino cresce com constância, não perfeição.</p></section>
+          <section class="panel wallet"><span class="coin">●</span><div><small>Ouro disponível</small><strong><span id="goldValueSide">0</span> moedas</strong></div><button class="shop-button" type="button" data-action="shop">Ver loja</button></section>
           <section class="panel diary"><span class="eyebrow">Diário de aventura</span><h3>Qual foi sua pequena vitória?</h3><p>Registre o que merece ser lembrado nesta noite.</p><textarea id="journal" placeholder="Escreva livremente…"></textarea><div class="diary-footer"><span class="saved" id="saved">Guardado neste dispositivo</span><button class="action-button" type="button" data-action="save-journal">Guardar no diário</button></div></section>
         </aside>
       </section>
@@ -320,7 +323,7 @@
     <section class="tab-view" data-view="campanhas">
       <div class="view-header"><div><span class="eyebrow">Arcos de evolução</span><h2>Campanhas do reino</h2></div><p>Missões de longo prazo que dão ritmo à jornada. Você define o próximo capítulo quando estiver pronto.</p></div>
       <div class="campaign-grid">
-        <article class="campaign-large"><span class="eyebrow">Em curso · semana 1</span><h3>Ritual de Vitalidade</h3><p>Uma base de cuidado para recuperar energia: água, escolhas conscientes e constância sem dureza.</p><div class="campaign-progress"><span id="vitalityCampaignLabel">2 de 7 dias</span><div class="track"><span id="vitalityCampaignBar"></span></div></div></article>
+        <article class="campaign-large"><span class="eyebrow">Em curso · semana 1</span><h3>Ritual de Vitalidade</h3><p>Uma base de cuidado para recuperar energia: água, escolhas conscientes e constância sem dureza.</p><div class="campaign-progress"><span id="vitalityCampaignLabel">0 de 7 dias</span><div class="track"><span id="vitalityCampaignBar"></span></div></div></article>
         <article class="campaign-large alt"><span class="eyebrow">Próxima fogueira</span><h3>Biblioteca Interior</h3><p>Pequenas leituras para ampliar repertório e criar um espaço de clareza dentro da rotina.</p><div class="campaign-progress"><span id="libraryCampaignLabel">0 de 7 dias</span><div class="track"><span id="libraryCampaignBar"></span></div></div></article>
       </div>
     </section>
@@ -336,7 +339,7 @@
     <section class="tab-view" data-view="reino">
       <div class="view-header"><div><span class="eyebrow">Seu espaço de progresso</span><h2>O reino em evolução</h2></div><p>Ouro, itens e construções serão os sinais visuais da constância que você está acumulando.</p></div>
       <div class="realm-grid">
-        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="realmPlayerName">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span>Nível 7</span><span><span id="realmGold">152</span> ouro</span></div></div></section>
+        <section class="panel realm-character"><div class="class-portrait" id="realmPortrait" data-class="guardiao" data-gender="masculino" role="img" aria-label="Retrato do personagem"><span class="gear-overlay gear-cloak" aria-hidden="true"></span><span class="gear-overlay gear-crown" aria-hidden="true"></span><span class="gear-overlay gear-amulet" aria-hidden="true"></span><span class="gear-overlay gear-sword" aria-hidden="true"></span><span class="gear-overlay gear-grimoire" aria-hidden="true"></span><span class="gear-overlay gear-orb" aria-hidden="true"></span></div><div><span class="eyebrow" id="realmPlayerName">Habitante do reino</span><h3 id="realmName">Guardião da Brasa</h3><p id="realmDescription">Uma presença firme que transforma disciplina em abrigo para o próprio reino.</p><div class="realm-badges"><span id="realmGender">Masculino</span><span id="realmLevel">Nível 1</span><span><span id="realmGold">0</span> ouro</span></div></div></section>
         <section class="panel buildings"><span class="eyebrow">Construções</span><div class="building"><span class="building-icon">♨</span><div><strong>Fogueira central</strong><small>Nível 1 · aquece o início da jornada</small></div></div><div class="building"><span class="building-icon">⌂</span><div><strong>Biblioteca</strong><small>Em breve · cresce com suas leituras</small></div></div><div class="building"><span class="building-icon">✦</span><div><strong>Arsenal de aparências</strong><small>Em breve · compre itens com ouro</small></div></div></section>
         <section class="panel armory-shop" id="armoryShop"><div class="shop-heading"><div><span class="eyebrow">Arsenal de aparências</span><h3>Mercador da Fogueira</h3></div><p>Use o ouro conquistado nas missões para comprar peças. Ao equipá-las, elas aparecem no retrato do seu personagem.</p></div><div class="shop-grid"><article class="shop-item" data-shop-item="manto-brasa"><div class="item-art" data-item="manto-brasa" aria-hidden="true"></div><span class="item-slot">Manto</span><h4>Manto das Brasas</h4><p>Uma capa cerimonial em vermelho profundo, com o calor da fogueira.</p><button class="shop-buy" type="button" data-item="manto-brasa"></button></article><article class="shop-item" data-shop-item="coroa-vigia"><div class="item-art" data-item="coroa-vigia" aria-hidden="true"></div><span class="item-slot">Cabeça</span><h4>Coroa do Vigia</h4><p>Metal dourado e uma gema âmbar para quem sustenta sua vigília.</p><button class="shop-buy" type="button" data-item="coroa-vigia"></button></article><article class="shop-item" data-shop-item="selo-aurora"><div class="item-art" data-item="selo-aurora" aria-hidden="true"></div><span class="item-slot">Relíquia</span><h4>Selo da Aurora</h4><p>Um amuleto que leva uma pequena chama junto ao coração.</p><button class="shop-buy" type="button" data-item="selo-aurora"></button></article><article class="shop-item" data-shop-item="espada-alvorada"><div class="item-art relic" data-item="espada-alvorada" aria-hidden="true"></div><span class="item-slot">Arma</span><h4>Espada da Alvorada</h4><p>Uma lâmina rúnica que acompanha quem escolhe recomeçar.</p><button class="shop-buy" type="button" data-item="espada-alvorada"></button></article><article class="shop-item" data-shop-item="grimorio-trilhas"><div class="item-art relic" data-item="grimorio-trilhas" aria-hidden="true"></div><span class="item-slot">Grimório</span><h4>Grimório das Trilhas</h4><p>Um livro vivo para transformar intenção em próximos passos.</p><button class="shop-buy" type="button" data-item="grimorio-trilhas"></button></article><article class="shop-item" data-shop-item="orbe-nevoa"><div class="item-art relic" data-item="orbe-nevoa" aria-hidden="true"></div><span class="item-slot">Aura</span><h4>Orbe da Névoa</h4><p>Uma esfera de clareza para lembrar que o caminho se revela aos poucos.</p><button class="shop-buy" type="button" data-item="orbe-nevoa"></button></article></div></section>
         <section class="panel journey-data"><span class="eyebrow">Porta-voz da jornada</span><h3>Seus dados, sob seu controle</h3><p>Leve a jornada para outro aparelho com um backup completo: personagem, ouro, diário, missões, histórico de conclusões e campanhas. Ao importar, o progresso atual deste dispositivo será substituído pelo conteúdo do arquivo.</p><div class="data-actions"><button class="data-action" type="button" data-action="export-backup">Baixar backup completo</button><label class="data-action" for="backupFile">Importar backup</label><button class="data-action danger" type="button" data-action="reset-journey">Reiniciar jornada</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><span class="backup-status" id="backupStatus" role="status" aria-live="polite"></span></section>
@@ -363,8 +366,10 @@
   <script>
     let savedState = {};
     try { savedState = JSON.parse(localStorage.getItem('reino-state') || '{}'); } catch { savedState = {}; }
+    const legacyDemoSeed = savedState.gold === 152 && savedState.xp === 280 && !Object.keys(savedState.done || {}).length && !(savedState.missionHistory || []).length && !(savedState.inventory || []).length;
+    if (legacyDemoSeed) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } } };
     const normalizePlayerName = value => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0,32) : '';
-    const defaultCampaigns = { vitalidade:{ completedDays:2, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } };
+    const defaultCampaigns = { vitalidade:{ completedDays:0, targetDays:7 }, biblioteca:{ completedDays:0, targetDays:7 } };
     const equipmentCatalog = {
       'manto-brasa': { slot:'cloak', name:'Manto das Brasas', cost:80 },
       'coroa-vigia': { slot:'head', name:'Coroa do Vigia', cost:120 },
@@ -378,7 +383,7 @@
     const sanitizeEquipped = (equipped, inventory) => Object.fromEntries(equipmentSlots.map(slot => { const item = equipped?.[slot]; return [slot, inventory.includes(item) && equipmentCatalog[item]?.slot === slot ? item : null]; }));
     const savedInventory = sanitizeInventory(savedState.inventory);
     const savedPlayerName = normalizePlayerName(savedState.playerName);
-    const state = { water:0, reading:0, gold:152, xp:280, done:{}, journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
+    const state = { water:0, reading:0, gold:0, xp:0, done:{}, journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', missionHistory:[], campaigns:{ ...defaultCampaigns }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
     if (!state.journeyStarted) { state.selectedClass = null; state.gender = null; }
     if (!state.playerName) state.journeyStarted = false;
     const classProfiles = {
@@ -416,9 +421,11 @@
       document.getElementById('realmDescription').textContent = profile.description;
       document.getElementById('realmGender').textContent = gender === 'feminino' ? 'Feminino' : 'Masculino';
       document.getElementById('realmGold').textContent = state.gold;
+      document.getElementById('realmLevel').textContent = `Nível ${Math.floor(state.xp / 100) + 1}`;
       document.getElementById('chapterLabel').textContent = state.playerName ? `Capítulo 1 · ${state.playerName}` : 'Capítulo 1 · Reconstrução';
       document.getElementById('realmPlayerName').textContent = state.playerName ? `${state.playerName} · habitante do reino` : 'Habitante do reino';
-      document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
+      document.querySelectorAll('.class-option').forEach(element => { const selected = state.selectedClass === element.dataset.class; element.classList.toggle('selected', selected); element.disabled = state.journeyStarted; element.setAttribute('aria-selected', String(selected)); });
+      document.getElementById('classFoot').textContent = state.journeyStarted ? 'Sua classe está selada para esta jornada. Para escolher outra, use Reiniciar jornada na aba Reino.' : 'A classe escolhida no início define a identidade do personagem. Para trocar de classe, reinicie a jornada.';
       document.querySelectorAll('[data-gender-choice]').forEach(element => { const selected = state.gender === element.dataset.genderChoice; element.classList.toggle('selected', selected); element.setAttribute('aria-pressed', String(selected)); });
       document.querySelectorAll('[data-gate-class]').forEach(element => { const selected = state.selectedClass === element.dataset.gateClass; element.classList.toggle('selected', selected); element.setAttribute('aria-selected', String(selected)); });
     };
@@ -460,8 +467,9 @@
       document.getElementById('waterLabel').textContent = `${state.water.toFixed(1).replace('.',',')} / 3 L`;
       document.getElementById('readingBar').style.width = `${Math.min(100,state.reading / 5 * 100)}%`;
       document.getElementById('readingLabel').textContent = `${state.reading} / 5 páginas`;
+      const level = Math.floor(state.xp / 100) + 1; const xpIntoLevel = state.xp % 100;
       document.getElementById('goldValue').textContent = state.gold; document.getElementById('goldValueSide').textContent = state.gold;
-      document.getElementById('xpValue').textContent = `${state.xp} / 400 XP`; document.getElementById('xpBar').style.width = `${Math.min(100,state.xp / 400 * 100)}%`;
+      document.getElementById('levelValue').textContent = level; document.getElementById('xpValue').textContent = `${xpIntoLevel} / 100 XP`; document.getElementById('xpBar').style.width = `${xpIntoLevel}%`;
       document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', Boolean(state.done[mission.dataset.mission])));
       const completed = Object.keys(state.done).length; document.getElementById('missionCount').textContent = completed === 4 ? 'Jornada concluída' : `${4 - completed} aguardando`;
       renderCampaigns(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
@@ -501,7 +509,7 @@
       const missionHistory = Array.isArray(source.missionHistory) ? source.missionHistory.filter(entry => entry && missionIds.has(entry.id) && typeof entry.completedAt === 'string').slice(-365).map(entry => ({ id:entry.id, completedAt:entry.completedAt, xp:Math.round(number(entry.xp,0,0,1000000000)), gold:Math.round(number(entry.gold,0,0,1000000000)) })) : [];
       const inventory = sanitizeInventory(source.inventory); const equipped = sanitizeEquipped(source.equipped, inventory);
       const playerName = normalizePlayerName(source.playerName); const restoredJourney = journeyStarted && playerName.length >= 2;
-      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,152,0,1000000000)), xp:Math.round(number(source.xp,280,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, inventory, equipped };
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','campanhas','diario','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, inventory, equipped };
     };
     const importBackup = async file => {
       if (!file) return;
@@ -526,7 +534,7 @@
       const gateClass = event.target.closest('[data-gate-class]');
       if (gateClass) { state.selectedClass = gateClass.dataset.gateClass; renderCharacter(); renderGate(); return; }
       const classChoice = event.target.closest('[data-class].class-option');
-      if (classChoice) { state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
+      if (classChoice) { if (state.journeyStarted) { message('A classe só pode ser alterada ao reiniciar a jornada.'); return; } state.selectedClass = classChoice.dataset.class; save(); renderCharacter(); message(`Classe escolhida: ${profileName()}.`); return; }
       if (event.target.id === 'startJourney') { if (state.playerName.length < 2 || !state.gender || !state.selectedClass) return; state.journeyStarted = true; save(); render(); message(`Sua jornada começou, ${state.playerName}. A fogueira está acesa.`); return; }
       const action = event.target.dataset.action; if (!action) return;
       if (action === 'water') { state.water = Math.min(3, +(state.water + .5).toFixed(1)); save(); render(); if (state.water === 3) award(20,8,'water'); }
