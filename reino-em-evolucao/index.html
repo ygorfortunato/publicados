@@ -577,7 +577,9 @@
     if (isPreBlankJourneyState) savedState = { ...savedState, water:0, reading:0, gold:0, xp:0, done:{}, missionHistory:[], campaigns:{ ...defaultCampaigns }, attributes:{ ...defaultAttributes }, inventory:[], equipped:{}, starterMissionsActive:false };
     const savedInventory = sanitizeInventory(savedState.inventory);
     const savedPlayerName = normalizePlayerName(savedState.playerName);
-    const state = { water:0, reading:0, gold:0, xp:0, done:{}, journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', starterMissionsActive:false, missionHistory:[], campaigns:{ ...defaultCampaigns }, customMissions:[], customCampaigns:[], attributes:{ ...defaultAttributes }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, starterMissionsActive:savedState.starterMissionsActive === true, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, customMissions:sanitizeCustomMissions(savedState.customMissions), customCampaigns:sanitizeCustomCampaigns(savedState.customCampaigns), attributes:sanitizeAttributes(savedState.attributes), missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
+    const state = { water:0, reading:0, gold:0, xp:0, done:{}, dailyCompletions:{}, dailyProgressDate:todayKey(), journal:'', playerName:savedPlayerName, selectedClass:null, gender:null, journeyStarted:false, activeTab:'hoje', starterMissionsActive:false, missionHistory:[], campaigns:{ ...defaultCampaigns }, customMissions:[], customCampaigns:[], attributes:{ ...defaultAttributes }, inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory), ...savedState, playerName:savedPlayerName, starterMissionsActive:savedState.starterMissionsActive === true, campaigns:{ ...defaultCampaigns, ...(savedState.campaigns || {}) }, customMissions:sanitizeCustomMissions(savedState.customMissions), customCampaigns:sanitizeCustomCampaigns(savedState.customCampaigns), attributes:sanitizeAttributes(savedState.attributes), missionHistory:Array.isArray(savedState.missionHistory) ? savedState.missionHistory : [], inventory:savedInventory, equipped:sanitizeEquipped(savedState.equipped, savedInventory) };
+    state.dailyCompletions = state.dailyCompletions && typeof state.dailyCompletions === 'object' ? Object.fromEntries(Object.entries(state.dailyCompletions).filter(([id,date]) => typeof id === 'string' && validDateKey(date))) : {};
+    if (!validDateKey(state.dailyProgressDate)) { state.water = 0; state.reading = 0; state.dailyProgressDate = todayKey(); }
     if (!state.journeyStarted) { state.selectedClass = null; state.gender = null; }
     if (!state.playerName) state.journeyStarted = false;
     const classProfiles = {
@@ -613,7 +615,7 @@
       if (!cloudUser) { accountButton.textContent = 'Entrar ou criar conta'; accountButton.hidden = false; signOutButton.hidden = true; setAccountStatus('Entre para sincronizar sua jornada em qualquer dispositivo.'); return; }
       accountButton.textContent = cloudUser.email || 'Conta conectada'; accountButton.hidden = false; signOutButton.hidden = false; setAccountStatus('Conta conectada · suas alterações serão sincronizadas automaticamente.', 'synced');
     };
-    const hasMeaningfulLocalJourney = () => Boolean(state.journeyStarted || state.xp || state.gold || state.journal || state.starterMissionsActive || state.customMissions.length || state.customCampaigns.length || state.missionHistory.length || state.inventory.length);
+    const hasMeaningfulLocalJourney = () => Boolean(state.journeyStarted || state.xp || state.gold || state.journal || state.starterMissionsActive || state.customMissions.length || state.customCampaigns.length || state.missionHistory.length || state.inventory.length || Object.keys(state.dailyCompletions).length);
     const save = () => { localStorage.setItem('reino-state', JSON.stringify(state)); queueCloudSave(); };
     const message = text => { toast.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2600); };
     const setBackupStatus = text => { backupStatus.textContent = text; };
@@ -688,6 +690,9 @@
     state.starterMissionSettings = state.starterMissionSettings && typeof state.starterMissionSettings === 'object' ? state.starterMissionSettings : {};
     const starterMissionConfig = id => ({ ...starterMissionDefaults[id], ...(state.starterMissionSettings?.[id] || {}) });
     const activeStarterMissions = () => [...missionIds].filter(id => state.starterMissionsActive && starterMissionConfig(id).active !== false);
+    const missionCadence = id => missionIds.has(id) ? starterMissionConfig(id).cadence : state.customMissions.find(mission => mission.id === id)?.cadence || 'esporadica';
+    const missionDone = (id, cadence = missionCadence(id)) => cadence === 'diaria' ? state.dailyCompletions[id] === todayKey() : state.done[id] === true;
+    const resetDailyProgressIfNeeded = () => { if (state.dailyProgressDate !== todayKey()) { state.water = 0; state.reading = 0; state.dailyProgressDate = todayKey(); } };
     const renderStarterMissions = () => document.querySelectorAll('[data-starter-mission]').forEach(card => { const id = card.dataset.starterMission; const mission = starterMissionConfig(id); card.hidden = !state.starterMissionsActive || mission.active === false; card.querySelector('strong').textContent = mission.title; card.querySelector('small').textContent = `${attributeLabels[mission.attribute]} · ${mission.detail}`; card.querySelector('.reward').textContent = `+${mission.xp} XP · +${mission.gold} ouro`; });
     const dueCustomMissions = () => state.customMissions.filter(mission => mission.dueDate <= todayKey());
     const renderCustomMissions = () => {
@@ -695,16 +700,16 @@
       const missions = dueCustomMissions();
       list.hidden = missions.length === 0;
       list.innerHTML = missions.map(mission => {
-        const done = Boolean(state.done[mission.id]); const typeText = mission.kind === 'reduce' ? 'Hábito a reduzir' : 'Hábito positivo';
+        const done = missionDone(mission.id, mission.cadence); const typeText = mission.kind === 'reduce' ? 'Hábito a reduzir' : 'Hábito positivo';
         const cadence = mission.cadence === 'esporadica' ? 'Esporádica' : 'Diária';
         const detail = mission.detail || `${typeText} · ${cadence}`;
         const completion = mission.kind === 'reduce' ? `<button class="complete" type="button" data-action="complete-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Hoje não ocorreu</button><button type="button" data-action="record-custom-occurrence" data-mission-id="${escapeHtml(mission.id)}">Registrar ocorrência</button>` : `<button class="complete" type="button" data-action="complete-custom-mission" data-mission-id="${escapeHtml(mission.id)}">Concluir</button>`;
-        return `<article class="mission ${mission.kind === 'reduce' ? 'reduce' : 'positive'}${done ? ' done' : ''}" data-mission="${escapeHtml(mission.id)}"><div class="sigil">${mission.kind === 'reduce' ? '◒' : '✦'}</div><div><strong>${escapeHtml(mission.title)}</strong><small>${escapeHtml(attributeLabels[mission.attribute])} · ${escapeHtml(detail)}</small></div><div class="reward">+${mission.xp} XP · +${mission.gold} ouro</div><div class="mission-action"><span>${done ? 'Concluída nesta jornada.' : `${typeText} · ${cadence}`}</span>${done ? '' : completion}</div></article>`;
+        return `<article class="mission ${mission.kind === 'reduce' ? 'reduce' : 'positive'}${done ? ' done' : ''}" data-mission="${escapeHtml(mission.id)}"><div class="sigil">${mission.kind === 'reduce' ? '◒' : '✦'}</div><div><strong>${escapeHtml(mission.title)}</strong><small>${escapeHtml(attributeLabels[mission.attribute])} · ${escapeHtml(detail)}</small></div><div class="reward">+${mission.xp} XP · +${mission.gold} ouro</div><div class="mission-action"><span>${done ? (mission.cadence === 'diaria' ? 'Concluída hoje. Retorna amanhã.' : 'Concluída nesta jornada.') : `${typeText} · ${cadence}`}</span>${done ? '' : completion}</div></article>`;
       }).join('');
     };
     const renderMissionManager = () => {
       const manager = document.getElementById('missionManagerList'); const history = document.getElementById('missionHistoryList');
-      const pending = [...activeStarterMissions().filter(id => !state.done[id]).map(id => ({ ...starterMissionConfig(id), id, starter:true, dueDate:todayKey() })), ...state.customMissions.filter(mission => !state.done[mission.id])].sort((a,b) => a.dueDate.localeCompare(b.dueDate));
+      const pending = [...activeStarterMissions().filter(id => !missionDone(id)).map(id => ({ ...starterMissionConfig(id), id, starter:true, dueDate:todayKey() })), ...state.customMissions.filter(mission => !missionDone(mission.id, mission.cadence))].sort((a,b) => a.dueDate.localeCompare(b.dueDate));
       manager.innerHTML = pending.length ? pending.map(mission => `<article class="managed-mission"><div><strong>${escapeHtml(mission.title)}</strong><small>${escapeHtml(attributeLabels[mission.attribute])} · ${mission.starter ? 'Jornada-base' : mission.cadence === 'esporadica' ? 'Esporádica' : 'Diária'} · executar em ${escapeHtml(dateLabel(mission.dueDate))}</small></div><div class="managed-actions"><button type="button" data-action="${mission.starter ? 'edit-starter-mission' : 'edit-custom-mission'}" ${mission.starter ? `data-starter-mission-id="${escapeHtml(mission.id)}"` : `data-mission-id="${escapeHtml(mission.id)}"`}>Editar</button><button class="delete" type="button" data-action="${mission.starter ? 'remove-starter-mission' : 'remove-custom-mission'}" ${mission.starter ? `data-starter-mission-id="${escapeHtml(mission.id)}"` : `data-mission-id="${escapeHtml(mission.id)}"`}>Excluir</button></div></article>`).join('') : '<div class="empty-list">Nenhuma missão pendente. Crie uma tarefa para hoje ou programe seu próximo passo.</div>';
       const historyEntries = [...state.missionHistory].reverse().slice(0,80);
       history.innerHTML = historyEntries.length ? historyEntries.map(entry => { const fallback = state.customMissions.find(mission => mission.id === entry.id)?.title || starterMissionTitles[entry.id] || 'Missão concluída'; const completedAt = new Intl.DateTimeFormat('pt-BR',{ day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }).format(new Date(entry.completedAt)); return `<article class="history-entry"><strong>${escapeHtml(entry.title || fallback)}</strong><span>${escapeHtml(completedAt)} · +${entry.xp} XP · +${entry.gold} ouro</span></article>`; }).join('') : '<div class="empty-list">Quando uma missão for concluída, a memória dela aparecerá aqui.</div>';
@@ -742,6 +747,7 @@
       });
     };
     const render = () => {
+      resetDailyProgressIfNeeded();
       document.getElementById('waterBar').style.width = `${Math.min(100,state.water / 3 * 100)}%`;
       document.getElementById('waterLabel').textContent = `${state.water.toFixed(1).replace('.',',')} / 3 L`;
       document.getElementById('readingBar').style.width = `${Math.min(100,state.reading / 5 * 100)}%`;
@@ -754,14 +760,14 @@
       document.getElementById('emptyMissionState').hidden = hasMissions;
       document.getElementById('emptyMissionTitle').textContent = state.customMissions.length ? 'Nenhuma missão está marcada para hoje.' : 'Acenda sua primeira missão.';
       document.getElementById('emptyMissionCopy').textContent = state.customMissions.length ? 'As próximas tarefas estão guardadas na aba Missões. Você também pode criar uma missão para hoje.' : 'Crie uma missão com a sua própria meta ou, se fizer sentido, carregue a jornada-base. Nenhuma opção é obrigatória.';
-      document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', Boolean(state.done[mission.dataset.mission])));
+      document.querySelectorAll('.mission').forEach(mission => mission.classList.toggle('done', missionDone(mission.dataset.mission)));
       const allMissionIds = [...activeStarter, ...todayCustom.map(mission => mission.id)];
-      const completed = allMissionIds.filter(id => state.done[id]).length;
+      const completed = allMissionIds.filter(id => missionDone(id)).length;
       document.getElementById('missionCount').textContent = allMissionIds.length ? (completed === allMissionIds.length ? 'Jornada concluída' : `${allMissionIds.length - completed} aguardando`) : 'Sem missões';
       renderStarterMissions(); renderCustomMissions(); renderMissionManager(); renderCampaigns(); renderAttributes(); renderCharacter(); renderShop(); renderGate(); setActiveTab(state.activeTab);
     };
     const missionAttributes = { water:'vitalidade', food:'vitalidade', reading:'sabedoria', adult:'sabedoria' };
-    const award = (xp,gold,mission,attribute = missionAttributes[mission], title = starterMissionTitles[mission] || '') => { if (state.done[mission]) return; state.done[mission] = true; state.xp += xp; state.gold += gold; if (attribute && Object.prototype.hasOwnProperty.call(state.attributes, attribute)) state.attributes[attribute] += xp; state.missionHistory = [...state.missionHistory, { id:mission, title:cleanText(title,64), completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
+    const award = (xp,gold,mission,attribute = missionAttributes[mission], title = starterMissionTitles[mission] || '', cadence = missionCadence(mission)) => { if (missionDone(mission, cadence)) return; if (cadence === 'diaria') state.dailyCompletions[mission] = todayKey(); else state.done[mission] = true; state.xp += xp; state.gold += gold; if (attribute && Object.prototype.hasOwnProperty.call(state.attributes, attribute)) state.attributes[attribute] += xp; state.missionHistory = [...state.missionHistory, { id:mission, title:cleanText(title,64), completedAt:new Date().toISOString(), xp, gold }].slice(-365); save(); render(); message(`Missão concluída: +${xp} XP e +${gold} ouro`); };
     const createLocalId = prefix => `${prefix}${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
     const openDialog = dialog => { if (dialog && !dialog.open) dialog.showModal(); };
     const closeDialog = dialog => { if (dialog?.open) dialog.close(); };
@@ -828,7 +834,7 @@
       save(); render(); message(equipping ? `${item.name} equipado.` : `${item.name} guardado no inventário.`);
     };
     const exportBackup = () => {
-      const backup = { app:'reino-em-evolucao', version:9, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
+      const backup = { app:'reino-em-evolucao', version:10, exportedAt:new Date().toISOString(), state:JSON.parse(JSON.stringify(state)) };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type:'application/json' });
       const url = URL.createObjectURL(blob); const link = document.createElement('a');
       link.href = url; link.download = `reino-em-evolucao-backup-${new Date().toISOString().slice(0,10)}.json`;
@@ -836,11 +842,12 @@
       setBackupStatus('Backup baixado. Guarde este arquivo em um local seguro.'); message('Backup da jornada criado.');
     };
     const restoreState = backup => {
-      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5,6,7,8,9].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
+      if (!backup || backup.app !== 'reino-em-evolucao' || ![1,2,3,4,5,6,7,8,9,10].includes(backup.version) || !backup.state || typeof backup.state !== 'object') throw new Error('Formato de backup inválido.');
       const source = backup.state;
       const number = (value, fallback, min, max) => { const parsed = Number(value); return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback; };
       const customMissions = sanitizeCustomMissions(source.customMissions); const customMissionIds = new Set(customMissions.map(mission => mission.id));
       const done = Object.fromEntries(Object.entries(source.done || {}).filter(([key,value]) => (missionIds.has(key) || customMissionIds.has(key)) && value === true));
+      const dailyCompletions = Object.fromEntries(Object.entries(source.dailyCompletions || {}).filter(([key,value]) => (missionIds.has(key) || customMissionIds.has(key)) && validDateKey(value)));
       const selectedClass = classProfiles[source.selectedClass] ? source.selectedClass : null;
       const gender = ['masculino','feminino'].includes(source.gender) ? source.gender : null;
       const journeyStarted = source.journeyStarted === true && Boolean(selectedClass && gender);
@@ -849,7 +856,8 @@
       const customCampaigns = sanitizeCustomCampaigns(source.customCampaigns);
       const inventory = sanitizeInventory(source.inventory); const equipped = sanitizeEquipped(source.equipped, inventory);
       const playerName = normalizePlayerName(source.playerName); const restoredJourney = journeyStarted && playerName.length >= 2;
-      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','missoes','campanhas','diario','personagem','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', starterMissionsActive:source.starterMissionsActive === true, starterMissionSettings:source.starterMissionSettings && typeof source.starterMissionSettings === 'object' ? source.starterMissionSettings : {}, missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, customMissions, customCampaigns, attributes:sanitizeAttributes(source.attributes), inventory, equipped };
+      const dailyProgressDate = validDateKey(source.dailyProgressDate) ? source.dailyProgressDate : '';
+      return { water:number(source.water,0,0,3), reading:Math.round(number(source.reading,0,0,5)), dailyProgressDate, dailyCompletions, gold:Math.round(number(source.gold,0,0,1000000000)), xp:Math.round(number(source.xp,0,0,1000000000)), done, journal:typeof source.journal === 'string' ? source.journal.slice(0,100000) : '', playerName, selectedClass:restoredJourney ? selectedClass : null, gender:restoredJourney ? gender : null, journeyStarted:restoredJourney, activeTab:['hoje','missoes','campanhas','diario','personagem','reino'].includes(source.activeTab) ? source.activeTab : 'hoje', starterMissionsActive:source.starterMissionsActive === true, starterMissionSettings:source.starterMissionSettings && typeof source.starterMissionSettings === 'object' ? source.starterMissionSettings : {}, missionHistory, campaigns:{ vitalidade:campaign('vitalidade', defaultCampaigns.vitalidade), biblioteca:campaign('biblioteca', defaultCampaigns.biblioteca) }, customMissions, customCampaigns, attributes:sanitizeAttributes(source.attributes), inventory, equipped };
     };
     const syncCloud = async (immediate = false) => {
       if (!cloudClient || !cloudUser || cloudHydrating) return;
@@ -883,7 +891,7 @@
       }
       try {
         cloudHydrating = true;
-        const restored = restoreState({ app:'reino-em-evolucao', version:9, state:data.state });
+        const restored = restoreState({ app:'reino-em-evolucao', version:10, state:data.state });
         Object.assign(state, restored); playerNameInput.value = state.playerName; journals.forEach(area => area.value = state.journal); localStorage.setItem('reino-state', JSON.stringify(state)); render();
         setAccountStatus('Jornada carregada da nuvem · ' + new Intl.DateTimeFormat('pt-BR',{ day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }).format(new Date(data.updated_at)), 'synced');
         message('Sua jornada foi restaurada da nuvem.');
@@ -979,13 +987,13 @@
       if (action === 'close-campaign-dialog') { editingCampaignRef = null; closeDialog(campaignDialog); return; }
       if (action === 'open-subgoal-dialog') { openSubgoalDialog(event.target.dataset.campaignRef); return; }
       if (action === 'close-subgoal-dialog') { subgoalCampaignRef = null; closeDialog(subgoalDialog); return; }
-      if (action === 'activate-starter') { state.starterMissionsActive = true; state.water = 0; state.reading = 0; Object.keys(state.done).filter(id => missionIds.has(id)).forEach(id => delete state.done[id]); state.campaigns = JSON.parse(JSON.stringify(defaultCampaigns)); save(); render(); message('Jornada-base carregada. Suas primeiras missões e campanhas estão prontas.'); return; }
+      if (action === 'activate-starter') { state.starterMissionsActive = true; state.water = 0; state.reading = 0; state.dailyProgressDate = todayKey(); Object.keys(state.done).filter(id => missionIds.has(id)).forEach(id => delete state.done[id]); Object.keys(state.dailyCompletions).filter(id => missionIds.has(id)).forEach(id => delete state.dailyCompletions[id]); state.campaigns = JSON.parse(JSON.stringify(defaultCampaigns)); save(); render(); message('Jornada-base carregada. Suas primeiras missões e campanhas estão prontas.'); return; }
       if (action === 'complete-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) award(mission.xp,mission.gold,mission.id,mission.attribute,mission.title); return; }
       if (action === 'record-custom-occurrence') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) message(`Ocorrência registrada em “${mission.title}”. Amanhã a jornada continua.`); return; }
       if (action === 'edit-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (mission) openMissionDialog(mission); return; }
-      if (action === 'remove-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (!mission || !window.confirm(`Remover a missão “${mission.title}”?`)) return; state.customMissions = state.customMissions.filter(item => item.id !== mission.id); delete state.done[mission.id]; save(); render(); message('Missão removida.'); return; }
+      if (action === 'remove-custom-mission') { const mission = state.customMissions.find(item => item.id === event.target.dataset.missionId); if (!mission || !window.confirm(`Remover a missão “${mission.title}”?`)) return; state.customMissions = state.customMissions.filter(item => item.id !== mission.id); delete state.done[mission.id]; delete state.dailyCompletions[mission.id]; save(); render(); message('Missão removida.'); return; }
       if (action === 'edit-starter-mission') { const key = event.target.dataset.starterMissionId; const mission = starterMissionConfig(key); if (mission) openMissionDialog({ ...mission, id:`starter:${key}`, dueDate:todayKey() }); return; }
-      if (action === 'remove-starter-mission') { const key = event.target.dataset.starterMissionId; const mission = starterMissionConfig(key); if (!mission || !window.confirm(`Excluir a missão “${mission.title}” da jornada-base?`)) return; state.starterMissionSettings[key] = { ...mission, active:false }; delete state.done[key]; save(); render(); message('Missão da jornada-base excluída.'); return; }
+      if (action === 'remove-starter-mission') { const key = event.target.dataset.starterMissionId; const mission = starterMissionConfig(key); if (!mission || !window.confirm(`Excluir a missão “${mission.title}” da jornada-base?`)) return; state.starterMissionSettings[key] = { ...mission, active:false }; delete state.done[key]; delete state.dailyCompletions[key]; save(); render(); message('Missão da jornada-base excluída.'); return; }
       if (action === 'edit-campaign') { openCampaignDialog(event.target.dataset.campaignRef); return; }
       if (action === 'remove-campaign') { const ref = event.target.dataset.campaignRef; const resolved = resolveCampaign(ref); if (!resolved || !window.confirm(`Excluir a campanha “${resolved.campaign.title}”?`)) return; if (resolved.starterKey) state.campaigns[resolved.starterKey] = { ...state.campaigns[resolved.starterKey], active:false }; else state.customCampaigns = state.customCampaigns.filter(item => item.id !== resolved.campaign.id); save(); render(); message('Campanha excluída.'); return; }
       if (action === 'complete-subgoal') { completeSubgoal(event.target.dataset.campaignRef, event.target.dataset.subgoalId); return; }
